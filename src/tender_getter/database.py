@@ -6,14 +6,20 @@ Tables:
   - cidb_gradings      : CIDB class/level records linked to companies.
   - tenders            : Cached raw tender opportunities.
   - matches            : Historic match results and audit records.
+
+Factory:
+  - get_database_client() : Returns TenderDatabase (SQLite) when SUPABASE_DB_URL
+                            is unset, or PostgresDatabase (Supabase) when it is set.
 """
 
+import os
 import sqlite3
 import json
 from pathlib import Path
 from datetime import datetime
 from typing import Optional
 
+from .database_base import TenderDatabaseBase
 from .schemas import CompanyProfile, TenderOpportunity, MatchResult
 
 DEFAULT_DB_PATH = Path(__file__).resolve().parents[3] / "localdata" / "tender_getter.db"
@@ -92,8 +98,8 @@ CREATE TABLE IF NOT EXISTS matches (
 # Public API
 # ---------------------------------------------------------------------------
 
-class TenderDatabase:
-    """Thin wrapper around an SQLite connection for Tender Getter RSA."""
+class TenderDatabase(TenderDatabaseBase):
+    """Local-first SQLite driver implementing TenderDatabaseBase."""
 
     def __init__(self, db_path: Optional[Path] = None):
         self.db_path = Path(db_path) if db_path else DEFAULT_DB_PATH
@@ -256,3 +262,26 @@ class TenderDatabase:
                 _CREATE_MATCHES,
             ]:
                 self._conn.execute(stmt)
+
+
+# ---------------------------------------------------------------------------
+# Public factory — runtime driver selection
+# ---------------------------------------------------------------------------
+
+def get_database_client() -> TenderDatabaseBase:
+    """
+    Factory that selects the active database driver at runtime.
+
+    Returns:
+        PostgresDatabase — when SUPABASE_DB_URL is set in the environment.
+        TenderDatabase   — otherwise (local SQLite, default for dev/testing).
+
+    The PostgresDatabase import is intentionally lazy: psycopg2 is only
+    imported on machines where SUPABASE_DB_URL is configured, keeping the
+    local development environment free of production dependencies.
+    """
+    postgres_url = os.environ.get("SUPABASE_DB_URL")
+    if postgres_url:
+        from .database_postgres import PostgresDatabase
+        return PostgresDatabase(postgres_url)
+    return TenderDatabase()
