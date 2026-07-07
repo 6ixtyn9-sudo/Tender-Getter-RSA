@@ -1,104 +1,124 @@
-# Tender-Getter-RSA: Architectural & Business Plan
+# Tender Getter RSA - Architectural & Technical Specification
+Date: 2026-07-07
+Venture: Commercial B2B SaaS Bidding Matchmaker (South Africa)
+Version: 1.0.0
 
-## 1. Vision & Strategy
-**Tender-Getter-RSA** is designed as a professional-grade screening engine for South African state and private tenders. Its primary goal is to automate the discovery, matching, and compliance verification of tenders against specific company profiles.
+## 1. Executive Summary & USP
+Tender Getter RSA is a highly optimized, AI-native B2B matchmaking and proposal-drafting platform built for South African SMMEs (Small, Medium, and Micro Enterprises).
 
-By keeping the architecture highly modular, the core matching engine can easily be spun off into subsequent high-leverage products (e.g., Job-Getter-RSA, Funding-Getter-RSA).
+The USP is execution-focused: We do not just aggregate a list of daily links (which existing R250-R800/month portals do). We solve the disqualification and proposal-writing traps by instantly screening non-negotiable regulatory gates (CSD, SARS, CIDB, B-BBEE, Geofencing) and generating custom-synthesized compliance-win strategies and proposal drafts in seconds.
 
----
+## 2. Core Python Architecture & Schemas
+To ensure rapid, modular iteration and high reliability, our backend is structured strictly around Pydantic validation models and a SQLite relational data layer.
 
-## 2. File Structure & Component Overview
+### A. The Master Schemas (src/tender_getter/schemas.py)
+Two data structures define the entire transaction space:
+
+```python
+from pydantic import BaseModel, Field
+from typing import List, Optional, Dict
+from datetime import datetime
+
+class CIDBGrading(BaseModel):
+    class_code: str = Field(..., description="e.g. CE (Civil Engineering), GB (General Building)")
+    level: int = Field(..., ge=1, le=9, description="CIDB grading level from 1 to 9")
+
+class Location(BaseModel):
+    province: str
+    city: str
+    municipality: Optional[str] = None
+
+class CompanyProfile(BaseModel):
+    registration_number: str = Field(..., description="CIPC registration number")
+    company_name: str
+    csd_number: Optional[str] = Field(None, description="MAAA supplier number")
+    bbbee_level: int = Field(9, ge=1, le=9, description="B-BBEE Level, 9 is Non-Compliant")
+    black_ownership_pct: float = Field(0.0, ge=0.0, le=100.0)
+    youth_ownership_pct: float = Field(0.0, ge=0.0, le=100.0)
+    women_ownership_pct: float = Field(0.0, ge=0.0, le=100.0)
+    cidb_gradings: List[CIDBGrading] = []
+    location: Location
+    sectors: List[str]
+    has_tax_pin: bool = False
+    has_coida: bool = False
+    is_active: bool = True
+
+class TenderOpportunity(BaseModel):
+    tender_id: str = Field(..., description="Official bid number/reference")
+    title: str
+    issuing_entity: str
+    closing_date: datetime
+    estimated_value: Optional[float] = None
+    required_cidb_class: Optional[str] = None
+    required_cidb_level: Optional[int] = None
+    mandatory_csd: bool = True
+    location_target: Optional[str] = Field(None, description="e.g. 'Gauteng' or 'National'")
+    raw_document_url: Optional[str] = None
+```
+
+### B. Relational Storage (src/tender_getter/database.py)
+A local-first SQLite database matches these schemas for instant, zero-cost state management:
+* **Table company_profiles:** Relational store of all registered clients.
+* **Table tenders:** Relational cache of raw, parsed tenders.
+* **Table matches:** Stores historic match results, evaluation scores, and client notification records.
+
+## 3. Mathematical Matching & Gating Logic (src/tender_getter/matcher.py)
+The matching core does not use vague vector similarity for regulatory hurdles. It uses strict mathematical filters followed by weighted heuristic sorting.
+
+### Gate 1: Binary Disqualification Filters (Hard Blocks)
+* **CSD Validation:** If Tender.mandatory_csd is True and Company.csd_number is null -> Disqualified (0% Match).
+* **Tax Status:** If Tender.tax_compliance_required is True and Company.has_tax_pin is False -> Warning flag (Match demated/Hold).
+* **CIDB Capacity Gate:**
+  Define upper financial thresholds for Grade levels:
+  Grade 1: R200k | Grade 2: R1m | Grade 3: R3m | Grade 4: R6m | Grade 5: R10m | Grade 6: R20m | Grade 7: R60m | Grade 8: R200m | Grade 9: No Limit.
+  Constraint Rule: The matching engine blocks a match if Tender.required_cidb_class is present but the client does not possess that class, OR if Company.cidb_level < Tender.required_cidb_level.
+
+### Gate 2: Preferential Procurement Scoring (B-BBEE / PPPFA Math)
+* **80/20 System (Estimated Value < R50 Million):**
+  Max Price points = 80.
+  B-BBEE preference points allocated dynamically:
+  Level 1 = 20 pts | Level 2 = 18 pts | Level 3 = 14 pts | Level 4 = 12 pts | Level 5 = 8 pts | Level 6 = 6 pts | Level 7 = 4 pts | Level 8 = 2 pts | Non-Compliant = 0 pts.
+* **90/10 System (Estimated Value >= R50 Million):**
+  Max Price points = 90.
+  B-BBEE preference points allocated dynamically:
+  Level 1 = 10 pts | Level 2 = 9 pts | Level 3 = 6 pts | Level 4 = 5 pts | Level 5 = 4 pts | Level 6 = 3 pts | Level 7 = 2 pts | Level 8 = 1 pt | Non-Compliant = 0 pts.
+
+## 4. Gemini OCR & Compliance Sieve (src/tender_getter/parser.py)
+Tender documents are highly complex, multi-page PDFs. To avoid blowing out our token budget and preventing lookup lag, the parsing pipeline uses a Two-Tier Sieve:
 
 ```text
-Tender-Getter-RSA/
-│
-├── README.md                  # Quick intro & how to run
-├── PLANNING.md                # DAY 1 - 4 full architectural plan
-│
-├── src/
-│   └── tender_getter/
-│       ├── __init__.py
-│       ├── schemas.py         # Structured models (Pydantic-based)
-│       ├── matcher.py         # Match calculations (CIDB, BBBEE, Location)
-│       ├── parser.py          # Gemini OCR & compliance extractor
-│       └── reporter.py        # PDF & Markdown report outputs
-│
-├── scripts/
-│   ├── run_poc.py             # CLI command to output free matched PDFs
-│   └── cipc_directory.py      # Lead list generation helper
-│
-└── tests/
-    └── test_matcher.py        # Validating math stays bulletproof
+[Messy 100-Page PDF] 
+        │
+        ▼ (Local Python Extraction)
+ [Page Pre-Screener] ──► Extracts only pages containing "SBD 1", "SBD 6.1", 
+        │                "CIDB", or "Evaluation Criteria". (Reduces to ~5 pages)
+        ▼
+[Gemini 1.5 Pro API] ──► Strict JSON Compliance Extraction (Structure Validation)
+        │
+        ▼
+ [Relational Schema] ──► Piped into sqlite matching engine
 ```
 
----
+**The System Prompt & Output Schema:**
+Gemini 1.5 Pro is invoked with a strict JSON system schema to prevent any formatting drift:
 
-## 3. South African Regulatory Gatekeeper Logic (The Math)
-
-The matching engine relies on precise, legally defined formulas to qualify contractors and estimate their competitiveness.
-
-### 3.1. B-BBEE Score Calculator (80/20 & 90/10)
-State tenders use the preference point system based on the tender's value.
-
-* **80/20 System (Tenders below R50 Million):** 80 points for price, 20 points for B-BBEE.
-* **90/10 System (Tenders above R50 Million):** 90 points for price, 10 points for B-BBEE.
-
-**Implementation (Python):**
-```python
-BB_BEE_POINTS = {
-    "80/20": {
-        1: 20, 2: 18, 3: 14, 4: 12, 5: 8, 6: 6, 7: 4, 8: 2, "Non-Compliant": 0
-    },
-    "90/10": {
-        1: 10, 2: 9, 3: 6, 4: 5, 5: 4, 6: 3, 7: 2, 8: 1, "Non-Compliant": 0
-    }
+```json
+{
+  "bid_number": "string",
+  "closing_date": "string (YYYY-MM-DD or null)",
+  "required_cidb_class": "string ('CE', 'GB', 'EE', 'ME' or null)",
+  "required_cidb_level": "integer (1-9 or null)",
+  "mandatory_csd": "boolean",
+  "bbbee_points_system": "string ('80/20', '90/10' or null)",
+  "location_target": "string or null"
 }
 ```
 
-### 3.2. CIDB Grading Evaluator
-The Construction Industry Development Board (CIDB) restricts maximum tender values based on a contractor's registered grade. 
+## 5. Next Agent Playbook & Rapid Bootstrap Checklist
+For future agents starting on this repository, do not build sprawling cloud wrappers. Follow this step-by-step technical implementation path immediately:
 
-**Implementation (Python):**
-```python
-CIDB_LIMITS = {
-    1: 200_000,       # Grade 1: up to R200k
-    2: 1_000_000,     # Grade 2: up to R1m
-    3: 3_000_000,     # Grade 3: up to R3m
-    4: 6_000_000,     # Grade 4: up to R6m
-    5: 10_000_000,    # Grade 5: up to R10m
-    6: 20_000_000,    # Grade 6: up to R20m
-    7: 60_000_000,    # Grade 7: up to R60m
-    8: 200_000_000,   # Grade 8: up to R200m
-    9: float('inf')   # Grade 9: No Limit
-}
-```
-
-**Match Rule:**
-A company qualifies for a tender requiring CIDB `X` of class `Y` if and only if:
-1. The company has a registered grading of class `Y` (e.g., "CE", "GB", "EE").
-2. The company's registered grade level `L` is `>= L_tender` OR the estimated contract value is `<= CIDB_LIMITS[L]`.
-
-### 3.3. Sector-Specific Gatekeepers
-Different sectors require specific regulatory body registrations. We track these as mandatory "industry tags" with active verification flags:
-* **Security Services:** Requires **PSIRA** registration.
-* **Construction/Housing:** Requires **NHBRC** registration.
-* **Electrical Work:** Requires a **Wireman's License / Department of Labour** registration.
-* **Cleaning/Waste:** Requires specific municipal waste-management licenses.
-
----
-
-## 4. Database & Schemas (Pydantic Models)
-
-To maintain rigorous data integrity across scraping, matching, and reporting, we use structured Pydantic models in `src/tender_getter/schemas.py`.
-
-### Proposed Schemas:
-* **CompanyProfile:** Represents a lead/client (Name, CIDB grades, B-BBEE level, Sector tags, Location).
-* **TenderDocument:** Represents a parsed tender (Issuer, Value Estimate, Required CIDB, Required Tags, Closing Date).
-* **MatchResult:** The outcome of the matching algorithm (Score, Eligibility Boolean, Missing Requirements).
-
----
-
-## 5. Next Steps (Day 2 - 4)
-- **Day 2:** Build out `schemas.py` and `matcher.py` based on the logic defined above, implementing unit tests in `tests/test_matcher.py` to ensure compliance.
-- **Day 3:** Build `parser.py` using Gemini API to OCR and extract data from tender PDFs into our Pydantic `TenderDocument` schema.
-- **Day 4:** Integrate `reporter.py` to generate the automated PDF/Markdown reports for qualified leads, and test the full pipeline using `run_poc.py`.
+1. **Verify Python Environment:** Install standard lightweight requirements: pydantic, sqlite3, pypdf, pdfplumber, and google-generativeai.
+2. **Build src/tender_getter/schemas.py:** Standardize the Pydantic models exactly as spec'd out in Section 2.
+3. **Build src/tender_getter/matcher.py:** Write the binary gates and the BBBEE 80/20 & 90/10 point mapping.
+4. **Wire up src/tender_getter/parser.py:** Connect to the Gemini 1.5 Pro API using Google AI Studio keys stored in a gitignored .env file.
+5. **Construct scripts/run_poc.py:** A CLI runner that takes an inputted Company Profile, parses a mock/local SBD 1 PDF, executes the matcher, and spits out a clean Markdown terminal scorecard showing eligibility.
