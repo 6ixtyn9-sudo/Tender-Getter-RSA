@@ -1,0 +1,4 @@
+# localdata/
+# This directory holds runtime-generated files (SQLite DB, reports).
+# The .gitkeep ensures git tracks the folder.
+# Never commit *.db or *.md report files to the repository.
