@@ -1,6 +1,6 @@
 import pytest
 from datetime import datetime, timezone
-from tender_getter.sources.transnet import TransnetSource, MOCK_TRANSNET_HTML
+from tender_getter.sources.soes.transnet import TransnetSource, MOCK_TRANSNET_HTML
 from tender_getter.schemas import TenderOpportunity
 
 def test_transnet_source_initialization():

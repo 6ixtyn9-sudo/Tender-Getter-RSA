@@ -1,6 +1,6 @@
 import pytest
 from datetime import datetime, timezone
-from tender_getter.sources.eskom import EskomSource, MOCK_ESKOM_HTML
+from tender_getter.sources.soes.eskom import EskomSource, MOCK_ESKOM_HTML
 from tender_getter.schemas import TenderOpportunity
 
 def test_eskom_source_initialization():

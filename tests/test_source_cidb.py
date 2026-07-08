@@ -1,6 +1,6 @@
 import pytest
 from datetime import datetime, timezone
-from tender_getter.sources.cidb import CIDBSource, MOCK_CIDB_HTML
+from tender_getter.sources.national.cidb import CIDBSource, MOCK_CIDB_HTML
 from tender_getter.schemas import TenderOpportunity
 
 def test_cidb_source_initialization():

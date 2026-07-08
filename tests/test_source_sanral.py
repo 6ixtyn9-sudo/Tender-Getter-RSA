@@ -1,6 +1,6 @@
 import pytest
 from datetime import datetime, timezone
-from tender_getter.sources.sanral import SANRALSource, MOCK_SANRAL_HTML
+from tender_getter.sources.soes.sanral import SANRALSource, MOCK_SANRAL_HTML
 from tender_getter.schemas import TenderOpportunity
 
 def test_sanral_source_initialization():

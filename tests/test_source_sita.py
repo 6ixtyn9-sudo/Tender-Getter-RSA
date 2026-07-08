@@ -1,6 +1,6 @@
 import pytest
 from datetime import datetime, timezone
-from tender_getter.sources.sita import SITASource, MOCK_SITA_HTML
+from tender_getter.sources.research.sita import SITASource, MOCK_SITA_HTML
 from tender_getter.schemas import TenderOpportunity
 
 def test_sita_source_initialization():

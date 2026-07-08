@@ -162,3 +162,594 @@ sources:
     type: html
     priority: 2
     free: true
+
+  # --- SOEs ---
+  - id: prasa_tenders
+    name: "Passenger Rail Agency of South Africa (PRASA)"
+    url: "https://www.prasa.com/tenders"
+    type: html
+    priority: 3
+    free: true
+
+  - id: landbank_tenders
+    name: "Land and Agricultural Development Bank"
+    url: "https://landbank.co.za/Pages/Procurement.aspx"
+    type: html
+    priority: 3
+    free: true
+
+  - id: sabc_tenders
+    name: "South African Broadcasting Corporation"
+    url: "https://www.sabc.co.za/sabc/tenders/"
+    type: html
+    priority: 3
+    free: true
+
+  - id: acsa_tenders
+    name: "Airports Company South Africa"
+    url: "https://www.airports.co.za/business/tender-bulletin"
+    type: html
+    priority: 3
+    free: true
+
+  - id: denel_tenders
+    name: "Denel SOC Ltd"
+    url: "https://www.denel.co.za/tenders"
+    type: html
+    priority: 3
+    free: true
+
+  - id: sentech_tenders
+    name: "Sentech SOC Ltd"
+    url: "https://www.sentech.co.za/tenders"
+    type: html
+    priority: 3
+    free: true
+
+  - id: safcol_tenders
+    name: "South African Forestry Company"
+    url: "https://www.safcol.co.za/tenders/"
+    type: html
+    priority: 3
+    free: true
+
+  - id: necsa_tenders
+    name: "South African Nuclear Energy Corporation"
+    url: "https://www.necsa.co.za/tenders/"
+    type: html
+    priority: 3
+    free: true
+
+  - id: petrosa_tenders
+    name: "PetroSA"
+    url: "https://www.petrosa.co.za/tenders"
+    type: html
+    priority: 3
+    free: true
+
+  - id: infraco_tenders
+    name: "Broadband Infraco"
+    url: "https://www.infraco.co.za/tenders/"
+    type: html
+    priority: 3
+    free: true
+
+  - id: atns_tenders
+    name: "Air Traffic & Navigation Services"
+    url: "https://www.atns.com/tenders"
+    type: html
+    priority: 3
+    free: true
+
+  - id: alexkor_tenders
+    name: "Alexkor SOC Ltd"
+    url: "https://www.alexkor.co.za/tenders"
+    type: html
+    priority: 3
+    free: true
+
+  # --- Water Boards ---
+  - id: rand_water_tenders
+    name: "Rand Water"
+    url: "https://www.randwater.co.za/tenders"
+    type: html
+    priority: 3
+    free: true
+
+  - id: umgeni_water_tenders
+    name: "Umgeni Water"
+    url: "https://www.umgeni.co.za/tenders"
+    type: html
+    priority: 3
+    free: true
+
+  - id: mhlathuze_water_tenders
+    name: "Mhlathuze Water"
+    url: "https://www.mhlathuzewater.co.za/tenders"
+    type: html
+    priority: 3
+    free: true
+
+  - id: overberg_water_tenders
+    name: "Overberg Water"
+    url: "https://overbergwater.co.za/tenders"
+    type: html
+    priority: 3
+    free: true
+
+  - id: amatola_water_tenders
+    name: "Amatola Water"
+    url: "https://www.amatolawater.co.za/tenders"
+    type: html
+    priority: 3
+    free: true
+
+  - id: lepelle_water_tenders
+    name: "Lepelle Northern Water"
+    url: "https://www.lepellewater.co.za/tenders"
+    type: html
+    priority: 3
+    free: true
+
+  - id: magalies_water_tenders
+    name: "Magalies Water"
+    url: "https://www.magalieswater.co.za/tenders"
+    type: html
+    priority: 3
+    free: true
+
+  - id: bloem_water_tenders
+    name: "Bloem Water"
+    url: "https://www.bloemwater.co.za/tenders"
+    type: html
+    priority: 3
+    free: true
+
+  - id: sedibeng_water_tenders
+    name: "Sedibeng Water"
+    url: "https://www.sedibengwater.co.za/tenders"
+    type: html
+    priority: 3
+    free: true
+
+  - id: tcta_tenders
+    name: "Trans-Caledon Tunnel Authority"
+    url: "https://www.tcta.co.za/tenders"
+    type: html
+    priority: 3
+    free: true
+
+  # --- DFIs / Regulators ---
+  - id: dbsa_tenders
+    name: "Development Bank of Southern Africa"
+    url: "https://www.dbsa.org/tenders"
+    type: html
+    priority: 3
+    free: true
+
+  - id: idc_tenders
+    name: "Industrial Development Corporation"
+    url: "https://www.idc.co.za/tenders"
+    type: html
+    priority: 3
+    free: true
+
+  - id: sars_tenders
+    name: "South African Revenue Service"
+    url: "https://www.sars.gov.za/procurement/"
+    type: html
+    priority: 3
+    free: true
+
+  - id: samsa_tenders
+    name: "South African Maritime Safety Authority"
+    url: "https://www.samsa.org.za/tenders"
+    type: html
+    priority: 3
+    free: true
+
+  - id: sanparks_tenders
+    name: "South African National Parks"
+    url: "https://www.sanparks.org/about/doing_business/tenders"
+    type: html
+    priority: 3
+    free: true
+
+  - id: seda_tenders
+    name: "Small Enterprise Development Agency"
+    url: "https://www.seda.org.za/tenders"
+    type: html
+    priority: 3
+    free: true
+
+  - id: sefa_tenders
+    name: "Small Enterprise Finance Agency"
+    url: "https://www.sefa.org.za/tenders"
+    type: html
+    priority: 3
+    free: true
+
+  - id: raf_tenders
+    name: "Road Accident Fund"
+    url: "https://www.raf.co.za/tenders"
+    type: html
+    priority: 3
+    free: true
+
+  - id: compensation_fund_tenders
+    name: "Compensation Fund"
+    url: "https://www.labour.gov.za/compensation-fund-tenders"
+    type: html
+    priority: 3
+    free: true
+
+  - id: uif_tenders
+    name: "Unemployment Insurance Fund"
+    url: "https://www.labour.gov.za/uif-tenders"
+    type: html
+    priority: 3
+    free: true
+
+  # --- Research Councils ---
+  - id: csir_tenders
+    name: "Council for Scientific & Industrial Research"
+    url: "https://www.csir.co.za/tenders"
+    type: html
+    priority: 3
+    free: true
+
+  - id: nhls_tenders
+    name: "National Health Laboratory Service"
+    url: "https://www.nhls.ac.za/tenders"
+    type: html
+    priority: 3
+    free: true
+
+  - id: sansa_tenders
+    name: "South African National Space Agency"
+    url: "https://www.sansa.org.za/tenders"
+    type: html
+    priority: 3
+    free: true
+
+  - id: geoscience_tenders
+    name: "Council for Geoscience"
+    url: "https://www.geoscience.org.za/tenders"
+    type: html
+    priority: 3
+    free: true
+
+  - id: mintek_tenders
+    name: "Mintek"
+    url: "https://www.mintek.co.za/tenders"
+    type: html
+    priority: 3
+    free: true
+
+  - id: hsrc_tenders
+    name: "Human Sciences Research Council"
+    url: "https://www.hsrc.ac.za/tenders"
+    type: html
+    priority: 3
+    free: true
+
+  - id: wrc_tenders
+    name: "Water Research Commission"
+    url: "https://www.wrc.org.za/tenders"
+    type: html
+    priority: 3
+    free: true
+
+  - id: sabs_tenders
+    name: "South African Bureau of Standards"
+    url: "https://www.sabs.co.za/tenders"
+    type: html
+    priority: 3
+    free: true
+
+  # --- District Municipalities ---
+  - id: west_rand_tenders
+    name: "West Rand District Municipality"
+    url: "https://www.wrdm.gov.za/tenders"
+    type: html
+    priority: 2
+    free: true
+
+  - id: sedibeng_dm_tenders
+    name: "Sedibeng District Municipality"
+    url: "https://www.sedibeng.gov.za/tenders"
+    type: html
+    priority: 2
+    free: true
+
+  - id: cape_winelands_tenders
+    name: "Cape Winelands District Municipality"
+    url: "https://www.capewinelands.gov.za/tenders"
+    type: html
+    priority: 2
+    free: true
+
+  - id: garden_route_tenders
+    name: "Garden Route District Municipality"
+    url: "https://www.gardenroute.gov.za/tenders"
+    type: html
+    priority: 2
+    free: true
+
+  - id: king_cetshwayo_tenders
+    name: "King Cetshwayo District Municipality"
+    url: "https://www.kingcetshwayo.gov.za/tenders"
+    type: html
+    priority: 2
+    free: true
+
+  - id: ilembe_tenders
+    name: "iLembe District Municipality"
+    url: "https://www.ilembe.gov.za/tenders"
+    type: html
+    priority: 2
+    free: true
+
+  - id: or_tambo_tenders
+    name: "OR Tambo District Municipality"
+    url: "https://www.ortambodm.gov.za/tenders"
+    type: html
+    priority: 2
+    free: true
+
+  - id: capricorn_tenders
+    name: "Capricorn District Municipality"
+    url: "https://www.cdm.org.za/tenders"
+    type: html
+    priority: 2
+    free: true
+
+  - id: ehlanzeni_tenders
+    name: "Ehlanzeni District Municipality"
+    url: "https://www.ehlanzeni.gov.za/tenders"
+    type: html
+    priority: 2
+    free: true
+
+  # --- Provincial Infrastructure Departments ---
+  - id: gdid_tenders
+    name: "Gauteng Department of Infrastructure Development"
+    url: "https://www.gdid.gpg.gov.za/tenders"
+    type: html
+    priority: 2
+    free: true
+  - id: gdrt_tenders
+    name: "Gauteng Department of Roads and Transport"
+    url: "https://www.gdrt.gpg.gov.za/tenders"
+    type: html
+    priority: 2
+    free: true
+  - id: gde_tenders
+    name: "Gauteng Department of Education"
+    url: "https://www.education.gpg.gov.za/tenders"
+    type: html
+    priority: 2
+    free: true
+  - id: gdh_tenders
+    name: "Gauteng Department of Health"
+    url: "https://www.health.gpg.gov.za/tenders"
+    type: html
+    priority: 2
+    free: true
+  - id: wcdi_tenders
+    name: "Western Cape Department of Infrastructure"
+    url: "https://www.westerncape.gov.za/dept/infrastructure/tenders"
+    type: html
+    priority: 2
+    free: true
+  - id: wc_health_tenders
+    name: "Western Cape Department of Health & Wellness"
+    url: "https://www.westerncape.gov.za/dept/health/tenders"
+    type: html
+    priority: 2
+    free: true
+  - id: kzn_dot_tenders
+    name: "KwaZulu-Natal Department of Transport"
+    url: "https://www.kzntransport.gov.za/tenders"
+    type: html
+    priority: 2
+    free: true
+  - id: kzn_human_settlements_tenders
+    name: "KwaZulu-Natal Department of Human Settlements"
+    url: "https://www.kznsethuman.gov.za/tenders"
+    type: html
+    priority: 2
+    free: true
+  - id: ec_public_works_tenders
+    name: "Eastern Cape Department of Public Works"
+    url: "https://www.ecdpw.gov.za/tenders"
+    type: html
+    priority: 2
+    free: true
+  - id: ec_education_tenders
+    name: "Eastern Cape Department of Education"
+    url: "https://www.ecdoe.gov.za/tenders"
+    type: html
+    priority: 2
+    free: true
+  - id: fs_police_roads_tenders
+    name: "Free State Department of Police, Roads & Transport"
+    url: "https://www.pret.fs.gov.za/tenders"
+    type: html
+    priority: 2
+    free: true
+  - id: limpopo_pwri_tenders
+    name: "Limpopo Department of Public Works, Roads & Infrastructure"
+    url: "https://www.ldprr.gov.za/tenders"
+    type: html
+    priority: 2
+    free: true
+  - id: mpumalanga_education_tenders
+    name: "Mpumalanga Department of Education"
+    url: "https://www.mpumalanga.gov.za/education/tenders"
+    type: html
+    priority: 2
+    free: true
+  - id: nw_public_works_tenders
+    name: "North West Department of Public Works and Roads"
+    url: "https://www.nwpg.gov.za/publicworks/tenders"
+    type: html
+    priority: 2
+    free: true
+  # --- National Government Departments ---
+  - id: saps_tenders
+    name: "South African Police Service"
+    url: "https://www.saps.gov.za/tenders"
+    type: html
+    priority: 2
+    free: true
+  - id: doel_tenders
+    name: "Department of Employment and Labour"
+    url: "https://www.labour.gov.za/tenders"
+    type: html
+    priority: 2
+    free: true
+  - id: dpwi_tenders
+    name: "Department of Public Works & Infrastructure"
+    url: "https://www.publicworks.gov.za/tenders"
+    type: html
+    priority: 2
+    free: true
+  - id: dws_tenders
+    name: "Department of Water and Sanitation"
+    url: "https://www.dws.gov.za/tenders"
+    type: html
+    priority: 2
+    free: true
+  - id: dod_tenders
+    name: "Department of Defence"
+    url: "https://www.dod.mil.za/tenders"
+    type: html
+    priority: 2
+    free: true
+  - id: doh_tenders
+    name: "Department of Health"
+    url: "https://www.health.gov.za/tenders"
+    type: html
+    priority: 2
+    free: true
+  - id: dbe_tenders
+    name: "Department of Basic Education"
+    url: "https://www.education.gov.za/tenders"
+    type: html
+    priority: 2
+    free: true
+  - id: dhet_tenders
+    name: "Department of Higher Education & Training"
+    url: "https://www.dhet.gov.za/tenders"
+    type: html
+    priority: 2
+    free: true
+  - id: dha_tenders
+    name: "Department of Home Affairs"
+    url: "https://www.dha.gov.za/tenders"
+    type: html
+    priority: 2
+    free: true
+  - id: dmre_tenders
+    name: "Department of Mineral Resources & Energy"
+    url: "https://www.dmre.gov.za/tenders"
+    type: html
+    priority: 2
+    free: true
+  - id: dalrrd_tenders
+    name: "Department of Agriculture, Land Reform & Rural Development"
+    url: "https://www.dalrrd.gov.za/tenders"
+    type: html
+    priority: 2
+    free: true
+  - id: dffe_tenders
+    name: "Department of Forestry, Fisheries & the Environment"
+    url: "https://www.dffe.gov.za/tenders"
+    type: html
+    priority: 2
+    free: true
+  - id: dot_tenders
+    name: "Department of Transport"
+    url: "https://www.transport.gov.za/tenders"
+    type: html
+    priority: 2
+    free: true
+  - id: national_treasury_tenders
+    name: "National Treasury"
+    url: "https://www.treasury.gov.za/tenders"
+    type: html
+    priority: 2
+    free: true
+  - id: dcs_tenders
+    name: "Department of Correctional Services"
+    url: "https://www.dcs.gov.za/tenders"
+    type: html
+    priority: 2
+    free: true
+  - id: tourism_tenders
+    name: "Department of Tourism"
+    url: "https://www.tourism.gov.za/tenders"
+    type: html
+    priority: 2
+    free: true
+  - id: dsac_tenders
+    name: "Department of Sports, Arts & Culture"
+    url: "https://www.dsac.gov.za/tenders"
+    type: html
+    priority: 2
+    free: true
+  - id: dsi_tenders
+    name: "Department of Science & Innovation"
+    url: "https://www.dst.gov.za/tenders"
+    type: html
+    priority: 2
+    free: true
+  - id: dcdt_tenders
+    name: "Department of Communications & Digital Technologies"
+    url: "https://www.dcdt.gov.za/tenders"
+    type: html
+    priority: 2
+    free: true
+  - id: dsbd_tenders
+    name: "Department of Small Business Development"
+    url: "https://www.dsbd.gov.za/tenders"
+    type: html
+    priority: 2
+    free: true
+  - id: dhs_tenders
+    name: "Department of Human Settlements"
+    url: "https://www.dhs.gov.za/tenders"
+    type: html
+    priority: 2
+    free: true
+  - id: cogta_tenders
+    name: "Department of Cooperative Governance & Traditional Affairs"
+    url: "https://www.cogta.gov.za/tenders"
+    type: html
+    priority: 2
+    free: true
+  - id: dpsa_tenders
+    name: "Department of Public Service & Administration"
+    url: "https://www.dpsa.gov.za/tenders"
+    type: html
+    priority: 2
+    free: true
+  - id: dtic_tenders
+    name: "Department of Trade, Industry & Competition"
+    url: "https://www.thedtic.gov.za/tenders"
+    type: html
+    priority: 2
+    free: true
+  - id: dpme_tenders
+    name: "Department of Planning, Monitoring & Evaluation"
+    url: "https://www.dpme.gov.za/tenders"
+    type: html
+    priority: 2
+    free: true
+  - id: presidency_tenders
+    name: "The Presidency"
+    url: "https://www.thepresidency.gov.za/tenders"
+    type: html
+    priority: 2
+    free: true

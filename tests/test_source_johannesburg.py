@@ -1,6 +1,6 @@
 import pytest
 from datetime import datetime, timezone
-from tender_getter.sources.johannesburg import JohannesburgSource, MOCK_JOHANNESBURG_HTML
+from tender_getter.sources.metros.johannesburg import JohannesburgSource, MOCK_JOHANNESBURG_HTML
 from tender_getter.schemas import TenderOpportunity
 
 def test_johannesburg_source_initialization():

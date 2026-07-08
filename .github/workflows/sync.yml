@@ -40,7 +40,7 @@ jobs:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           PYTHONUNBUFFERED: "1"
         run: |
-          PYTHONPATH=src:. python scripts/run_poc.py
+          PYTHONPATH=src:. python scripts/run_ingestion_engine.py
 
       - name: Pytest
         run: |

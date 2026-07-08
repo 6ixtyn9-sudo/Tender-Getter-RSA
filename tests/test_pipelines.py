@@ -1,10 +1,10 @@
 import os
 import pytest
 from datetime import datetime, timezone
-from src.tender_getter.source_sync import parse_ocds_release_to_tender, re_search_cidb
-from src.tender_getter.lead_harvester import import_suppliers_from_csv
-from src.tender_getter.database import TenderDatabase
-from src.tender_getter.sources.common import parse_closing_date, parse_html_table
+from tender_getter.source_sync import parse_ocds_release_to_tender, re_search_cidb
+from tender_getter.lead_harvester import import_suppliers_from_csv
+from tender_getter.database import TenderDatabase
+from tender_getter.sources.common import parse_closing_date, parse_html_table
 
 @pytest.fixture(autouse=True)
 def clean_db():

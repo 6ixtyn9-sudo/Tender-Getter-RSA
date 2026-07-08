@@ -1,6 +1,6 @@
 import pytest
 from datetime import datetime, timezone
-from tender_getter.sources.gauteng import GautengSource, MOCK_GAUTENG_HTML
+from tender_getter.sources.provincial.gauteng import GautengSource, MOCK_GAUTENG_HTML
 from tender_getter.schemas import TenderOpportunity
 
 def test_gauteng_source_initialization():

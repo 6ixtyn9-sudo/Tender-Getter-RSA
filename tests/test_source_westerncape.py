@@ -1,6 +1,6 @@
 import pytest
 from datetime import datetime, timezone
-from tender_getter.sources.westerncape import WesternCapeSource, MOCK_WESTERNCAPE_HTML
+from tender_getter.sources.provincial.westerncape import WesternCapeSource, MOCK_WESTERNCAPE_HTML
 from tender_getter.schemas import TenderOpportunity
 
 def test_westerncape_source_initialization():

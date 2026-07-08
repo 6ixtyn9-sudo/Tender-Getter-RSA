@@ -1,6 +1,6 @@
 import pytest
 from datetime import datetime, timezone
-from tender_getter.sources.kzn import KZNSource, MOCK_KZN_HTML
+from tender_getter.sources.provincial.kzn import KZNSource, MOCK_KZN_HTML
 from tender_getter.schemas import TenderOpportunity
 
 def test_kzn_source_initialization():
