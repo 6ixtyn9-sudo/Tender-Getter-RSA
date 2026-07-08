@@ -2,7 +2,7 @@ import pytest
 from tender_getter.sources.national_depts.saps import SAPSSource, MOCK_SAPS_HTML
 def test_saps_source_initialization():
     source = SAPSSource()
-    assert source.source_id == "saps_tenders"
+    assert source.source_id == "saps"
     assert source.url.startswith("http")
 def test_saps_parse_mock_html():
     source = SAPSSource()

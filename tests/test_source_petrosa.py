@@ -3,7 +3,7 @@ from tender_getter.sources.soes.petrosa import PetroSASource, MOCK_PETROSA_HTML
 
 def test_petrosa_source_initialization():
     source = PetroSASource()
-    assert source.source_id == "petrosa_tenders"
+    assert source.source_id == "petrosa"
     assert source.url.startswith("http")
 
 def test_petrosa_parse_mock_html():

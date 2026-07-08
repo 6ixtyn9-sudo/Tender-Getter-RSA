@@ -2,7 +2,7 @@ import pytest
 from tender_getter.sources.national_depts.dsac import DSACSource, MOCK_DSAC_HTML
 def test_dsac_source_initialization():
     source = DSACSource()
-    assert source.source_id == "dsac_tenders"
+    assert source.source_id == "dsac"
     assert source.url.startswith("http")
 def test_dsac_parse_mock_html():
     source = DSACSource()

@@ -53,7 +53,7 @@ MOCK_OVERBERG_WATER_HTML = """
 """
 
 class OverbergWaterSource:
-    source_id: str = "overberg_water_tenders"
+    source_id: str = "overberg_water"
 
     def __init__(self, url: str = "https://overbergwater.co.za/tenders"):
         self.url = url

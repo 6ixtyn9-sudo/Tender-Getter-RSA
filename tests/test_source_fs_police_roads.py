@@ -2,7 +2,7 @@ import pytest
 from tender_getter.sources.provincial_depts.fs_police_roads import FSPoliceRoadsSource, MOCK_FS_POLICE_ROADS_HTML
 def test_fs_police_roads_source_initialization():
     source = FSPoliceRoadsSource()
-    assert source.source_id == "fs_police_roads_tenders"
+    assert source.source_id == "fs_police_roads"
     assert source.url.startswith("http")
 def test_fs_police_roads_parse_mock_html():
     source = FSPoliceRoadsSource()

@@ -34,7 +34,7 @@ MOCK_GEOSCIENCE_HTML = """
 """
 
 class GeoscienceSource:
-    source_id: str = "geoscience_tenders"
+    source_id: str = "geoscience"
 
     def __init__(self, url: str = "https://www.geoscience.org.za/tenders"):
         self.url = url

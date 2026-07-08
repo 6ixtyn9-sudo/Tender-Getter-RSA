@@ -53,7 +53,7 @@ MOCK_BUFFALOCITY_HTML = """
 """
 
 class BuffaloCitySource:
-    source_id: str = "buffalo_city_tenders"
+    source_id: str = "buffalo_city"
 
     def __init__(self, url: str = "https://www.buffalocity.gov.za/tenders.php"):
         self.url = url

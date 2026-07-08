@@ -2,7 +2,7 @@ import pytest
 from tender_getter.sources.national_depts.doh import DoHSource, MOCK_DOH_HTML
 def test_doh_source_initialization():
     source = DoHSource()
-    assert source.source_id == "doh_tenders"
+    assert source.source_id == "doh"
     assert source.url.startswith("http")
 def test_doh_parse_mock_html():
     source = DoHSource()

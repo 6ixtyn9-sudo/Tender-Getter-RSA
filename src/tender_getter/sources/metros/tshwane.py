@@ -53,7 +53,7 @@ MOCK_TSHWANE_HTML = """
 """
 
 class TshwaneSource:
-    source_id: str = "tshwane_tenders"
+    source_id: str = "tshwane"
 
     def __init__(self, url: str = "https://www.tshwane.gov.za/?page_id=427"):
         self.url = url

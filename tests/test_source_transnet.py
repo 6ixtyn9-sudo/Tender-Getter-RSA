@@ -5,7 +5,7 @@ from tender_getter.schemas import TenderOpportunity
 
 def test_transnet_source_initialization():
     source = TransnetSource()
-    assert source.source_id == "transnet_tenders"
+    assert source.source_id == "transnet"
     assert "transnetetenders" in source.url
 
 def test_transnet_parse_mock_html():

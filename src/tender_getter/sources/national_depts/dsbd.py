@@ -34,7 +34,7 @@ MOCK_DSBD_HTML = """
 """
 
 class DSBDSource:
-    source_id: str = "dsbd_tenders"
+    source_id: str = "dsbd"
 
     def __init__(self, url: str = "https://www.dsbd.gov.za/tenders"):
         self.url = url

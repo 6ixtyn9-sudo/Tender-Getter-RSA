@@ -53,7 +53,7 @@ MOCK_ATNS_HTML = """
 """
 
 class ATNSSource:
-    source_id: str = "atns_tenders"
+    source_id: str = "atns"
 
     def __init__(self, url: str = "https://www.atns.com/tenders"):
         self.url = url

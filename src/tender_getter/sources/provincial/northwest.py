@@ -53,7 +53,7 @@ MOCK_NORTHWEST_HTML = """
 """
 
 class NorthWestSource:
-    source_id: str = "northwest_tenders"
+    source_id: str = "northwest"
 
     def __init__(self, url: str = "http://www.nwpg.gov.za/Treasury/Tenders.asp"):
         self.url = url

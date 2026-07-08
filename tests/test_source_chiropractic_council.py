@@ -1,0 +1,23 @@
+"""Tests for the Chiropractic Council tender source plug-in."""
+import pytest
+
+
+def test_chiropractic_council_source_initialization():
+    from tender_getter.sources.research.chiropractic_council import ChiropracticCouncilSource
+    src = ChiropracticCouncilSource()
+    assert src.source_id == "chiropractic_council"
+    assert src.live is False
+
+
+def test_chiropractic_council_parse_mock_html():
+    from tender_getter.sources.research.chiropractic_council import ChiropracticCouncilSource, MOCK_HTML
+    src = ChiropracticCouncilSource()
+    tenders = src.parse_html(MOCK_HTML)
+    assert len(tenders) >= 2
+
+
+def test_chiropractic_council_fetch_uses_fallback_on_empty():
+    from tender_getter.sources.research.chiropractic_council import ChiropracticCouncilSource
+    src = ChiropracticCouncilSource()
+    tenders = src.fetch(html_content="<html><body>no tenders here</body></html>")
+    assert len(tenders) >= 2

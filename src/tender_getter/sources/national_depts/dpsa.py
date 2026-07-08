@@ -34,7 +34,7 @@ MOCK_DPSA_HTML = """
 """
 
 class DPSASource:
-    source_id: str = "dpsa_tenders"
+    source_id: str = "dpsa"
 
     def __init__(self, url: str = "https://www.dpsa.gov.za/tenders"):
         self.url = url

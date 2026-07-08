@@ -34,7 +34,7 @@ MOCK_DPWI_HTML = """
 """
 
 class DPWISource:
-    source_id: str = "dpwi_tenders"
+    source_id: str = "dpwi"
 
     def __init__(self, url: str = "https://www.publicworks.gov.za/tenders"):
         self.url = url

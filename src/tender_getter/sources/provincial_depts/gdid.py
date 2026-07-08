@@ -34,7 +34,7 @@ MOCK_GDID_HTML = """
 """
 
 class GDIDSource:
-    source_id: str = "gdid_tenders"
+    source_id: str = "gdid"
 
     def __init__(self, url: str = "https://www.gdid.gpg.gov.za/tenders"):
         self.url = url

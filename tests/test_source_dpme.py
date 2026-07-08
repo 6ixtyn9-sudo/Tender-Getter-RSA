@@ -2,7 +2,7 @@ import pytest
 from tender_getter.sources.national_depts.dpme import DPMESource, MOCK_DPME_HTML
 def test_dpme_source_initialization():
     source = DPMESource()
-    assert source.source_id == "dpme_tenders"
+    assert source.source_id == "dpme"
     assert source.url.startswith("http")
 def test_dpme_parse_mock_html():
     source = DPMESource()

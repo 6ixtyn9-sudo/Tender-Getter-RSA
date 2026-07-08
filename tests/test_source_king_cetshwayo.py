@@ -2,7 +2,7 @@ import pytest
 from tender_getter.sources.districts.king_cetshwayo import KingCetshwayoSource, MOCK_KING_CETSHWAYO_HTML
 def test_king_cetshwayo_source_initialization():
     source = KingCetshwayoSource()
-    assert source.source_id == "king_cetshwayo_tenders"
+    assert source.source_id == "king_cetshwayo"
     assert source.url.startswith("http")
 def test_king_cetshwayo_parse_mock_html():
     source = KingCetshwayoSource()

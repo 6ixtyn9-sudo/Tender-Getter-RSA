@@ -53,7 +53,7 @@ MOCK_NORTHERNCAPE_HTML = """
 """
 
 class NorthernCapeSource:
-    source_id: str = "northerncape_tenders"
+    source_id: str = "northerncape"
 
     def __init__(self, url: str = "https://nctreasury.ncpg.gov.za/index.php/tenders"):
         self.url = url

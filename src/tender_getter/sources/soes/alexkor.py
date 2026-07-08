@@ -53,7 +53,7 @@ MOCK_ALEXKOR_HTML = """
 """
 
 class AlexkorSource:
-    source_id: str = "alexkor_tenders"
+    source_id: str = "alexkor"
 
     def __init__(self, url: str = "https://www.alexkor.co.za/tenders"):
         self.url = url

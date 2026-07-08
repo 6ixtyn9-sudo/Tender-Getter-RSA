@@ -2,7 +2,7 @@ import pytest
 from tender_getter.sources.research.wrc import WRCSource, MOCK_WRC_HTML
 def test_wrc_source_initialization():
     source = WRCSource()
-    assert source.source_id == "wrc_tenders"
+    assert source.source_id == "wrc"
     assert source.url.startswith("http")
 def test_wrc_parse_mock_html():
     source = WRCSource()

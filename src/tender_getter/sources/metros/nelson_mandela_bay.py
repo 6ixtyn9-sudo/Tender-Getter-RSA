@@ -53,7 +53,7 @@ MOCK_NELSONMANDELABAY_HTML = """
 """
 
 class NelsonMandelaBaySource:
-    source_id: str = "nelsonmandelabay_tenders"
+    source_id: str = "nelsonmandelabay"
 
     def __init__(self, url: str = "https://www.nelsonmandelabay.gov.za/Tenders"):
         self.url = url

@@ -53,7 +53,7 @@ MOCK_INFRACO_HTML = """
 """
 
 class BroadbandInfracoSource:
-    source_id: str = "infraco_tenders"
+    source_id: str = "infraco"
 
     def __init__(self, url: str = "https://www.infraco.co.za/tenders/"):
         self.url = url

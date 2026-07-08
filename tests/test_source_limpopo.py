@@ -4,7 +4,7 @@ from tender_getter.sources.provincial.limpopo import LimpopoSource, MOCK_LIMPOPO
 
 def test_limpopo_source_initialization():
     source = LimpopoSource()
-    assert source.source_id == "limpopo_tenders"
+    assert source.source_id == "limpopo"
     assert source.url.startswith("http")
 
 def test_limpopo_parse_mock_html():

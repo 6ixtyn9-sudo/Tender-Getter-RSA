@@ -34,7 +34,7 @@ MOCK_DOEL_HTML = """
 """
 
 class DoELSource:
-    source_id: str = "doel_tenders"
+    source_id: str = "doel"
 
     def __init__(self, url: str = "https://www.labour.gov.za/tenders"):
         self.url = url

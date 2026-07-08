@@ -3,7 +3,7 @@ from tender_getter.sources.water.sedibeng_water import SedibengWaterSource, MOCK
 
 def test_sedibeng_water_source_initialization():
     source = SedibengWaterSource()
-    assert source.source_id == "sedibeng_water_tenders"
+    assert source.source_id == "sedibeng_water"
     assert source.url.startswith("http")
 
 def test_sedibeng_water_parse_mock_html():

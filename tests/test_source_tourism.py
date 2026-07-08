@@ -2,7 +2,7 @@ import pytest
 from tender_getter.sources.national_depts.tourism import TourismSource, MOCK_TOURISM_HTML
 def test_tourism_source_initialization():
     source = TourismSource()
-    assert source.source_id == "tourism_tenders"
+    assert source.source_id == "tourism"
     assert source.url.startswith("http")
 def test_tourism_parse_mock_html():
     source = TourismSource()

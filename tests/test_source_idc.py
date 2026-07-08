@@ -3,7 +3,7 @@ from tender_getter.sources.dfi.idc import IDCSource, MOCK_IDC_HTML
 
 def test_idc_source_initialization():
     source = IDCSource()
-    assert source.source_id == "idc_tenders"
+    assert source.source_id == "idc"
     assert source.url.startswith("http")
 
 def test_idc_parse_mock_html():

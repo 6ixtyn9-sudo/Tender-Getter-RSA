@@ -5,7 +5,7 @@ from tender_getter.schemas import TenderOpportunity
 
 def test_westerncape_source_initialization():
     source = WesternCapeSource()
-    assert source.source_id == "westerncape_tenders"
+    assert source.source_id == "westerncape"
     assert "westerncape.gov.za" in source.url
 
 def test_westerncape_parse_mock_html():

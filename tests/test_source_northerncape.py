@@ -4,7 +4,7 @@ from tender_getter.sources.provincial.northerncape import NorthernCapeSource, MO
 
 def test_northerncape_source_initialization():
     source = NorthernCapeSource()
-    assert source.source_id == "northerncape_tenders"
+    assert source.source_id == "northerncape"
     assert source.url.startswith("http")
 
 def test_northerncape_parse_mock_html():

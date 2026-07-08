@@ -34,7 +34,7 @@ MOCK_GDRT_HTML = """
 """
 
 class GDRTSource:
-    source_id: str = "gdrt_tenders"
+    source_id: str = "gdrt"
 
     def __init__(self, url: str = "https://www.gdrt.gpg.gov.za/tenders"):
         self.url = url

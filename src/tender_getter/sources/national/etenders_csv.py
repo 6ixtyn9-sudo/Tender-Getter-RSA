@@ -55,7 +55,7 @@ def parse_csv_row_to_tender(row: dict) -> Optional[TenderOpportunity]:
         logger.warning("Failed to parse CSV row %s: %s", tender_id, exc)
         return None
 
-def sync_csv_tenders(db, csv_path: str, limit: Optional[int] = None) -> int:
+def sync_csv(db, csv_path: str, limit: Optional[int] = None) -> int:
     saved = 0
     if csv_path.startswith("http://") or csv_path.startswith("https://"):
         req = Request(csv_path, headers={"User-Agent": "Tender-Getter-RSA/1.1"})
@@ -75,5 +75,5 @@ def sync_csv_tenders(db, csv_path: str, limit: Optional[int] = None) -> int:
                 saved += 1
     finally:
         f.close()
-    logger.info("sync_csv_tenders: saved %d tenders from %s", saved, csv_path)
+    logger.info("sync_csv: saved %d tenders from %s", saved, csv_path)
     return saved

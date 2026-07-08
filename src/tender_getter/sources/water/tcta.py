@@ -53,7 +53,7 @@ MOCK_TCTA_HTML = """
 """
 
 class TCTASource:
-    source_id: str = "tcta_tenders"
+    source_id: str = "tcta"
 
     def __init__(self, url: str = "https://www.tcta.co.za/tenders"):
         self.url = url

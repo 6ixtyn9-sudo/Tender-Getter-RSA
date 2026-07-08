@@ -3,7 +3,7 @@ from tender_getter.sources.soes.infraco import BroadbandInfracoSource, MOCK_INFR
 
 def test_infraco_source_initialization():
     source = BroadbandInfracoSource()
-    assert source.source_id == "infraco_tenders"
+    assert source.source_id == "infraco"
     assert source.url.startswith("http")
 
 def test_infraco_parse_mock_html():

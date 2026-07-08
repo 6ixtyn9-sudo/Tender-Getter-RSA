@@ -4,7 +4,7 @@ from tender_getter.sources.metros.nelson_mandela_bay import NelsonMandelaBaySour
 
 def test_nelson_mandela_bay_source_initialization():
     source = NelsonMandelaBaySource()
-    assert source.source_id == "nelsonmandelabay_tenders"
+    assert source.source_id == "nelsonmandelabay"
     assert source.url.startswith("http")
 
 def test_nelson_mandela_bay_parse_mock_html():

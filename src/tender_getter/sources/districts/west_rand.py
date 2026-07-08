@@ -34,7 +34,7 @@ MOCK_WEST_RAND_HTML = """
 """
 
 class WestRandSource:
-    source_id: str = "west_rand_tenders"
+    source_id: str = "west_rand"
 
     def __init__(self, url: str = "https://www.wrdm.gov.za/tenders"):
         self.url = url

@@ -3,7 +3,7 @@ from tender_getter.sources.soes.denel import DenelSource, MOCK_DENEL_HTML
 
 def test_denel_source_initialization():
     source = DenelSource()
-    assert source.source_id == "denel_tenders"
+    assert source.source_id == "denel"
     assert source.url.startswith("http")
 
 def test_denel_parse_mock_html():

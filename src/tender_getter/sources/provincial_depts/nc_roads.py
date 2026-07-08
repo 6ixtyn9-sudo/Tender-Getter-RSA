@@ -34,7 +34,7 @@ MOCK_NC_ROADS_HTML = """
 """
 
 class NCRoadsSource:
-    source_id: str = "nc_roads_tenders"
+    source_id: str = "nc_roads"
 
     def __init__(self, url: str = "https://ncrpw.ncpg.gov.za/tenders"):
         self.url = url

@@ -34,7 +34,7 @@ MOCK_COGTA_HTML = """
 """
 
 class COGTASource:
-    source_id: str = "cogta_tenders"
+    source_id: str = "cogta"
 
     def __init__(self, url: str = "https://www.cogta.gov.za/tenders"):
         self.url = url

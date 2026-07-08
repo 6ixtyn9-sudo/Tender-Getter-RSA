@@ -3,7 +3,7 @@ from tender_getter.sources.soes.prasa import PRASASource, MOCK_PRASA_HTML
 
 def test_prasa_source_initialization():
     source = PRASASource()
-    assert source.source_id == "prasa_tenders"
+    assert source.source_id == "prasa"
     assert source.url.startswith("http")
 
 def test_prasa_parse_mock_html():

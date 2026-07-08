@@ -2,7 +2,7 @@ import pytest
 from tender_getter.sources.national_depts.dbe import DBESource, MOCK_DBE_HTML
 def test_dbe_source_initialization():
     source = DBESource()
-    assert source.source_id == "dbe_tenders"
+    assert source.source_id == "dbe"
     assert source.url.startswith("http")
 def test_dbe_parse_mock_html():
     source = DBESource()

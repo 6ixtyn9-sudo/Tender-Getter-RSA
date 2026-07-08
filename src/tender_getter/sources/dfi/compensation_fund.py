@@ -53,7 +53,7 @@ MOCK_COMPENSATION_FUND_HTML = """
 """
 
 class CompensationFundSource:
-    source_id: str = "compensation_fund_tenders"
+    source_id: str = "compensation_fund"
 
     def __init__(self, url: str = "https://www.labour.gov.za/compensation-fund-tenders"):
         self.url = url

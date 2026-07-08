@@ -34,7 +34,7 @@ MOCK_DBE_HTML = """
 """
 
 class DBESource:
-    source_id: str = "dbe_tenders"
+    source_id: str = "dbe"
 
     def __init__(self, url: str = "https://www.education.gov.za/tenders"):
         self.url = url

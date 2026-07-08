@@ -34,7 +34,7 @@ MOCK_DSAC_HTML = """
 """
 
 class DSACSource:
-    source_id: str = "dsac_tenders"
+    source_id: str = "dsac"
 
     def __init__(self, url: str = "https://www.dsac.gov.za/tenders"):
         self.url = url

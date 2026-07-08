@@ -3,7 +3,7 @@ from tender_getter.sources.water.mhlathuze_water import MhlathuzeWaterSource, MO
 
 def test_mhlathuze_water_source_initialization():
     source = MhlathuzeWaterSource()
-    assert source.source_id == "mhlathuze_water_tenders"
+    assert source.source_id == "mhlathuze_water"
     assert source.url.startswith("http")
 
 def test_mhlathuze_water_parse_mock_html():

@@ -53,7 +53,7 @@ MOCK_SANPARKS_HTML = """
 """
 
 class SANParksSource:
-    source_id: str = "sanparks_tenders"
+    source_id: str = "sanparks"
 
     def __init__(self, url: str = "https://www.sanparks.org/about/doing_business/tenders"):
         self.url = url

@@ -2,7 +2,7 @@ import pytest
 from tender_getter.sources.national_depts.dpsa import DPSASource, MOCK_DPSA_HTML
 def test_dpsa_source_initialization():
     source = DPSASource()
-    assert source.source_id == "dpsa_tenders"
+    assert source.source_id == "dpsa"
     assert source.url.startswith("http")
 def test_dpsa_parse_mock_html():
     source = DPSASource()

@@ -52,7 +52,7 @@ MOCK_WESTERNCAPE_HTML = """
 """
 
 class WesternCapeSource:
-    source_id: str = "westerncape_tenders"
+    source_id: str = "westerncape"
 
     def __init__(self, url: str = "https://www.westerncape.gov.za/tenders"):
         self.url = url

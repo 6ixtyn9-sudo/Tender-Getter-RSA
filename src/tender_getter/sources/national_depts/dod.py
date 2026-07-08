@@ -34,7 +34,7 @@ MOCK_DOD_HTML = """
 """
 
 class DoDSource:
-    source_id: str = "dod_tenders"
+    source_id: str = "dod"
 
     def __init__(self, url: str = "https://www.dod.mil.za/tenders"):
         self.url = url

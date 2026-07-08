@@ -53,7 +53,7 @@ MOCK_DENEL_HTML = """
 """
 
 class DenelSource:
-    source_id: str = "denel_tenders"
+    source_id: str = "denel"
 
     def __init__(self, url: str = "https://www.denel.co.za/tenders"):
         self.url = url

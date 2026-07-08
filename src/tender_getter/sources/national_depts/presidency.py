@@ -34,7 +34,7 @@ MOCK_PRESIDENCY_HTML = """
 """
 
 class PresidencySource:
-    source_id: str = "presidency_tenders"
+    source_id: str = "presidency"
 
     def __init__(self, url: str = "https://www.thepresidency.gov.za/tenders"):
         self.url = url

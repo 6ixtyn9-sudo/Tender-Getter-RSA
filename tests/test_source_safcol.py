@@ -3,7 +3,7 @@ from tender_getter.sources.soes.safcol import SAFCOLSource, MOCK_SAFCOL_HTML
 
 def test_safcol_source_initialization():
     source = SAFCOLSource()
-    assert source.source_id == "safcol_tenders"
+    assert source.source_id == "safcol"
     assert source.url.startswith("http")
 
 def test_safcol_parse_mock_html():

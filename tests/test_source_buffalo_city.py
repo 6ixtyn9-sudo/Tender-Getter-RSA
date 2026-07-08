@@ -4,7 +4,7 @@ from tender_getter.sources.metros.buffalo_city import BuffaloCitySource, MOCK_BU
 
 def test_buffalo_city_source_initialization():
     source = BuffaloCitySource()
-    assert source.source_id == "buffalo_city_tenders"
+    assert source.source_id == "buffalo_city"
     assert source.url.startswith("http")
 
 def test_buffalo_city_parse_mock_html():

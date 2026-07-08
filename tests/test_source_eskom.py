@@ -5,7 +5,7 @@ from tender_getter.schemas import TenderOpportunity
 
 def test_eskom_source_initialization():
     source = EskomSource()
-    assert source.source_id == "eskom_tenders"
+    assert source.source_id == "eskom"
     assert "eskom.co.za" in source.url
 
 def test_eskom_parse_mock_html():

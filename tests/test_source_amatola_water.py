@@ -3,7 +3,7 @@ from tender_getter.sources.water.amatola_water import AmatolaWaterSource, MOCK_A
 
 def test_amatola_water_source_initialization():
     source = AmatolaWaterSource()
-    assert source.source_id == "amatola_water_tenders"
+    assert source.source_id == "amatola_water"
     assert source.url.startswith("http")
 
 def test_amatola_water_parse_mock_html():

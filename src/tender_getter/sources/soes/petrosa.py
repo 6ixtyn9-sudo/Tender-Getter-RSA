@@ -53,7 +53,7 @@ MOCK_PETROSA_HTML = """
 """
 
 class PetroSASource:
-    source_id: str = "petrosa_tenders"
+    source_id: str = "petrosa"
 
     def __init__(self, url: str = "https://www.petrosa.co.za/tenders"):
         self.url = url

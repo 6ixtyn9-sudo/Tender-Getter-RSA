@@ -34,7 +34,7 @@ MOCK_GARDEN_ROUTE_HTML = """
 """
 
 class GardenRouteSource:
-    source_id: str = "garden_route_tenders"
+    source_id: str = "garden_route"
 
     def __init__(self, url: str = "https://www.gardenroute.gov.za/tenders"):
         self.url = url

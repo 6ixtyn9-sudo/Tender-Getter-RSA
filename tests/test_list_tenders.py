@@ -18,19 +18,19 @@ def _make_tender(tid: str, days_offset: int, province: str = "Gauteng") -> Tende
         location_target=province,
     )
 
-def test_list_open_tenders_returns_in_date_order(tmp_path):
+def test_list_open_returns_in_date_order(tmp_path):
     db_path = tmp_path / "test.db"
     db = TenderDatabase(db_path).connect()
     try:
         db.upsert_tender(_make_tender("C", 30))
         db.upsert_tender(_make_tender("A", 5))
         db.upsert_tender(_make_tender("B", 15))
-        results = db.list_open_tenders(limit=10)
+        results = db.list_open(limit=10)
         assert [t.tender_id for t in results] == ["A", "B", "C"]
     finally:
         db.close()
 
-def test_list_open_tenders_filters_by_province(tmp_path):
+def test_list_open_filters_by_province(tmp_path):
     db_path = tmp_path / "test2.db"
     db = TenderDatabase(db_path).connect()
     try:
@@ -41,7 +41,7 @@ def test_list_open_tenders_filters_by_province(tmp_path):
         t.location_target = None  # type: ignore
         db.upsert_tender(t)
 
-        gp = db.list_open_tenders(limit=10, province="Gauteng")
+        gp = db.list_open(limit=10, province="Gauteng")
         ids = {t.tender_id for t in gp}
         assert "GP1" in ids
         assert "NAT1" in ids

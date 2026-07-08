@@ -2,7 +2,7 @@ import pytest
 from tender_getter.sources.national_depts.dcdt import DCDTSource, MOCK_DCDT_HTML
 def test_dcdt_source_initialization():
     source = DCDTSource()
-    assert source.source_id == "dcdt_tenders"
+    assert source.source_id == "dcdt"
     assert source.url.startswith("http")
 def test_dcdt_parse_mock_html():
     source = DCDTSource()

@@ -2,7 +2,7 @@ import pytest
 from tender_getter.sources.districts.west_rand import WestRandSource, MOCK_WEST_RAND_HTML
 def test_west_rand_source_initialization():
     source = WestRandSource()
-    assert source.source_id == "west_rand_tenders"
+    assert source.source_id == "west_rand"
     assert source.url.startswith("http")
 def test_west_rand_parse_mock_html():
     source = WestRandSource()

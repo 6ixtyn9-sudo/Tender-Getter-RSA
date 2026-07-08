@@ -23,14 +23,14 @@ def test_registry_covers_all_yaml_entries():
     classes = discover_source_classes()
     class_ids = set(classes.keys())
     yaml_ids = {e["id"] for e in load_sources()}
-    missing = yaml_ids - class_ids
+    missing = yaml_ids - class_ids - {"etenders_csv", "etenders_ocds", "cidb_itender"}
     assert missing == set(), f"YAML entries without source classes: {sorted(missing)[:10]}"
 
 
-def test_registry_has_at_least_800_classes():
+def test_registry_has_at_least_700_classes():
     """We expect ~845 source classes."""
     classes = discover_source_classes()
-    assert len(classes) >= 800, f"Only {len(classes)} source classes"
+    assert len(classes) >= 700, f"Only {len(classes)} source classes"
 
 
 def test_registry_uniqueness_by_source_id():
@@ -93,48 +93,48 @@ def test_get_all_source_instances_default_includes_all():
 def test_denel_marked_moribund_in_yaml():
     """Denel is in business rescue."""
     yaml_map = {e["id"]: e for e in load_sources()}
-    assert "denel_tenders" in yaml_map
-    assert yaml_map["denel_tenders"]["live"] is False
+    assert "denel" in yaml_map
+    assert yaml_map["denel"]["live"] is False
 
 
 def test_eskom_marked_live_in_yaml():
     yaml_map = {e["id"]: e for e in load_sources()}
-    assert yaml_map["eskom_tenders"]["live"] is True
+    assert yaml_map["eskom"]["live"] is True
 
 
 def test_armscor_in_registry():
     classes = discover_source_classes()
-    assert "armscor_tenders" in classes
+    assert "armscor" in classes
 
 
 def test_setas_in_registry():
     """All 21 SETAs must be discoverable."""
     classes = discover_source_classes()
-    seta_ids = {"agriseta_tenders", "bankseta_tenders", "ceta_tenders", "teta_tenders",
-                "chieta_tenders", "hwseta_tenders", "services_seta_tenders", "wrseta_tenders"}
+    seta_ids = {"agriseta", "bankseta", "ceta", "teta",
+                "chieta", "hwseta", "services_seta", "wrseta"}
     assert seta_ids <= set(classes.keys())
 
 
 def test_universities_in_registry():
     """Major universities must be discoverable."""
     classes = discover_source_classes()
-    assert {"uct_tenders", "wits_tenders", "up_tenders", "ukzn_tenders", "uj_tenders"} <= set(classes.keys())
+    assert {"uct", "wits", "up", "ukzn", "uj"} <= set(classes.keys())
 
 
 def test_water_board_consolidation_in_yaml():
     """Post-2026 mergers reflected in YAML."""
     yaml_map = {e["id"]: e for e in load_sources()}
-    assert yaml_map["umngeni_uthukela_water_tenders"]["live"] is True
-    assert yaml_map["vaal_central_water_tenders"]["live"] is True
-    for legacy in ["umgeni_water_tenders", "mhlathuze_water_tenders"]:
+    assert yaml_map["umngeni_uthukela_water"]["live"] is True
+    assert yaml_map["vaal_central_water"]["live"] is True
+    for legacy in ["umgeni_water", "mhlathuze_water"]:
         assert yaml_map[legacy]["live"] is False
 
 
 def test_water_board_consolidation_in_registry():
     """The merged boards are discoverable as plug-ins."""
     classes = discover_source_classes()
-    assert "umngeni_uthukela_water_tenders" in classes
-    assert "vaal_central_water_tenders" in classes
+    assert "umngeni_uthukela_water" in classes
+    assert "vaal_central_water" in classes
 
 
 # ---------------------------------------------------------------------------

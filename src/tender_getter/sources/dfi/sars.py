@@ -53,7 +53,7 @@ MOCK_SARS_HTML = """
 """
 
 class SARSSource:
-    source_id: str = "sars_tenders"
+    source_id: str = "sars"
 
     def __init__(self, url: str = "https://www.sars.gov.za/procurement/"):
         self.url = url

@@ -2,7 +2,7 @@ import pytest
 from tender_getter.sources.national_depts.dot import DoTSource, MOCK_DOT_HTML
 def test_dot_source_initialization():
     source = DoTSource()
-    assert source.source_id == "dot_tenders"
+    assert source.source_id == "dot"
     assert source.url.startswith("http")
 def test_dot_parse_mock_html():
     source = DoTSource()

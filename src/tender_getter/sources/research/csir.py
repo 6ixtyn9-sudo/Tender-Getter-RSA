@@ -34,7 +34,7 @@ MOCK_CSIR_HTML = """
 """
 
 class CSIRSource:
-    source_id: str = "csir_tenders"
+    source_id: str = "csir"
 
     def __init__(self, url: str = "https://www.csir.co.za/tenders"):
         self.url = url

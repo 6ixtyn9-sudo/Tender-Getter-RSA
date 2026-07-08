@@ -4,7 +4,7 @@ from tender_getter.sources.provincial.northwest import NorthWestSource, MOCK_NOR
 
 def test_northwest_source_initialization():
     source = NorthWestSource()
-    assert source.source_id == "northwest_tenders"
+    assert source.source_id == "northwest"
     assert source.url.startswith("http")
 
 def test_northwest_parse_mock_html():

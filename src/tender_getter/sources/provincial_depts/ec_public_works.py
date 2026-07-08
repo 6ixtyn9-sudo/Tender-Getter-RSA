@@ -34,7 +34,7 @@ MOCK_EC_PUBLIC_WORKS_HTML = """
 """
 
 class ECPublicWorksSource:
-    source_id: str = "ec_public_works_tenders"
+    source_id: str = "ec_public_works"
 
     def __init__(self, url: str = "https://www.ecdpw.gov.za/tenders"):
         self.url = url

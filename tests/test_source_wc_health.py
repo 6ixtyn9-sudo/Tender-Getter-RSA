@@ -2,7 +2,7 @@ import pytest
 from tender_getter.sources.provincial_depts.wc_health import WCHealthSource, MOCK_WC_HEALTH_HTML
 def test_wc_health_source_initialization():
     source = WCHealthSource()
-    assert source.source_id == "wc_health_tenders"
+    assert source.source_id == "wc_health"
     assert source.url.startswith("http")
 def test_wc_health_parse_mock_html():
     source = WCHealthSource()

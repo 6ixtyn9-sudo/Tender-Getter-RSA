@@ -34,7 +34,7 @@ MOCK_NHLS_HTML = """
 """
 
 class NHLSSource:
-    source_id: str = "nhls_tenders"
+    source_id: str = "nhls"
 
     def __init__(self, url: str = "https://www.nhls.ac.za/tenders"):
         self.url = url

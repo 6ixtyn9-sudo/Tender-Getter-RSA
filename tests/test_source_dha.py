@@ -2,7 +2,7 @@ import pytest
 from tender_getter.sources.national_depts.dha import DHASource, MOCK_DHA_HTML
 def test_dha_source_initialization():
     source = DHASource()
-    assert source.source_id == "dha_tenders"
+    assert source.source_id == "dha"
     assert source.url.startswith("http")
 def test_dha_parse_mock_html():
     source = DHASource()

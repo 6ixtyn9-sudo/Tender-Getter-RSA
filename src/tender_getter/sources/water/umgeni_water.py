@@ -53,7 +53,7 @@ MOCK_UMGENI_WATER_HTML = """
 """
 
 class UmgeniWaterSource:
-    source_id: str = "umgeni_water_tenders"
+    source_id: str = "umgeni_water"
 
     def __init__(self, url: str = "https://www.umgeni.co.za/tenders"):
         self.url = url

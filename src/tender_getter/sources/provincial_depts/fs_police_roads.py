@@ -34,7 +34,7 @@ MOCK_FS_POLICE_ROADS_HTML = """
 """
 
 class FSPoliceRoadsSource:
-    source_id: str = "fs_police_roads_tenders"
+    source_id: str = "fs_police_roads"
 
     def __init__(self, url: str = "https://www.pret.fs.gov.za/tenders"):
         self.url = url

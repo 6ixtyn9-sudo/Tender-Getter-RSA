@@ -2,7 +2,7 @@ import pytest
 from tender_getter.sources.provincial_depts.wcdi import WCDISource, MOCK_WCDI_HTML
 def test_wcdi_source_initialization():
     source = WCDISource()
-    assert source.source_id == "wcdi_tenders"
+    assert source.source_id == "wcdi"
     assert source.url.startswith("http")
 def test_wcdi_parse_mock_html():
     source = WCDISource()

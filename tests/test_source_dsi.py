@@ -2,7 +2,7 @@ import pytest
 from tender_getter.sources.national_depts.dsi import DSISource, MOCK_DSI_HTML
 def test_dsi_source_initialization():
     source = DSISource()
-    assert source.source_id == "dsi_tenders"
+    assert source.source_id == "dsi"
     assert source.url.startswith("http")
 def test_dsi_parse_mock_html():
     source = DSISource()

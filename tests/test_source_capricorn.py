@@ -2,7 +2,7 @@ import pytest
 from tender_getter.sources.districts.capricorn import CapricornSource, MOCK_CAPRICORN_HTML
 def test_capricorn_source_initialization():
     source = CapricornSource()
-    assert source.source_id == "capricorn_tenders"
+    assert source.source_id == "capricorn"
     assert source.url.startswith("http")
 def test_capricorn_parse_mock_html():
     source = CapricornSource()

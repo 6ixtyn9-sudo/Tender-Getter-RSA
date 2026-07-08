@@ -3,7 +3,7 @@ from tender_getter.sources.soes.acsa import ACSASource, MOCK_ACSA_HTML
 
 def test_acsa_source_initialization():
     source = ACSASource()
-    assert source.source_id == "acsa_tenders"
+    assert source.source_id == "acsa"
     assert source.url.startswith("http")
 
 def test_acsa_parse_mock_html():

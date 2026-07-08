@@ -2,7 +2,7 @@ import pytest
 from tender_getter.sources.districts.sedibeng_dm import SedibengDMSource, MOCK_SEDIBENG_DM_HTML
 def test_sedibeng_dm_source_initialization():
     source = SedibengDMSource()
-    assert source.source_id == "sedibeng_dm_tenders"
+    assert source.source_id == "sedibeng_dm"
     assert source.url.startswith("http")
 def test_sedibeng_dm_parse_mock_html():
     source = SedibengDMSource()

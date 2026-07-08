@@ -2,7 +2,7 @@ import pytest
 from tender_getter.sources.districts.ilembe import ILembeSource, MOCK_ILEMBE_HTML
 def test_ilembe_source_initialization():
     source = ILembeSource()
-    assert source.source_id == "ilembe_tenders"
+    assert source.source_id == "ilembe"
     assert source.url.startswith("http")
 def test_ilembe_parse_mock_html():
     source = ILembeSource()

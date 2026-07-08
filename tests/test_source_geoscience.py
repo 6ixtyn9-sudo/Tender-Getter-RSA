@@ -2,7 +2,7 @@ import pytest
 from tender_getter.sources.research.geoscience import GeoscienceSource, MOCK_GEOSCIENCE_HTML
 def test_geoscience_source_initialization():
     source = GeoscienceSource()
-    assert source.source_id == "geoscience_tenders"
+    assert source.source_id == "geoscience"
     assert source.url.startswith("http")
 def test_geoscience_parse_mock_html():
     source = GeoscienceSource()

@@ -52,7 +52,7 @@ MOCK_CAPETOWN_HTML = """
 """
 
 class CapeTownSource:
-    source_id: str = "capetown_tenders"
+    source_id: str = "capetown"
 
     def __init__(self, url: str = "https://web1.capetown.gov.za/web1/TenderPortal/"):
         self.url = url

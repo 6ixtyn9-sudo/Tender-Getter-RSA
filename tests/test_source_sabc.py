@@ -3,7 +3,7 @@ from tender_getter.sources.soes.sabc import SABCSource, MOCK_SABC_HTML
 
 def test_sabc_source_initialization():
     source = SABCSource()
-    assert source.source_id == "sabc_tenders"
+    assert source.source_id == "sabc"
     assert source.url.startswith("http")
 
 def test_sabc_parse_mock_html():

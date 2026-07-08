@@ -2,7 +2,7 @@ import pytest
 from tender_getter.sources.provincial_depts.nw_public_works import NWPublicWorksSource, MOCK_NW_PUBLIC_WORKS_HTML
 def test_nw_public_works_source_initialization():
     source = NWPublicWorksSource()
-    assert source.source_id == "nw_public_works_tenders"
+    assert source.source_id == "nw_public_works"
     assert source.url.startswith("http")
 def test_nw_public_works_parse_mock_html():
     source = NWPublicWorksSource()

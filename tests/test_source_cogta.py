@@ -2,7 +2,7 @@ import pytest
 from tender_getter.sources.national_depts.cogta import COGTASource, MOCK_COGTA_HTML
 def test_cogta_source_initialization():
     source = COGTASource()
-    assert source.source_id == "cogta_tenders"
+    assert source.source_id == "cogta"
     assert source.url.startswith("http")
 def test_cogta_parse_mock_html():
     source = COGTASource()

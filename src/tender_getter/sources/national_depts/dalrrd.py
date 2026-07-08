@@ -34,7 +34,7 @@ MOCK_DALRRD_HTML = """
 """
 
 class DALRRDSource:
-    source_id: str = "dalrrd_tenders"
+    source_id: str = "dalrrd"
 
     def __init__(self, url: str = "https://www.dalrrd.gov.za/tenders"):
         self.url = url

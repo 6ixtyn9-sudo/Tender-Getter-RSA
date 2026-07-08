@@ -2,7 +2,7 @@ import pytest
 from tender_getter.sources.provincial_depts.mpumalanga_education import MpumalangaEducationSource, MOCK_MPUMALANGA_EDUCATION_HTML
 def test_mpumalanga_education_source_initialization():
     source = MpumalangaEducationSource()
-    assert source.source_id == "mpumalanga_education_tenders"
+    assert source.source_id == "mpumalanga_education"
     assert source.url.startswith("http")
 def test_mpumalanga_education_parse_mock_html():
     source = MpumalangaEducationSource()

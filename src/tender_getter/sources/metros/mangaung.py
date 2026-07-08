@@ -53,7 +53,7 @@ MOCK_MANGAUNG_HTML = """
 """
 
 class MangaungSource:
-    source_id: str = "mangaung_tenders"
+    source_id: str = "mangaung"
 
     def __init__(self, url: str = "http://www.mangaung.co.za/category/tenders/"):
         self.url = url

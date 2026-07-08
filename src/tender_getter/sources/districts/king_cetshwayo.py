@@ -34,7 +34,7 @@ MOCK_KING_CETSHWAYO_HTML = """
 """
 
 class KingCetshwayoSource:
-    source_id: str = "king_cetshwayo_tenders"
+    source_id: str = "king_cetshwayo"
 
     def __init__(self, url: str = "https://www.kingcetshwayo.gov.za/tenders"):
         self.url = url

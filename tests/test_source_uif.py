@@ -3,7 +3,7 @@ from tender_getter.sources.dfi.uif import UIFSource, MOCK_UIF_HTML
 
 def test_uif_source_initialization():
     source = UIFSource()
-    assert source.source_id == "uif_tenders"
+    assert source.source_id == "uif"
     assert source.url.startswith("http")
 
 def test_uif_parse_mock_html():

@@ -2,7 +2,7 @@ import pytest
 from tender_getter.sources.national_depts.presidency import PresidencySource, MOCK_PRESIDENCY_HTML
 def test_presidency_source_initialization():
     source = PresidencySource()
-    assert source.source_id == "presidency_tenders"
+    assert source.source_id == "presidency"
     assert source.url.startswith("http")
 def test_presidency_parse_mock_html():
     source = PresidencySource()

@@ -53,7 +53,7 @@ MOCK_LEPELLE_WATER_HTML = """
 """
 
 class LepelleWaterSource:
-    source_id: str = "lepelle_water_tenders"
+    source_id: str = "lepelle_water"
 
     def __init__(self, url: str = "https://www.lepellewater.co.za/tenders"):
         self.url = url

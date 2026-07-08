@@ -3,7 +3,7 @@ from tender_getter.sources.water.overberg_water import OverbergWaterSource, MOCK
 
 def test_overberg_water_source_initialization():
     source = OverbergWaterSource()
-    assert source.source_id == "overberg_water_tenders"
+    assert source.source_id == "overberg_water"
     assert source.url.startswith("http")
 
 def test_overberg_water_parse_mock_html():

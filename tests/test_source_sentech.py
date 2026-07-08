@@ -3,7 +3,7 @@ from tender_getter.sources.soes.sentech import SentechSource, MOCK_SENTECH_HTML
 
 def test_sentech_source_initialization():
     source = SentechSource()
-    assert source.source_id == "sentech_tenders"
+    assert source.source_id == "sentech"
     assert source.url.startswith("http")
 
 def test_sentech_parse_mock_html():

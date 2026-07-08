@@ -34,7 +34,7 @@ MOCK_LIMPOPO_PWRI_HTML = """
 """
 
 class LimpopoPWRISource:
-    source_id: str = "limpopo_pwri_tenders"
+    source_id: str = "limpopo_pwri"
 
     def __init__(self, url: str = "https://www.ldprr.gov.za/tenders"):
         self.url = url

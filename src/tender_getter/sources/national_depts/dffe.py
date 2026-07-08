@@ -34,7 +34,7 @@ MOCK_DFFE_HTML = """
 """
 
 class DFFESource:
-    source_id: str = "dffe_tenders"
+    source_id: str = "dffe"
 
     def __init__(self, url: str = "https://www.dffe.gov.za/tenders"):
         self.url = url

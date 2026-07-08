@@ -2,7 +2,7 @@ import pytest
 from tender_getter.sources.national_depts.dffe import DFFESource, MOCK_DFFE_HTML
 def test_dffe_source_initialization():
     source = DFFESource()
-    assert source.source_id == "dffe_tenders"
+    assert source.source_id == "dffe"
     assert source.url.startswith("http")
 def test_dffe_parse_mock_html():
     source = DFFESource()

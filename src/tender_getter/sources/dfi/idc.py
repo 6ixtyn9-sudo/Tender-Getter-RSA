@@ -53,7 +53,7 @@ MOCK_IDC_HTML = """
 """
 
 class IDCSource:
-    source_id: str = "idc_tenders"
+    source_id: str = "idc"
 
     def __init__(self, url: str = "https://www.idc.co.za/tenders"):
         self.url = url

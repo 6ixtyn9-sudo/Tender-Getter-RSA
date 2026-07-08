@@ -34,7 +34,7 @@ MOCK_ILEMBE_HTML = """
 """
 
 class ILembeSource:
-    source_id: str = "ilembe_tenders"
+    source_id: str = "ilembe"
 
     def __init__(self, url: str = "https://www.ilembe.gov.za/tenders"):
         self.url = url

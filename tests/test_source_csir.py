@@ -2,7 +2,7 @@ import pytest
 from tender_getter.sources.research.csir import CSIRSource, MOCK_CSIR_HTML
 def test_csir_source_initialization():
     source = CSIRSource()
-    assert source.source_id == "csir_tenders"
+    assert source.source_id == "csir"
     assert source.url.startswith("http")
 def test_csir_parse_mock_html():
     source = CSIRSource()

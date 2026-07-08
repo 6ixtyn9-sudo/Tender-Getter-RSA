@@ -3,7 +3,7 @@ from tender_getter.sources.dfi.sars import SARSSource, MOCK_SARS_HTML
 
 def test_sars_source_initialization():
     source = SARSSource()
-    assert source.source_id == "sars_tenders"
+    assert source.source_id == "sars"
     assert source.url.startswith("http")
 
 def test_sars_parse_mock_html():

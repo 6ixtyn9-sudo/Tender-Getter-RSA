@@ -34,7 +34,7 @@ MOCK_CAPE_WINELANDS_HTML = """
 """
 
 class CapeWinelandsSource:
-    source_id: str = "cape_winelands_tenders"
+    source_id: str = "cape_winelands"
 
     def __init__(self, url: str = "https://www.capewinelands.gov.za/tenders"):
         self.url = url

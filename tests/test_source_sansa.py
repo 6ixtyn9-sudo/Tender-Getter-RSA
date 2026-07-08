@@ -2,7 +2,7 @@ import pytest
 from tender_getter.sources.research.sansa import SANSASource, MOCK_SANSA_HTML
 def test_sansa_source_initialization():
     source = SANSASource()
-    assert source.source_id == "sansa_tenders"
+    assert source.source_id == "sansa"
     assert source.url.startswith("http")
 def test_sansa_parse_mock_html():
     source = SANSASource()

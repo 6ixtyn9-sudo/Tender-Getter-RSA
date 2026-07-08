@@ -2,7 +2,7 @@ import pytest
 from tender_getter.sources.provincial_depts.gde import GDESource, MOCK_GDE_HTML
 def test_gde_source_initialization():
     source = GDESource()
-    assert source.source_id == "gde_tenders"
+    assert source.source_id == "gde"
     assert source.url.startswith("http")
 def test_gde_parse_mock_html():
     source = GDESource()

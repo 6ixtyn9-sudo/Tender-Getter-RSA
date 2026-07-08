@@ -17,7 +17,7 @@ New code should import from tender_getter.sources import ...
 # Re-export public API – keeps all 59 existing tests green
 from .sources.common import re_search_cidb, province_from_text
 from .sources.national.etenders_ocds import parse_ocds_release_to_tender, sync_live_tenders
-from .sources.national.etenders_csv import parse_csv_row_to_tender, sync_csv_tenders
+from .sources.national.etenders_csv import parse_csv_row_to_tender, sync_csv
 from .sources import load_sources
 
 __all__ = [
@@ -26,6 +26,6 @@ __all__ = [
     "parse_ocds_release_to_tender",
     "sync_live_tenders",
     "parse_csv_row_to_tender",
-    "sync_csv_tenders",
+    "sync_csv",
     "load_sources",
 ]

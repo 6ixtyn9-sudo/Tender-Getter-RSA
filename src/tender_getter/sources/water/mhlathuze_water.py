@@ -53,7 +53,7 @@ MOCK_MHLATHUZE_WATER_HTML = """
 """
 
 class MhlathuzeWaterSource:
-    source_id: str = "mhlathuze_water_tenders"
+    source_id: str = "mhlathuze_water"
 
     def __init__(self, url: str = "https://www.mhlathuzewater.co.za/tenders"):
         self.url = url

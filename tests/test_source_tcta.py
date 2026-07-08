@@ -3,7 +3,7 @@ from tender_getter.sources.water.tcta import TCTASource, MOCK_TCTA_HTML
 
 def test_tcta_source_initialization():
     source = TCTASource()
-    assert source.source_id == "tcta_tenders"
+    assert source.source_id == "tcta"
     assert source.url.startswith("http")
 
 def test_tcta_parse_mock_html():

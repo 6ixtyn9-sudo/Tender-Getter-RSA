@@ -34,7 +34,7 @@ MOCK_DOT_HTML = """
 """
 
 class DoTSource:
-    source_id: str = "dot_tenders"
+    source_id: str = "dot"
 
     def __init__(self, url: str = "https://www.transport.gov.za/tenders"):
         self.url = url

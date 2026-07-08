@@ -53,7 +53,7 @@ MOCK_LIMPOPO_HTML = """
 """
 
 class LimpopoSource:
-    source_id: str = "limpopo_tenders"
+    source_id: str = "limpopo"
 
     def __init__(self, url: str = "https://www.limtreasury.gov.za/lim_admin_trea/pages/sites/tender_documents/index.php"):
         self.url = url

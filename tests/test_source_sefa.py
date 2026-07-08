@@ -3,7 +3,7 @@ from tender_getter.sources.dfi.sefa import SefaSource, MOCK_SEFA_HTML
 
 def test_sefa_source_initialization():
     source = SefaSource()
-    assert source.source_id == "sefa_tenders"
+    assert source.source_id == "sefa"
     assert source.url.startswith("http")
 
 def test_sefa_parse_mock_html():

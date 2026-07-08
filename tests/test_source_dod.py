@@ -2,7 +2,7 @@ import pytest
 from tender_getter.sources.national_depts.dod import DoDSource, MOCK_DOD_HTML
 def test_dod_source_initialization():
     source = DoDSource()
-    assert source.source_id == "dod_tenders"
+    assert source.source_id == "dod"
     assert source.url.startswith("http")
 def test_dod_parse_mock_html():
     source = DoDSource()

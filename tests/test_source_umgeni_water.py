@@ -3,7 +3,7 @@ from tender_getter.sources.water.umgeni_water import UmgeniWaterSource, MOCK_UMG
 
 def test_umgeni_water_source_initialization():
     source = UmgeniWaterSource()
-    assert source.source_id == "umgeni_water_tenders"
+    assert source.source_id == "umgeni_water"
     assert source.url.startswith("http")
 
 def test_umgeni_water_parse_mock_html():

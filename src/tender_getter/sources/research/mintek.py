@@ -34,7 +34,7 @@ MOCK_MINTEK_HTML = """
 """
 
 class MintekSource:
-    source_id: str = "mintek_tenders"
+    source_id: str = "mintek"
 
     def __init__(self, url: str = "https://www.mintek.co.za/tenders"):
         self.url = url

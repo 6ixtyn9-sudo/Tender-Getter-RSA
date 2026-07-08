@@ -3,7 +3,7 @@ from tender_getter.sources.soes.alexkor import AlexkorSource, MOCK_ALEXKOR_HTML
 
 def test_alexkor_source_initialization():
     source = AlexkorSource()
-    assert source.source_id == "alexkor_tenders"
+    assert source.source_id == "alexkor"
     assert source.url.startswith("http")
 
 def test_alexkor_parse_mock_html():

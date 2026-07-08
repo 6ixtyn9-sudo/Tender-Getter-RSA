@@ -2,7 +2,7 @@ import pytest
 from tender_getter.sources.provincial_depts.ec_education import ECEducationSource, MOCK_EC_EDUCATION_HTML
 def test_ec_education_source_initialization():
     source = ECEducationSource()
-    assert source.source_id == "ec_education_tenders"
+    assert source.source_id == "ec_education"
     assert source.url.startswith("http")
 def test_ec_education_parse_mock_html():
     source = ECEducationSource()

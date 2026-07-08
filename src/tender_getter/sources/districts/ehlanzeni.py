@@ -34,7 +34,7 @@ MOCK_EHLANZENI_HTML = """
 """
 
 class EhlanzeniSource:
-    source_id: str = "ehlanzeni_tenders"
+    source_id: str = "ehlanzeni"
 
     def __init__(self, url: str = "https://www.ehlanzeni.gov.za/tenders"):
         self.url = url

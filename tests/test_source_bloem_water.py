@@ -3,7 +3,7 @@ from tender_getter.sources.water.bloem_water import BloemWaterSource, MOCK_BLOEM
 
 def test_bloem_water_source_initialization():
     source = BloemWaterSource()
-    assert source.source_id == "bloem_water_tenders"
+    assert source.source_id == "bloem_water"
     assert source.url.startswith("http")
 
 def test_bloem_water_parse_mock_html():

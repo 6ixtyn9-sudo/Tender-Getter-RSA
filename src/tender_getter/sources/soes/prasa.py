@@ -53,7 +53,7 @@ MOCK_PRASA_HTML = """
 """
 
 class PRASASource:
-    source_id: str = "prasa_tenders"
+    source_id: str = "prasa"
 
     def __init__(self, url: str = "https://www.prasa.com/tenders"):
         self.url = url

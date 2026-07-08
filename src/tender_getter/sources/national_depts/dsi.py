@@ -34,7 +34,7 @@ MOCK_DSI_HTML = """
 """
 
 class DSISource:
-    source_id: str = "dsi_tenders"
+    source_id: str = "dsi"
 
     def __init__(self, url: str = "https://www.dst.gov.za/tenders"):
         self.url = url

@@ -34,7 +34,7 @@ MOCK_WCDI_HTML = """
 """
 
 class WCDISource:
-    source_id: str = "wcdi_tenders"
+    source_id: str = "wcdi"
 
     def __init__(self, url: str = "https://www.westerncape.gov.za/dept/infrastructure/tenders"):
         self.url = url

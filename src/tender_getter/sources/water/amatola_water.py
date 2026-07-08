@@ -53,7 +53,7 @@ MOCK_AMATOLA_WATER_HTML = """
 """
 
 class AmatolaWaterSource:
-    source_id: str = "amatola_water_tenders"
+    source_id: str = "amatola_water"
 
     def __init__(self, url: str = "https://www.amatolawater.co.za/tenders"):
         self.url = url

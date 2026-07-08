@@ -2,7 +2,7 @@ import pytest
 from tender_getter.sources.provincial_depts.gdrt import GDRTSource, MOCK_GDRT_HTML
 def test_gdrt_source_initialization():
     source = GDRTSource()
-    assert source.source_id == "gdrt_tenders"
+    assert source.source_id == "gdrt"
     assert source.url.startswith("http")
 def test_gdrt_parse_mock_html():
     source = GDRTSource()

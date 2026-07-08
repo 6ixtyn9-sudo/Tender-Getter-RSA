@@ -34,7 +34,7 @@ MOCK_GDE_HTML = """
 """
 
 class GDESource:
-    source_id: str = "gde_tenders"
+    source_id: str = "gde"
 
     def __init__(self, url: str = "https://www.education.gpg.gov.za/tenders"):
         self.url = url

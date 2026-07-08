@@ -3,7 +3,7 @@ from tender_getter.sources.dfi.samsa import SAMSASource, MOCK_SAMSA_HTML
 
 def test_samsa_source_initialization():
     source = SAMSASource()
-    assert source.source_id == "samsa_tenders"
+    assert source.source_id == "samsa"
     assert source.url.startswith("http")
 
 def test_samsa_parse_mock_html():

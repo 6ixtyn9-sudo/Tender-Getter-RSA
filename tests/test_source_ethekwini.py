@@ -4,7 +4,7 @@ from tender_getter.sources.metros.ethekwini import EthekwiniSource, MOCK_ETHEKWI
 
 def test_ethekwini_source_initialization():
     source = EthekwiniSource()
-    assert source.source_id == "ethekwini_tenders"
+    assert source.source_id == "ethekwini"
     assert source.url.startswith("http")
 
 def test_ethekwini_parse_mock_html():

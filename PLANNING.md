@@ -365,7 +365,8 @@ Before sending any outreach, we implement:
 8. Next Agent Playbook & Rapid Bootstrap Checklist
 
 For future agents starting on this repository:
-- **Source registry is COMPLETE (731 sources wired).** Do not add new sources without updating sources.yaml AND the corresponding plug-in module AND the test.
+- **Source registry is COMPLETE (~723 sources wired).** Do not add new sources without creating the corresponding plug-in module AND the test.
+- **sources.yaml is a derived artifact.** Do not edit it manually. The Python file tree is the ultimate source of truth, and `sources.yaml` is generated from the Python source files.
 - **Use `GenericSource` from `sources/generic.py`** automatically – just append a YAML entry and the aggregator picks it up. Only write a bespoke plug-in if the entity has a genuinely unique parser (e.g. eTenders OCDS API, eTenders CSV bulk import).
 - **Honour `live: false`.** If a source is known to be inactive, set it false in YAML. The aggregator will skip it without raising errors.
 - **All sources are mock-backed.** First sync will yield mock data unless you've verified liveness. Verify liveness via `scripts/doctor.py` before flipping `live: true`.

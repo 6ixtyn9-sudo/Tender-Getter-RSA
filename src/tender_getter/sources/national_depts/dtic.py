@@ -34,7 +34,7 @@ MOCK_DTIC_HTML = """
 """
 
 class DTICSource:
-    source_id: str = "dtic_tenders"
+    source_id: str = "dtic"
 
     def __init__(self, url: str = "https://www.thedtic.gov.za/tenders"):
         self.url = url

@@ -34,7 +34,7 @@ MOCK_SAPS_HTML = """
 """
 
 class SAPSSource:
-    source_id: str = "saps_tenders"
+    source_id: str = "saps"
 
     def __init__(self, url: str = "https://www.saps.gov.za/tenders"):
         self.url = url

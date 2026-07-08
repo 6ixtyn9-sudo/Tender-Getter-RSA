@@ -53,7 +53,7 @@ MOCK_MAGALIES_WATER_HTML = """
 """
 
 class MagaliesWaterSource:
-    source_id: str = "magalies_water_tenders"
+    source_id: str = "magalies_water"
 
     def __init__(self, url: str = "https://www.magalieswater.co.za/tenders"):
         self.url = url

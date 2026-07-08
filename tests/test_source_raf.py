@@ -3,7 +3,7 @@ from tender_getter.sources.dfi.raf import RAFSource, MOCK_RAF_HTML
 
 def test_raf_source_initialization():
     source = RAFSource()
-    assert source.source_id == "raf_tenders"
+    assert source.source_id == "raf"
     assert source.url.startswith("http")
 
 def test_raf_parse_mock_html():

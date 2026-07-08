@@ -2,7 +2,7 @@ import pytest
 from tender_getter.sources.national_depts.doel import DoELSource, MOCK_DOEL_HTML
 def test_doel_source_initialization():
     source = DoELSource()
-    assert source.source_id == "doel_tenders"
+    assert source.source_id == "doel"
     assert source.url.startswith("http")
 def test_doel_parse_mock_html():
     source = DoELSource()

@@ -53,7 +53,7 @@ MOCK_SEDIBENG_WATER_HTML = """
 """
 
 class SedibengWaterSource:
-    source_id: str = "sedibeng_water_tenders"
+    source_id: str = "sedibeng_water"
 
     def __init__(self, url: str = "https://www.sedibengwater.co.za/tenders"):
         self.url = url

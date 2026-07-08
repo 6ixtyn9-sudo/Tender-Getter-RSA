@@ -3,7 +3,7 @@ from tender_getter.sources.water.lepelle_water import LepelleWaterSource, MOCK_L
 
 def test_lepelle_water_source_initialization():
     source = LepelleWaterSource()
-    assert source.source_id == "lepelle_water_tenders"
+    assert source.source_id == "lepelle_water"
     assert source.url.startswith("http")
 
 def test_lepelle_water_parse_mock_html():

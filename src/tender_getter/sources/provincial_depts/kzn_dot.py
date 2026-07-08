@@ -34,7 +34,7 @@ MOCK_KZN_DOT_HTML = """
 """
 
 class KZNDoTSource:
-    source_id: str = "kzn_dot_tenders"
+    source_id: str = "kzn_dot"
 
     def __init__(self, url: str = "https://www.kzntransport.gov.za/tenders"):
         self.url = url

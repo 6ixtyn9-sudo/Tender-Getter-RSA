@@ -4,7 +4,7 @@ from tender_getter.sources.metros.tshwane import TshwaneSource, MOCK_TSHWANE_HTM
 
 def test_tshwane_source_initialization():
     source = TshwaneSource()
-    assert source.source_id == "tshwane_tenders"
+    assert source.source_id == "tshwane"
     assert source.url.startswith("http")
 
 def test_tshwane_parse_mock_html():

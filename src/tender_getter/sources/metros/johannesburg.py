@@ -52,7 +52,7 @@ MOCK_JOHANNESBURG_HTML = """
 """
 
 class JohannesburgSource:
-    source_id: str = "johannesburg_tenders"
+    source_id: str = "johannesburg"
 
     def __init__(self, url: str = "https://joburg.org.za/work_/Pages/2025-Tenders-and-Quotations/Bid-Opening-Registers.aspx"):
         self.url = url

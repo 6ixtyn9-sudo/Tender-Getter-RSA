@@ -53,7 +53,7 @@ MOCK_SEDA_HTML = """
 """
 
 class SEDASource:
-    source_id: str = "seda_tenders"
+    source_id: str = "seda"
 
     def __init__(self, url: str = "https://www.seda.org.za/tenders"):
         self.url = url

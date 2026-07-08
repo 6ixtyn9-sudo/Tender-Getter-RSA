@@ -4,7 +4,7 @@ from tender_getter.sources.provincial.mpumalanga import MpumalangaSource, MOCK_M
 
 def test_mpumalanga_source_initialization():
     source = MpumalangaSource()
-    assert source.source_id == "mpumalanga_tenders"
+    assert source.source_id == "mpumalanga"
     assert source.url.startswith("http")
 
 def test_mpumalanga_parse_mock_html():

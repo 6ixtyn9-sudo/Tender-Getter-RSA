@@ -2,7 +2,7 @@ import pytest
 from tender_getter.sources.national_depts.dtic import DTICSource, MOCK_DTIC_HTML
 def test_dtic_source_initialization():
     source = DTICSource()
-    assert source.source_id == "dtic_tenders"
+    assert source.source_id == "dtic"
     assert source.url.startswith("http")
 def test_dtic_parse_mock_html():
     source = DTICSource()

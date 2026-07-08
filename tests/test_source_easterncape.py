@@ -4,7 +4,7 @@ from tender_getter.sources.provincial.easterncape import EasternCapeSource, MOCK
 
 def test_easterncape_source_initialization():
     source = EasternCapeSource()
-    assert source.source_id == "easterncape_tenders"
+    assert source.source_id == "easterncape"
     assert source.url.startswith("http")
 
 def test_easterncape_parse_mock_html():

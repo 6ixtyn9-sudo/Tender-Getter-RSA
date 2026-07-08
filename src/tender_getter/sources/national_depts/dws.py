@@ -34,7 +34,7 @@ MOCK_DWS_HTML = """
 """
 
 class DWSSource:
-    source_id: str = "dws_tenders"
+    source_id: str = "dws"
 
     def __init__(self, url: str = "https://www.dws.gov.za/tenders"):
         self.url = url

@@ -46,7 +46,7 @@ def main():
         print(f"\n{'='*60}")
         print(f"Tender-Getter RSA – Sync Summary")
         print(f"{'='*60}")
-        print(f"Sources candidates : {summary['sources_total_candidates']}")
+        print(f"Sources candidates : {summary['class_total']}")
         print(f"Sources skipped     : {summary['sources_skipped_live_false']} (live:false)")
         print(f"Sources OK          : {summary['sources_ok']}/{summary['sources_total']}")
         print(f"Sources failed      : {summary['sources_failed']}")

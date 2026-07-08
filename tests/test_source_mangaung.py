@@ -4,7 +4,7 @@ from tender_getter.sources.metros.mangaung import MangaungSource, MOCK_MANGAUNG_
 
 def test_mangaung_source_initialization():
     source = MangaungSource()
-    assert source.source_id == "mangaung_tenders"
+    assert source.source_id == "mangaung"
     assert source.url.startswith("http")
 
 def test_mangaung_parse_mock_html():

@@ -34,7 +34,7 @@ MOCK_TOURISM_HTML = """
 """
 
 class TourismSource:
-    source_id: str = "tourism_tenders"
+    source_id: str = "tourism"
 
     def __init__(self, url: str = "https://www.tourism.gov.za/tenders"):
         self.url = url

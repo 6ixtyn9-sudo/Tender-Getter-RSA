@@ -34,7 +34,7 @@ MOCK_EC_EDUCATION_HTML = """
 """
 
 class ECEducationSource:
-    source_id: str = "ec_education_tenders"
+    source_id: str = "ec_education"
 
     def __init__(self, url: str = "https://www.ecdoe.gov.za/tenders"):
         self.url = url

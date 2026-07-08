@@ -53,7 +53,7 @@ MOCK_SAMSA_HTML = """
 """
 
 class SAMSASource:
-    source_id: str = "samsa_tenders"
+    source_id: str = "samsa"
 
     def __init__(self, url: str = "https://www.samsa.org.za/tenders"):
         self.url = url

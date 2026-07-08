@@ -52,7 +52,7 @@ MOCK_SANRAL_HTML = """
 """
 
 class SANRALSource:
-    source_id: str = "sanral_tenders"
+    source_id: str = "sanral"
 
     def __init__(self, url: str = "https://www.nra.co.za/sanral-tenders/"):
         self.url = url

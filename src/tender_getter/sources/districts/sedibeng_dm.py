@@ -34,7 +34,7 @@ MOCK_SEDIBENG_DM_HTML = """
 """
 
 class SedibengDMSource:
-    source_id: str = "sedibeng_dm_tenders"
+    source_id: str = "sedibeng_dm"
 
     def __init__(self, url: str = "https://www.sedibeng.gov.za/tenders"):
         self.url = url

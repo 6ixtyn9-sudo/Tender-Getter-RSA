@@ -34,7 +34,7 @@ MOCK_DHET_HTML = """
 """
 
 class DHETSource:
-    source_id: str = "dhet_tenders"
+    source_id: str = "dhet"
 
     def __init__(self, url: str = "https://www.dhet.gov.za/tenders"):
         self.url = url

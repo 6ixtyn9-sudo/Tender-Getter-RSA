@@ -2,7 +2,7 @@ import pytest
 from tender_getter.sources.national_depts.dalrrd import DALRRDSource, MOCK_DALRRD_HTML
 def test_dalrrd_source_initialization():
     source = DALRRDSource()
-    assert source.source_id == "dalrrd_tenders"
+    assert source.source_id == "dalrrd"
     assert source.url.startswith("http")
 def test_dalrrd_parse_mock_html():
     source = DALRRDSource()

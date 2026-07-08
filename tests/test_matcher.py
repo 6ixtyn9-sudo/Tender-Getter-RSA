@@ -167,11 +167,11 @@ def test_disqualify_cidb_level_shortfall_exceeds_cap(base_company, base_tender):
 
 
 def test_cidb_level_shortfall_within_cap_passes(base_company, base_tender):
-    """Company is CE2 (cap R1m), tender requires CE3, value R800k -> PASS."""
+    """Company is CE2 (cap R1m), tender requires CE3, value R700k -> PASS."""
     base_company.cidb_gradings = [CIDBGrading(class_code="CE", level=2)]
     base_tender.required_cidb_class = "CE"
     base_tender.required_cidb_level = 3
-    base_tender.estimated_value = 800_000
+    base_tender.estimated_value = 700_000
     result = match(base_company, base_tender)
     assert result.is_eligible
 

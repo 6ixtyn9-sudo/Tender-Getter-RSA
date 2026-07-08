@@ -34,7 +34,7 @@ MOCK_KZN_HUMAN_SETTLEMENTS_HTML = """
 """
 
 class KZNHumanSettlementsSource:
-    source_id: str = "kzn_human_settlements_tenders"
+    source_id: str = "kzn_human_settlements"
 
     def __init__(self, url: str = "https://www.kznsethuman.gov.za/tenders"):
         self.url = url

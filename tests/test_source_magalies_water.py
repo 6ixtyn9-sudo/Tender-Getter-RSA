@@ -3,7 +3,7 @@ from tender_getter.sources.water.magalies_water import MagaliesWaterSource, MOCK
 
 def test_magalies_water_source_initialization():
     source = MagaliesWaterSource()
-    assert source.source_id == "magalies_water_tenders"
+    assert source.source_id == "magalies_water"
     assert source.url.startswith("http")
 
 def test_magalies_water_parse_mock_html():

@@ -2,7 +2,7 @@ import pytest
 from tender_getter.sources.national_depts.dhet import DHETSource, MOCK_DHET_HTML
 def test_dhet_source_initialization():
     source = DHETSource()
-    assert source.source_id == "dhet_tenders"
+    assert source.source_id == "dhet"
     assert source.url.startswith("http")
 def test_dhet_parse_mock_html():
     source = DHETSource()

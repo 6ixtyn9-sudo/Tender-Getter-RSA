@@ -2,7 +2,7 @@ import pytest
 from tender_getter.sources.national_depts.dws import DWSSource, MOCK_DWS_HTML
 def test_dws_source_initialization():
     source = DWSSource()
-    assert source.source_id == "dws_tenders"
+    assert source.source_id == "dws"
     assert source.url.startswith("http")
 def test_dws_parse_mock_html():
     source = DWSSource()

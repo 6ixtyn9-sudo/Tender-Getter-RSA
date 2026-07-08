@@ -53,7 +53,7 @@ MOCK_LANDBANK_HTML = """
 """
 
 class LandbankSource:
-    source_id: str = "landbank_tenders"
+    source_id: str = "landbank"
 
     def __init__(self, url: str = "https://landbank.co.za/Pages/Procurement.aspx"):
         self.url = url

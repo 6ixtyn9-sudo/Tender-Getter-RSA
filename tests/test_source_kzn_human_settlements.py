@@ -2,7 +2,7 @@ import pytest
 from tender_getter.sources.provincial_depts.kzn_human_settlements import KZNHumanSettlementsSource, MOCK_KZN_HUMAN_SETTLEMENTS_HTML
 def test_kzn_human_settlements_source_initialization():
     source = KZNHumanSettlementsSource()
-    assert source.source_id == "kzn_human_settlements_tenders"
+    assert source.source_id == "kzn_human_settlements"
     assert source.url.startswith("http")
 def test_kzn_human_settlements_parse_mock_html():
     source = KZNHumanSettlementsSource()

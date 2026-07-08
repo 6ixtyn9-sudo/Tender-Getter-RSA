@@ -34,7 +34,7 @@ MOCK_DCDT_HTML = """
 """
 
 class DCDTSource:
-    source_id: str = "dcdt_tenders"
+    source_id: str = "dcdt"
 
     def __init__(self, url: str = "https://www.dcdt.gov.za/tenders"):
         self.url = url

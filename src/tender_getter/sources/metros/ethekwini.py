@@ -53,7 +53,7 @@ MOCK_ETHEKWINI_HTML = """
 """
 
 class EthekwiniSource:
-    source_id: str = "ethekwini_tenders"
+    source_id: str = "ethekwini"
 
     def __init__(self, url: str = "https://www.durban.gov.za/pages/residents/tenders"):
         self.url = url

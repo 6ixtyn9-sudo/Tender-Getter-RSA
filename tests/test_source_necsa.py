@@ -3,7 +3,7 @@ from tender_getter.sources.soes.necsa import NECSASource, MOCK_NECSA_HTML
 
 def test_necsa_source_initialization():
     source = NECSASource()
-    assert source.source_id == "necsa_tenders"
+    assert source.source_id == "necsa"
     assert source.url.startswith("http")
 
 def test_necsa_parse_mock_html():

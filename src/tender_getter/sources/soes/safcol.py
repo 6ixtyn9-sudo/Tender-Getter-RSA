@@ -53,7 +53,7 @@ MOCK_SAFCOL_HTML = """
 """
 
 class SAFCOLSource:
-    source_id: str = "safcol_tenders"
+    source_id: str = "safcol"
 
     def __init__(self, url: str = "https://www.safcol.co.za/tenders/"):
         self.url = url

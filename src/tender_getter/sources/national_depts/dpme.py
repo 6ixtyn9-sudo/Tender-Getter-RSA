@@ -34,7 +34,7 @@ MOCK_DPME_HTML = """
 """
 
 class DPMESource:
-    source_id: str = "dpme_tenders"
+    source_id: str = "dpme"
 
     def __init__(self, url: str = "https://www.dpme.gov.za/tenders"):
         self.url = url

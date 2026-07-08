@@ -4,7 +4,7 @@ from tender_getter.sources.metros.ekurhuleni import EkurhuleniSource, MOCK_EKURH
 
 def test_ekurhuleni_source_initialization():
     source = EkurhuleniSource()
-    assert source.source_id == "ekurhuleni_tenders"
+    assert source.source_id == "ekurhuleni"
     assert source.url.startswith("http")
 
 def test_ekurhuleni_parse_mock_html():

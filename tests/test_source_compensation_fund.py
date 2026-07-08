@@ -3,7 +3,7 @@ from tender_getter.sources.dfi.compensation_fund import CompensationFundSource, 
 
 def test_compensation_fund_source_initialization():
     source = CompensationFundSource()
-    assert source.source_id == "compensation_fund_tenders"
+    assert source.source_id == "compensation_fund"
     assert source.url.startswith("http")
 
 def test_compensation_fund_parse_mock_html():

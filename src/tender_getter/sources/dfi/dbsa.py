@@ -53,7 +53,7 @@ MOCK_DBSA_HTML = """
 """
 
 class DBSASource:
-    source_id: str = "dbsa_tenders"
+    source_id: str = "dbsa"
 
     def __init__(self, url: str = "https://www.dbsa.org/tenders"):
         self.url = url

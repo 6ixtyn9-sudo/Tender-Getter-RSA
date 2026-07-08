@@ -53,7 +53,7 @@ MOCK_FREESTATE_HTML = """
 """
 
 class FreeStateSource:
-    source_id: str = "freestate_tenders"
+    source_id: str = "freestate"
 
     def __init__(self, url: str = "http://www.treasury.fs.gov.za/tenders/"):
         self.url = url

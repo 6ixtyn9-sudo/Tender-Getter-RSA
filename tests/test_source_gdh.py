@@ -2,7 +2,7 @@ import pytest
 from tender_getter.sources.provincial_depts.gdh import GDHSource, MOCK_GDH_HTML
 def test_gdh_source_initialization():
     source = GDHSource()
-    assert source.source_id == "gdh_tenders"
+    assert source.source_id == "gdh"
     assert source.url.startswith("http")
 def test_gdh_parse_mock_html():
     source = GDHSource()

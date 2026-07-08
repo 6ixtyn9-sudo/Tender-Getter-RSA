@@ -3,7 +3,7 @@ from tender_getter.sources.soes.landbank import LandbankSource, MOCK_LANDBANK_HT
 
 def test_landbank_source_initialization():
     source = LandbankSource()
-    assert source.source_id == "landbank_tenders"
+    assert source.source_id == "landbank"
     assert source.url.startswith("http")
 
 def test_landbank_parse_mock_html():

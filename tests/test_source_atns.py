@@ -3,7 +3,7 @@ from tender_getter.sources.soes.atns import ATNSSource, MOCK_ATNS_HTML
 
 def test_atns_source_initialization():
     source = ATNSSource()
-    assert source.source_id == "atns_tenders"
+    assert source.source_id == "atns"
     assert source.url.startswith("http")
 
 def test_atns_parse_mock_html():

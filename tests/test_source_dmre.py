@@ -2,7 +2,7 @@ import pytest
 from tender_getter.sources.national_depts.dmre import DMRESource, MOCK_DMRE_HTML
 def test_dmre_source_initialization():
     source = DMRESource()
-    assert source.source_id == "dmre_tenders"
+    assert source.source_id == "dmre"
     assert source.url.startswith("http")
 def test_dmre_parse_mock_html():
     source = DMRESource()

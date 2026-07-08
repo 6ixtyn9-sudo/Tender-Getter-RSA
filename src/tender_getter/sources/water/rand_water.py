@@ -53,7 +53,7 @@ MOCK_RAND_WATER_HTML = """
 """
 
 class RandWaterSource:
-    source_id: str = "rand_water_tenders"
+    source_id: str = "rand_water"
 
     def __init__(self, url: str = "https://www.randwater.co.za/tenders"):
         self.url = url

@@ -53,7 +53,7 @@ MOCK_NECSA_HTML = """
 """
 
 class NECSASource:
-    source_id: str = "necsa_tenders"
+    source_id: str = "necsa"
 
     def __init__(self, url: str = "https://www.necsa.co.za/tenders/"):
         self.url = url

@@ -2,7 +2,7 @@ import pytest
 from tender_getter.sources.provincial_depts.limpopo_pwri import LimpopoPWRISource, MOCK_LIMPOPO_PWRI_HTML
 def test_limpopo_pwri_source_initialization():
     source = LimpopoPWRISource()
-    assert source.source_id == "limpopo_pwri_tenders"
+    assert source.source_id == "limpopo_pwri"
     assert source.url.startswith("http")
 def test_limpopo_pwri_parse_mock_html():
     source = LimpopoPWRISource()

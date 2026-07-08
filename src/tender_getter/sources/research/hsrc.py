@@ -34,7 +34,7 @@ MOCK_HSRC_HTML = """
 """
 
 class HSRCSource:
-    source_id: str = "hsrc_tenders"
+    source_id: str = "hsrc"
 
     def __init__(self, url: str = "https://www.hsrc.ac.za/tenders"):
         self.url = url

@@ -2,7 +2,7 @@ import pytest
 from tender_getter.sources.provincial_depts.gdid import GDIDSource, MOCK_GDID_HTML
 def test_gdid_source_initialization():
     source = GDIDSource()
-    assert source.source_id == "gdid_tenders"
+    assert source.source_id == "gdid"
     assert source.url.startswith("http")
 def test_gdid_parse_mock_html():
     source = GDIDSource()

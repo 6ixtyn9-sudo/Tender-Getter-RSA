@@ -4,7 +4,7 @@ from tender_getter.sources.provincial.freestate import FreeStateSource, MOCK_FRE
 
 def test_freestate_source_initialization():
     source = FreeStateSource()
-    assert source.source_id == "freestate_tenders"
+    assert source.source_id == "freestate"
     assert source.url.startswith("http")
 
 def test_freestate_parse_mock_html():

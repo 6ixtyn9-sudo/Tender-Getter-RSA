@@ -53,7 +53,7 @@ MOCK_RAF_HTML = """
 """
 
 class RAFSource:
-    source_id: str = "raf_tenders"
+    source_id: str = "raf"
 
     def __init__(self, url: str = "https://www.raf.co.za/tenders"):
         self.url = url

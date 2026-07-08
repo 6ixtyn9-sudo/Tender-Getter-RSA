@@ -2,7 +2,7 @@ import pytest
 from tender_getter.sources.research.hsrc import HSRCSource, MOCK_HSRC_HTML
 def test_hsrc_source_initialization():
     source = HSRCSource()
-    assert source.source_id == "hsrc_tenders"
+    assert source.source_id == "hsrc"
     assert source.url.startswith("http")
 def test_hsrc_parse_mock_html():
     source = HSRCSource()

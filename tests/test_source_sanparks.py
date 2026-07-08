@@ -3,7 +3,7 @@ from tender_getter.sources.dfi.sanparks import SANParksSource, MOCK_SANPARKS_HTM
 
 def test_sanparks_source_initialization():
     source = SANParksSource()
-    assert source.source_id == "sanparks_tenders"
+    assert source.source_id == "sanparks"
     assert source.url.startswith("http")
 
 def test_sanparks_parse_mock_html():

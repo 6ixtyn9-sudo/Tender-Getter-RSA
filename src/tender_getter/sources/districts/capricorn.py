@@ -34,7 +34,7 @@ MOCK_CAPRICORN_HTML = """
 """
 
 class CapricornSource:
-    source_id: str = "capricorn_tenders"
+    source_id: str = "capricorn"
 
     def __init__(self, url: str = "https://www.cdm.org.za/tenders"):
         self.url = url

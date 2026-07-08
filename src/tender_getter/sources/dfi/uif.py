@@ -53,7 +53,7 @@ MOCK_UIF_HTML = """
 """
 
 class UIFSource:
-    source_id: str = "uif_tenders"
+    source_id: str = "uif"
 
     def __init__(self, url: str = "https://www.labour.gov.za/uif-tenders"):
         self.url = url

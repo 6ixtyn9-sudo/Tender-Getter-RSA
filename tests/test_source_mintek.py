@@ -2,7 +2,7 @@ import pytest
 from tender_getter.sources.research.mintek import MintekSource, MOCK_MINTEK_HTML
 def test_mintek_source_initialization():
     source = MintekSource()
-    assert source.source_id == "mintek_tenders"
+    assert source.source_id == "mintek"
     assert source.url.startswith("http")
 def test_mintek_parse_mock_html():
     source = MintekSource()

@@ -2,7 +2,7 @@ import pytest
 from tender_getter.sources.provincial_depts.kzn_dot import KZNDoTSource, MOCK_KZN_DOT_HTML
 def test_kzn_dot_source_initialization():
     source = KZNDoTSource()
-    assert source.source_id == "kzn_dot_tenders"
+    assert source.source_id == "kzn_dot"
     assert source.url.startswith("http")
 def test_kzn_dot_parse_mock_html():
     source = KZNDoTSource()

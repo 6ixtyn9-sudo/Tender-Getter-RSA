@@ -53,7 +53,7 @@ MOCK_MPUMALANGA_HTML = """
 """
 
 class MpumalangaSource:
-    source_id: str = "mpumalanga_tenders"
+    source_id: str = "mpumalanga"
 
     def __init__(self, url: str = "https://www.mpumalanga.gov.za/finance/tenders.htm"):
         self.url = url

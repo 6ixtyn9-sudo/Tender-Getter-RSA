@@ -3,7 +3,7 @@ from tender_getter.sources.water.rand_water import RandWaterSource, MOCK_RAND_WA
 
 def test_rand_water_source_initialization():
     source = RandWaterSource()
-    assert source.source_id == "rand_water_tenders"
+    assert source.source_id == "rand_water"
     assert source.url.startswith("http")
 
 def test_rand_water_parse_mock_html():

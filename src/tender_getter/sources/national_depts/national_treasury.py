@@ -34,7 +34,7 @@ MOCK_NATIONAL_TREASURY_HTML = """
 """
 
 class NationalTreasurySource:
-    source_id: str = "national_treasury_tenders"
+    source_id: str = "national_treasury"
 
     def __init__(self, url: str = "https://www.treasury.gov.za/tenders"):
         self.url = url

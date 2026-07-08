@@ -3,7 +3,7 @@ from tender_getter.sources.dfi.dbsa import DBSASource, MOCK_DBSA_HTML
 
 def test_dbsa_source_initialization():
     source = DBSASource()
-    assert source.source_id == "dbsa_tenders"
+    assert source.source_id == "dbsa"
     assert source.url.startswith("http")
 
 def test_dbsa_parse_mock_html():

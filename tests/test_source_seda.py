@@ -3,7 +3,7 @@ from tender_getter.sources.dfi.seda import SEDASource, MOCK_SEDA_HTML
 
 def test_seda_source_initialization():
     source = SEDASource()
-    assert source.source_id == "seda_tenders"
+    assert source.source_id == "seda"
     assert source.url.startswith("http")
 
 def test_seda_parse_mock_html():

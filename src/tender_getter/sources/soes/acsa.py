@@ -53,7 +53,7 @@ MOCK_ACSA_HTML = """
 """
 
 class ACSASource:
-    source_id: str = "acsa_tenders"
+    source_id: str = "acsa"
 
     def __init__(self, url: str = "https://www.airports.co.za/business/tender-bulletin"):
         self.url = url

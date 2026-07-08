@@ -2,7 +2,7 @@ import pytest
 from tender_getter.sources.research.nhls import NHLSSource, MOCK_NHLS_HTML
 def test_nhls_source_initialization():
     source = NHLSSource()
-    assert source.source_id == "nhls_tenders"
+    assert source.source_id == "nhls"
     assert source.url.startswith("http")
 def test_nhls_parse_mock_html():
     source = NHLSSource()

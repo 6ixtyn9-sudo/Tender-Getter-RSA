@@ -2,7 +2,7 @@ import pytest
 from tender_getter.sources.provincial_depts.nc_roads import NCRoadsSource, MOCK_NC_ROADS_HTML
 def test_nc_roads_source_initialization():
     source = NCRoadsSource()
-    assert source.source_id == "nc_roads_tenders"
+    assert source.source_id == "nc_roads"
     assert source.url.startswith("http")
 def test_nc_roads_parse_mock_html():
     source = NCRoadsSource()

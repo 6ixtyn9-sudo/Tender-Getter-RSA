@@ -17,23 +17,23 @@ def _yaml_map():
 def test_merged_water_board_ids_present_in_yaml():
     """Both uMngeni-uThukela and Vaal Central Water must be in sources.yaml."""
     m = _yaml_map()
-    assert "umngeni_uthukela_water_tenders" in m
-    assert "vaal_central_water_tenders" in m
+    assert "umngeni_uthukela_water" in m
+    assert "vaal_central_water" in m
 
 
 def test_merged_water_boards_marked_live():
     """Merged boards are the current active entities -> live=True."""
     m = _yaml_map()
-    assert m["umngeni_uthukela_water_tenders"]["live"] is True
-    assert m["vaal_central_water_tenders"]["live"] is True
+    assert m["umngeni_uthukela_water"]["live"] is True
+    assert m["vaal_central_water"]["live"] is True
 
 
 def test_legacy_water_board_ids_marked_moribund():
     """Legacy boards (post-merger) are marked live=False in YAML."""
     m = _yaml_map()
     for legacy_id in [
-        "umgeni_water_tenders", "mhlathuze_water_tenders",
-        "bloem_water_tenders", "sedibeng_water_tenders", "lepelle_water_tenders",
+        "umgeni_water", "mhlathuze_water",
+        "bloem_water", "sedibeng_water", "lepelle_water",
     ]:
         assert legacy_id in m, f"Legacy {legacy_id} missing from registry"
         assert m[legacy_id]["live"] is False, f"{legacy_id} should be live=False (post-merger)"
@@ -44,6 +44,6 @@ def test_legacy_water_boards_excluded_under_live_only():
     from tender_getter.aggregator import get_all_source_instances
     live_only = get_all_source_instances(live_only=True)
     live_only_ids = {inst.source_id for inst in live_only}
-    for legacy_id in ["umgeni_water_tenders", "mhlathuze_water_tenders",
-                      "bloem_water_tenders", "sedibeng_water_tenders", "lepelle_water_tenders"]:
+    for legacy_id in ["umgeni_water", "mhlathuze_water",
+                      "bloem_water", "sedibeng_water", "lepelle_water"]:
         assert legacy_id not in live_only_ids, f"{legacy_id} should be excluded under live_only=True"

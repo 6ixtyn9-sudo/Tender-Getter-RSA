@@ -34,7 +34,7 @@ MOCK_OR_TAMBO_HTML = """
 """
 
 class ORTamboSource:
-    source_id: str = "or_tambo_tenders"
+    source_id: str = "or_tambo"
 
     def __init__(self, url: str = "https://www.ortambodm.gov.za/tenders"):
         self.url = url

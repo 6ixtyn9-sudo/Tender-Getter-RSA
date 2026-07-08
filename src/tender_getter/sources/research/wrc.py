@@ -34,7 +34,7 @@ MOCK_WRC_HTML = """
 """
 
 class WRCSource:
-    source_id: str = "wrc_tenders"
+    source_id: str = "wrc"
 
     def __init__(self, url: str = "https://www.wrc.org.za/tenders"):
         self.url = url

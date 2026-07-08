@@ -53,7 +53,7 @@ MOCK_SENTECH_HTML = """
 """
 
 class SentechSource:
-    source_id: str = "sentech_tenders"
+    source_id: str = "sentech"
 
     def __init__(self, url: str = "https://www.sentech.co.za/tenders"):
         self.url = url

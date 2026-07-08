@@ -2,7 +2,7 @@ import pytest
 from tender_getter.sources.national_depts.dpwi import DPWISource, MOCK_DPWI_HTML
 def test_dpwi_source_initialization():
     source = DPWISource()
-    assert source.source_id == "dpwi_tenders"
+    assert source.source_id == "dpwi"
     assert source.url.startswith("http")
 def test_dpwi_parse_mock_html():
     source = DPWISource()

@@ -2,7 +2,7 @@ import pytest
 from tender_getter.sources.districts.cape_winelands import CapeWinelandsSource, MOCK_CAPE_WINELANDS_HTML
 def test_cape_winelands_source_initialization():
     source = CapeWinelandsSource()
-    assert source.source_id == "cape_winelands_tenders"
+    assert source.source_id == "cape_winelands"
     assert source.url.startswith("http")
 def test_cape_winelands_parse_mock_html():
     source = CapeWinelandsSource()

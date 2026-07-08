@@ -34,7 +34,7 @@ MOCK_WC_HEALTH_HTML = """
 """
 
 class WCHealthSource:
-    source_id: str = "wc_health_tenders"
+    source_id: str = "wc_health"
 
     def __init__(self, url: str = "https://www.westerncape.gov.za/dept/health/tenders"):
         self.url = url

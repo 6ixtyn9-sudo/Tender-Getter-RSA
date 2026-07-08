@@ -2,7 +2,7 @@ import pytest
 from tender_getter.sources.districts.garden_route import GardenRouteSource, MOCK_GARDEN_ROUTE_HTML
 def test_garden_route_source_initialization():
     source = GardenRouteSource()
-    assert source.source_id == "garden_route_tenders"
+    assert source.source_id == "garden_route"
     assert source.url.startswith("http")
 def test_garden_route_parse_mock_html():
     source = GardenRouteSource()
