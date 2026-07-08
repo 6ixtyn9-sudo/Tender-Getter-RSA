@@ -244,7 +244,6 @@ __all__ = [
     "DPMESource",
     "PresidencySource",
     "DBSASource",
-    "DBSASource",
     "IDCSource",
     "SARSSource",
     "SAMSASource",
