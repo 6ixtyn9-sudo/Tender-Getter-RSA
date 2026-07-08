@@ -9,7 +9,7 @@ Environment variable consumed by get_database_client() (in database.py):
     SUPABASE_DB_URL  — full connection string, e.g.:
         postgresql://postgres:[PASSWORD]@db.[PROJECT_REF].supabase.co:5432/postgres
 
-Schema (DDL) lives in scripts/migrate_supabase.sql and is run once against
+Schema (DDL) lives in supabase/migrations/20260707_initial_schema.sql and is run once against
 Supabase. This driver assumes the tables already exist.
 """
 

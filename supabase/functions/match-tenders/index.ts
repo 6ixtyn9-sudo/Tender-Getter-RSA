@@ -9,6 +9,6 @@ Deno.serve(async (_req) => {
     Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
   )
   const { data: tenders } = await supabase.from("tenders").select("tender_id").limit(1)
-  return new Response(JSON.stringify({ ok: true, count: tenders?.length ?? 0 }), 
+  return new Response(JSON.stringify({ ok: true, count: tenders?.length ?? 0 }),
     { headers: { "Content-Type": "application/json" }})
 })
