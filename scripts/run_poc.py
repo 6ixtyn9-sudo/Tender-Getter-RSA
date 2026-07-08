@@ -162,7 +162,21 @@ def run_poc():
         if csv_count > 0:
             print(f"[3/4] CSV bulk: {csv_count} total tenders synced from {len(tried)} URLs probed")
     
-    total_synced = ocds_count + csv_count
+    # 3c – SANRAL Scraping Ingestion Vector (New in Patch G!)
+    sanral_count = 0
+    try:
+        from tender_getter.sources import SANRALSource
+        sanral_src = SANRALSource()
+        sanral_tenders = sanral_src.fetch()
+        for tender in sanral_tenders:
+            db.upsert_tender(tender)
+            sanral_count += 1
+        if sanral_count > 0:
+            print(f"[3/4] SANRAL Scraper: {sanral_count} high-value civil engineering tenders synced")
+    except Exception as e:
+        print(f"  SANRAL sync failed: {e}")
+
+    total_synced = ocds_count + csv_count + sanral_count
 
     # Pull open tenders from DB – real data path
     try:
@@ -183,7 +197,7 @@ def run_poc():
         used_mocks = True
         print(f"[3/4] {len(MOCK_TENDERS)} mock tenders cached (live sources yielded 0).")
     else:
-        src = f"OCDS:{ocds_count} CSV:{csv_count}" if total_synced > 0 else "DB cache"
+        src = f"OCDS:{ocds_count} CSV:{csv_count} SANRAL:{sanral_count}" if total_synced > 0 else "DB cache"
         print(f"[3/4] {len(tenders_to_match)} open tenders loaded from DB [{src}]")
 
     # Step 4: Match

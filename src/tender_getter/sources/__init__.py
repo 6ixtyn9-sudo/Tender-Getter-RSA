@@ -15,6 +15,7 @@ class TenderSource(Protocol):
 # Re-export the built-in parsers / syncers
 from .etenders_ocds import sync_live_tenders, parse_ocds_release_to_tender
 from .etenders_csv import sync_csv_tenders, parse_csv_row_to_tender
+from .sanral import SANRALSource
 from .common import re_search_cidb, province_from_text
 
 def load_sources() -> List[Dict[str, Any]]:
@@ -35,6 +36,7 @@ __all__ = [
     "TenderSource",
     "sync_live_tenders", "parse_ocds_release_to_tender",
     "sync_csv_tenders", "parse_csv_row_to_tender",
+    "SANRALSource",
     "re_search_cidb", "province_from_text",
     "load_sources",
 ]
