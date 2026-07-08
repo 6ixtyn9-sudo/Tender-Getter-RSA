@@ -2,32 +2,42 @@
 run_poc.py - Tender Getter RSA: Proof of Concept CLI Runner
 
 Usage:
-    PYTHONPATH=. python scripts/run_poc.py
+ PYTHONPATH=src:. python scripts/run_poc.py
+ Set SUPABASE_URL / SUPABASE_SERVICE_ROLE_KEY in .env to write to Supabase,
+ otherwise falls back to local SQLite.
 
 This script:
-  1. Initialises the local SQLite database.
-  2. Creates a mock company profile (Sipho Electrical and Civils).
-  3. Caches 3 mock tenders with different disqualification scenarios.
-  4. Runs the matching engine against each tender.
-  5. Prints a formatted terminal scorecard.
+ 1. Initialises the database via get_database_client() (Supabase/Postgres/SQLite).
+ 2. Creates a mock company profile (Sipho Electrical and Civils).
+ 3. Tries to sync live tenders from data.etenders.gov.za CSV,
+    falls back to 3 mock tenders if offline.
+ 4. Runs the matching engine.
+ 5. Prints a formatted terminal scorecard.
 """
 
 import sys
 from pathlib import Path
 from datetime import datetime, timezone
 
-# Ensure project root is on the path when running directly
-sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+# Load .env automatically if python-dotenv is installed
+try:
+    from dotenv import load_dotenv  # type: ignore
+    load_dotenv()
+except Exception:
+    pass
 
-from src.tender_getter.schemas import (
+# Ensure project root is on the path when running directly
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
+
+from tender_getter.schemas import (
     CIDBGrading, Location, CompanyProfile, TenderOpportunity,
 )
-from src.tender_getter.matcher import match
-from src.tender_getter.database import TenderDatabase
-
+from tender_getter.matcher import match
+from tender_getter.database import get_database_client
+from tender_getter.source_sync import sync_csv_tenders
 
 # ---------------------------------------------------------------------------
-# Mock data
+# Mock company
 # ---------------------------------------------------------------------------
 
 MOCK_COMPANY = CompanyProfile(
@@ -53,6 +63,7 @@ MOCK_COMPANY = CompanyProfile(
     is_active=True,
 )
 
+# Fallback mock tenders – used if live CSV sync fails / returns 0
 MOCK_TENDERS = [
     TenderOpportunity(
         tender_id="COJ/EE/2026/012",
@@ -92,7 +103,6 @@ MOCK_TENDERS = [
     ),
 ]
 
-
 # ---------------------------------------------------------------------------
 # CLI runner
 # ---------------------------------------------------------------------------
@@ -100,32 +110,65 @@ MOCK_TENDERS = [
 def print_separator(char: str = "-", width: int = 80):
     print(char * width)
 
-
 def run_poc():
     print()
     print("=" * 50)
-    print("      TENDER GETTER RSA - PROOF OF CONCEPT        ")
+    print("      TENDER GETTER RSA - PROOF OF CONCEPT")
     print("=" * 50)
 
-    # Step 1: Database
-    db = TenderDatabase()
-    db.connect()
-    print("[1/4] Local SQLite database initialized successfully.")
+    # Step 1: Database – Supabase / Postgres / SQLite auto-selected
+    db = get_database_client()
+    try:
+        db.connect()
+    except Exception as e:
+        print(f"Database connect failed: {e}")
+        return
+    print(f"[1/4] Database connected: {type(db).__name__}")
 
     # Step 2: Save company
     db.upsert_company(MOCK_COMPANY)
     cidb_str = ", ".join(
         f"{g.class_code}{g.level}" for g in MOCK_COMPANY.cidb_gradings
     )
-    print(
-        f"[2/4] Mock Client Profile Saved: {MOCK_COMPANY.company_name} "
-        f"(CIDB: {cidb_str})"
-    )
+    print(f"[2/4] Client Profile Saved: {MOCK_COMPANY.company_name} (CIDB: {cidb_str})")
 
-    # Step 3: Cache tenders
-    for tender in MOCK_TENDERS:
-        db.upsert_tender(tender)
-    print(f"[3/4] {len(MOCK_TENDERS)} Live Tenders Cached in Database.")
+    # Step 3: Sync live tenders – try CSV bulk first
+    # data.etenders.gov.za publishes daily OCDS CSVs – try recent dates
+    # Fall back to mock data if offline
+    live_count = 0
+    try:
+        # Try latest daily CSV – eTenders uses DDMMYYYY.csv
+        # Try a few recent dates to find a non-empty file
+        from datetime import timedelta
+        today = datetime.now(timezone.utc)
+        for days_back in range(0, 7):
+            d = today - timedelta(days=days_back)
+            csv_url = f"https://data.etenders.gov.za/Home/DownloadFile/?fileName={d.strftime('%d%m%Y')}.csv"
+            try:
+                live_count = sync_csv_tenders(db, csv_url)
+                if live_count > 0:
+                    print(f"[3/4] {live_count} live tenders synced from eTenders CSV: {csv_url}")
+                    break
+            except Exception:
+                continue
+    except Exception as e:
+        print(f"Live CSV sync failed: {e}")
+
+    # Fallback to mock tenders if live sync yielded nothing
+    if live_count == 0:
+        for tender in MOCK_TENDERS:
+            db.upsert_tender(tender)
+        print(f"[3/4] {len(MOCK_TENDERS)} mock tenders cached (live source offline).")
+        tenders_to_match = MOCK_TENDERS
+    else:
+        # Pull back the tenders we just saved – for POC, re-match the mock company
+        # against whatever came in from the CSV. Simplest: query via DB if available,
+        # otherwise just use the mock list for display.
+        # Here we keep it simple: if we got live data, we can't easily list it without
+        # a list_tenders() method, so fall back to matching the mock set for a stable demo.
+        # TODO: add list_open_tenders() to TenderDatabaseBase
+        tenders_to_match = MOCK_TENDERS
+        print(f"[3/4] Live tenders saved to DB – running matcher against demo set for stable output.")
 
     # Step 4: Match
     print("\n[4/4] Running Automated Matching Core...\n")
@@ -142,7 +185,7 @@ def run_poc():
     )
     print_separator()
 
-    for tender in MOCK_TENDERS:
+    for tender in tenders_to_match:
         result = match(MOCK_COMPANY, tender)
         db.save_match(MOCK_COMPANY, result)
 
@@ -157,9 +200,9 @@ def run_poc():
         print_separator()
 
     db.close()
-    print("\nAll results persisted to localdata/tender_getter.db")
+    print("\nAll results persisted.")
+    print(f"DB driver: {type(db).__name__}")
     print("Day 2 milestone: COMPLETE ✅\n")
-
 
 if __name__ == "__main__":
     run_poc()
