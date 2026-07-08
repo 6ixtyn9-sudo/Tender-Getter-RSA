@@ -2,13 +2,6 @@
 """
 doctor.py – Tender Getter RSA health check
 Exits 0 if all checks pass, 1 otherwise. No secrets are printed.
-
-Checks:
-  1. Python / package imports
-  2. GEMINI_API_KEY present
-  3. sources.yaml loads and contains etenders_ocds
-  4. eTenders portal reachable (OCDS API or data portal fallback)
-  5. Database client connects (Supabase / Postgres / SQLite fallback)
 """
 import sys
 import os
@@ -59,19 +52,22 @@ def check_sources():
 def check_etenders_api():
     from urllib.request import urlopen, Request
     from urllib.error import URLError, HTTPError
-    # OCDS API has been flaky (404s as of 2026-07-08), fall back to data portal
+    from datetime import datetime, timezone, timedelta
+    end = datetime.now(timezone.utc)
+    start = end - timedelta(days=30)
+    params = f"PageNumber=1&PageSize=1&dateFrom={start.strftime('%Y-%m-%dT%H:%M:%SZ')}&dateTo={end.strftime('%Y-%m-%dT%H:%M:%SZ')}"
     urls = [
-        "https://ocds-api.etenders.gov.za/api/v1/releases?page=1&pageSize=1",
+        f"https://ocds-api.etenders.gov.za/api/OCDSReleases?{params}",
         "https://data.etenders.gov.za/",
     ]
     for url in urls:
         try:
-            req = Request(url, headers={"User-Agent": "Tender-Getter-RSA/doctor"})
-            with urlopen(req, timeout=5) as r:
+            req = Request(url, headers={"User-Agent": "Tender-Getter-RSA/doctor", "Accept": "application/json"})
+            with urlopen(req, timeout=8) as r:
                 if 200 <= r.status < 400:
                     host = url.split("/")[2]
                     return True, f"OK via {host}"
-        except (URLError, HTTPError):
+        except (URLError, HTTPError, Exception):
             continue
     return False, "eTenders OCDS API and data portal both unreachable"
 
@@ -81,6 +77,11 @@ def check_database():
         db = get_database_client()
         db.connect()
         name = type(db).__name__
+        try:
+            if hasattr(db, "list_open_tenders"):
+                _ = db.list_open_tenders(limit=1)
+        except Exception:
+            pass
         db.close()
         return True, name
     except Exception as e:
