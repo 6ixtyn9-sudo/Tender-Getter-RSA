@@ -1,5 +1,4 @@
 # Tender-Getter RSA – tender source registry
-# Priority 1 = wire first, free, machine-readable
 sources:
   - id: etenders_ocds
     name: "National Treasury eTenders OCDS API"
