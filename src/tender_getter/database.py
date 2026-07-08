@@ -270,18 +270,20 @@ class TenderDatabase(TenderDatabaseBase):
 
 def get_database_client() -> TenderDatabaseBase:
     """
-    Factory that selects the active database driver at runtime.
-
-    Returns:
-        PostgresDatabase — when SUPABASE_DB_URL is set in the environment.
-        TenderDatabase   — otherwise (local SQLite, default for dev/testing).
-
-    The PostgresDatabase import is intentionally lazy: psycopg2 is only
-    imported on machines where SUPABASE_DB_URL is configured, keeping the
-    local development environment free of production dependencies.
+    Priority:
+    1. SUPABASE_URL + SUPABASE_SERVICE_ROLE_KEY -> SupabaseDatabase (PostgREST, recommended)
+    2. SUPABASE_DB_URL                          -> PostgresDatabase (psycopg2)
+    3. fallback                                 -> TenderDatabase (SQLite)
     """
+    import os
+    supabase_url = os.environ.get("SUPABASE_URL")
+    supabase_key = os.environ.get("SUPABASE_SERVICE_ROLE_KEY") or os.environ.get("SUPABASE_ANON_KEY")
+    if supabase_url and supabase_key:
+        from .database_supabase import SupabaseDatabase
+        return SupabaseDatabase(supabase_url, supabase_key)
     postgres_url = os.environ.get("SUPABASE_DB_URL")
     if postgres_url:
         from .database_postgres import PostgresDatabase
         return PostgresDatabase(postgres_url)
     return TenderDatabase()
+
