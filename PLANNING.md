@@ -3,14 +3,12 @@ Date: 2026-07-08
 Venture: Commercial B2B SaaS Bidding Matchmaker (South Africa)
 Version: 1.1.0
 
-1. Executive Summary & USP
+Executive Summary & USP
 Tender Getter RSA is a highly optimized, AI-native B2B matchmaking and proposal-drafting platform built for South African SMMEs (Small, Medium, and Micro Enterprises).
-
 The USP is execution-focused: We do not just aggregate a list of daily links (which existing R250-R800/month portals do). We solve the disqualification and proposal-writing traps by instantly screening non-negotiable regulatory gates (CSD, SARS, CIDB, B-BBEE, Geofencing) and generating custom-synthesized compliance-win strategies and proposal drafts in seconds.
 
-2. Core Python Architecture & Schemas
+Core Python Architecture & Schemas
 To ensure rapid, modular iteration and high reliability, our backend is structured strictly around Pydantic validation models and a SQLite relational data layer.
-
 A. The Master Schemas (src/tender_getter/schemas.py)
 Two data structures define the entire transaction space:
 
@@ -21,40 +19,40 @@ from typing import List, Optional, Dict
 from datetime import datetime
 
 class CIDBGrading(BaseModel):
-    class_code: str = Field(..., description="e.g. CE (Civil Engineering), GB (General Building)")
-    level: int = Field(..., ge=1, le=9, description="CIDB grading level from 1 to 9")
+class_code: str = Field(..., description="e.g. CE (Civil Engineering), GB (General Building)")
+level: int = Field(..., ge=1, le=9, description="CIDB grading level from 1 to 9")
 
 class Location(BaseModel):
-    province: str
-    city: str
-    municipality: Optional[str] = None
+province: str
+city: str
+municipality: Optional[str] = None
 
 class CompanyProfile(BaseModel):
-    registration_number: str = Field(..., description="CIPC registration number")
-    company_name: str
-    csd_number: Optional[str] = Field(None, description="MAAA supplier number")
-    bbbee_level: int = Field(9, ge=1, le=9, description="B-BBEE Level, 9 is Non-Compliant")
-    black_ownership_pct: float = Field(0.0, ge=0.0, le=100.0)
-    youth_ownership_pct: float = Field(0.0, ge=0.0, le=100.0)
-    women_ownership_pct: float = Field(0.0, ge=0.0, le=100.0)
-    cidb_gradings: List[CIDBGrading] = []
-    location: Location
-    sectors: List[str]
-    has_tax_pin: bool = False
-    has_coida: bool = False
-    is_active: bool = True
+registration_number: str = Field(..., description="CIPC registration number")
+company_name: str
+csd_number: Optional[str] = Field(None, description="MAAA supplier number")
+bbbee_level: int = Field(9, ge=1, le=9, description="B-BBEE Level, 9 is Non-Compliant")
+black_ownership_pct: float = Field(0.0, ge=0.0, le=100.0)
+youth_ownership_pct: float = Field(0.0, ge=0.0, le=100.0)
+women_ownership_pct: float = Field(0.0, ge=0.0, le=100.0)
+cidb_gradings: List[CIDBGrading] = []
+location: Location
+sectors: List[str]
+has_tax_pin: bool = False
+has_coida: bool = False
+is_active: bool = True
 
 class TenderOpportunity(BaseModel):
-    tender_id: str = Field(..., description="Official bid number/reference")
-    title: str
-    issuing_entity: str
-    closing_date: datetime
-    estimated_value: Optional[float] = None
-    required_cidb_class: Optional[str] = None
-    required_cidb_level: Optional[int] = None
-    mandatory_csd: bool = True
-    location_target: Optional[str] = Field(None, description="e.g. 'Gauteng' or 'National'")
-    raw_document_url: Optional[str] = None
+tender_id: str = Field(..., description="Official bid number/reference")
+title: str
+issuing_entity: str
+closing_date: datetime
+estimated_value: Optional[float] = None
+required_cidb_class: Optional[str] = None
+required_cidb_level: Optional[int] = None
+mandatory_csd: bool = True
+location_target: Optional[str] = Field(None, description="e.g. 'Gauteng' or 'National'")
+raw_document_url: Optional[str] = None
 B. Relational Storage (src/tender_getter/database.py)
 A local-first SQLite database matches these schemas for instant, zero-cost state management:
 
@@ -85,29 +83,29 @@ Tender documents are highly complex, multi-page PDFs. To avoid blowing out our t
 
 text
 
-[Messy 100-Page PDF] 
-        │
-        ▼ (Local Python Extraction)
- [Page Pre-Screener] ──► Extracts only pages containing "SBD 1", "SBD 6.1", 
-        │                "CIDB", or "Evaluation Criteria". (Reduces to ~5 pages)
-        ▼
+[Messy 100-Page PDF]
+│
+▼ (Local Python Extraction)
+[Page Pre-Screener] ──► Extracts only pages containing "SBD 1", "SBD 6.1",
+│ "CIDB", or "Evaluation Criteria". (Reduces to ~5 pages)
+▼
 [Gemini 1.5 Pro API] ──► Strict JSON Compliance Extraction (Structure Validation)
-        │
-        ▼
- [Relational Schema] ──► Piped into sqlite matching engine
+│
+▼
+[Relational Schema] ──► Piped into sqlite matching engine
 The System Prompt & Output Schema:
 Gemini 1.5 Pro is invoked with a strict JSON system schema to prevent any formatting drift:
 
 JSON
 
 {
-  "bid_number": "string",
-  "closing_date": "string (YYYY-MM-DD or null)",
-  "required_cidb_class": "string ('CE', 'GB', 'EE', 'ME' or null)",
-  "required_cidb_level": "integer (1-9 or null)",
-  "mandatory_csd": "boolean",
-  "bbbee_points_system": "string ('80/20', '90/10' or null)",
-  "location_target": "string or null"
+"bid_number": "string",
+"closing_date": "string (YYYY-MM-DD or null)",
+"required_cidb_class": "string ('CE', 'GB', 'EE', 'ME' or null)",
+"required_cidb_level": "integer (1-9 or null)",
+"mandatory_csd": "boolean",
+"bbbee_points_system": "string ('80/20', '90/10' or null)",
+"location_target": "string or null"
 }
 5. Phase 1 (Today): Ingestion Maximization Engine
 To build the most comprehensive procurement catalog in South Africa, today is dedicated to maximizing active tender harvesting. We move beyond single-point failures by implementing a high-throughput, redundant pipeline strategy.
