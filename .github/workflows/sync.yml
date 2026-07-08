@@ -33,14 +33,14 @@ jobs:
         run: |
           PYTHONPATH=src:. python scripts/doctor.py
 
-      - name: Run POC / tender sync
+      - name: Run tender sync (live sources only)
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           PYTHONUNBUFFERED: "1"
         run: |
-          PYTHONPATH=src:. python scripts/sync_all.py
+          PYTHONPATH=src:. python scripts/sync_all.py --live-only
 
       - name: Pytest
         run: |

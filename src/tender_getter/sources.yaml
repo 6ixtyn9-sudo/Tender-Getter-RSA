@@ -1,761 +1,5918 @@
-# Tender-Getter RSA – tender source registry
 sources:
-  - id: etenders_ocds
-    name: "National Treasury eTenders OCDS API"
-    url: "https://ocds-api.etenders.gov.za"
-    swagger: "https://ocds-api.etenders.gov.za/swagger/index.html"
-    type: ocds_json
-    priority: 1
-    free: true
-
-  - id: etenders_csv
-    name: "National Treasury eTenders Bulk CSV"
-    url: "https://data.etenders.gov.za/"
-    download_pattern: "https://data.etenders.gov.za/Home/DownloadFile/?fileName=DDMMYYYY.csv"
-    type: csv
-    priority: 1
-    free: true
-
-  - id: cidb_itender
-    name: "CIDB i-Tender"
-    url: "https://www.cidb.org.za/"
-    type: html
-    priority: 2
-
-  - id: gauteng_etenders
-    name: "Gauteng eTenders"
-    url: "https://etenders.gauteng.gov.za"
-    type: html
-    priority: 2
-
-  - id: westerncape_tenders
-    name: "Western Cape Government Tenders"
-    url: "https://www.westerncape.gov.za/tenders"
-    type: html
-    priority: 2
-
-  - id: kzn_treasury
-    name: "KwaZulu-Natal Treasury"
-    url: "https://www.kzntreasury.gov.za"
-    type: html
-    priority: 2
-
-  - id: eskom
-    name: "Eskom Tender Bulletin"
-    url: "https://tenderbulletin.eskom.co.za/"
-    type: html
-    priority: 3
-
-  - id: transnet
-    name: "Transnet eTenders"
-    url: "https://transnetetenders.azurewebsites.net/"
-    type: html
-    priority: 3
-
-  - id: sanral
-    name: "SANRAL"
-    url: "https://www.nra.co.za/sanral-tenders/"
-    type: html
-    priority: 3
-
-  - id: capetown_tenders
-    name: "City of Cape Town"
-    url: "https://web1.capetown.gov.za/web1/TenderPortal/"
-    type: html
-    priority: 2
-    free: true
-
-  - id: sita_tenders
-    name: "State Information Technology Agency (SITA)"
-    url: "https://www.sita.co.za/tenders"
-    type: html
-    priority: 3
-    free: true
-
-  - id: johannesburg_tenders
-    name: "City of Johannesburg"
-    url: "https://joburg.org.za/work_/Pages/2025-Tenders-and-Quotations/Bid-Opening-Registers.aspx"
-    type: html
-    priority: 2
-    free: true
-
-  - id: ethekwini_tenders
-    name: "eThekwini Metropolitan Municipality"
-    url: "https://www.durban.gov.za/pages/residents/tenders"
-    type: html
-    priority: 2
-    free: true
-
-  - id: tshwane_tenders
-    name: "City of Tshwane"
-    url: "https://www.tshwane.gov.za/?page_id=427"
-    type: html
-    priority: 2
-    free: true
-
-  - id: ekurhuleni_tenders
-    name: "Ekurhuleni Metropolitan Municipality"
-    url: "https://www.ekurhuleni.gov.za/tenders/"
-    type: html
-    priority: 2
-    free: true
-
-  - id: nelsonmandelabay_tenders
-    name: "Nelson Mandela Bay Metropolitan Municipality"
-    url: "https://www.nelsonmandelabay.gov.za/Tenders"
-    type: html
-    priority: 2
-    free: true
-
-  - id: buffalo_city_tenders
-    name: "Buffalo City Metropolitan Municipality"
-    url: "https://www.buffalocity.gov.za/tenders.php"
-    type: html
-    priority: 2
-    free: true
-
-  - id: mangaung_tenders
-    name: "Mangaung Metropolitan Municipality"
-    url: "http://www.mangaung.co.za/category/tenders/"
-    type: html
-    priority: 2
-    free: true
-
-  - id: easterncape_tenders
-    name: "Eastern Cape Provincial Treasury"
-    url: "https://www.ecprov.gov.za/tenders"
-    type: html
-    priority: 2
-    free: true
-
-  - id: freestate_tenders
-    name: "Free State Provincial Treasury"
-    url: "http://www.treasury.fs.gov.za/tenders/"
-    type: html
-    priority: 2
-    free: true
-
-  - id: limpopo_tenders
-    name: "Limpopo Provincial Treasury"
-    url: "https://www.limtreasury.gov.za/lim_admin_trea/pages/sites/tender_documents/index.php"
-    type: html
-    priority: 2
-    free: true
-
-  - id: mpumalanga_tenders
-    name: "Mpumalanga Provincial Treasury"
-    url: "https://www.mpumalanga.gov.za/finance/tenders.htm"
-    type: html
-    priority: 2
-    free: true
-
-  - id: northwest_tenders
-    name: "North West Provincial Treasury"
-    url: "http://www.nwpg.gov.za/Treasury/Tenders.asp"
-    type: html
-    priority: 2
-    free: true
-
-  - id: northerncape_tenders
-    name: "Northern Cape Provincial Treasury"
-    url: "https://nctreasury.ncpg.gov.za/index.php/tenders"
-    type: html
-    priority: 2
-    free: true
-
-  # --- SOEs ---
-  - id: prasa_tenders
-    name: "Passenger Rail Agency of South Africa (PRASA)"
-    url: "https://www.prasa.com/tenders"
-    type: html
-    priority: 3
-    free: true
-
-  - id: landbank_tenders
-    name: "Land and Agricultural Development Bank"
-    url: "https://landbank.co.za/Pages/Procurement.aspx"
-    type: html
-    priority: 3
-    free: true
-
-  - id: sabc_tenders
-    name: "South African Broadcasting Corporation"
-    url: "https://www.sabc.co.za/sabc/tenders/"
-    type: html
-    priority: 3
-    free: true
-
-  - id: acsa_tenders
-    name: "Airports Company South Africa"
-    url: "https://www.airports.co.za/business/tender-bulletin"
-    type: html
-    priority: 3
-    free: true
-
-  - id: denel_tenders
-    name: "Denel SOC Ltd"
-    url: "https://www.denel.co.za/tenders"
-    type: html
-    priority: 3
-    free: true
-
-  - id: sentech_tenders
-    name: "Sentech SOC Ltd"
-    url: "https://www.sentech.co.za/tenders"
-    type: html
-    priority: 3
-    free: true
-
-  - id: safcol_tenders
-    name: "South African Forestry Company"
-    url: "https://www.safcol.co.za/tenders/"
-    type: html
-    priority: 3
-    free: true
-
-  - id: necsa_tenders
-    name: "South African Nuclear Energy Corporation"
-    url: "https://www.necsa.co.za/tenders/"
-    type: html
-    priority: 3
-    free: true
-
-  - id: petrosa_tenders
-    name: "PetroSA"
-    url: "https://www.petrosa.co.za/tenders"
-    type: html
-    priority: 3
-    free: true
-
-  - id: infraco_tenders
-    name: "Broadband Infraco"
-    url: "https://www.infraco.co.za/tenders/"
-    type: html
-    priority: 3
-    free: true
-
-  - id: atns_tenders
-    name: "Air Traffic & Navigation Services"
-    url: "https://www.atns.com/tenders"
-    type: html
-    priority: 3
-    free: true
-
-  - id: alexkor_tenders
-    name: "Alexkor SOC Ltd"
-    url: "https://www.alexkor.co.za/tenders"
-    type: html
-    priority: 3
-    free: true
-
-  # --- Water Boards ---
-  - id: rand_water_tenders
-    name: "Rand Water"
-    url: "https://www.randwater.co.za/tenders"
-    type: html
-    priority: 3
-    free: true
-
-  - id: umgeni_water_tenders
-    name: "Umgeni Water"
-    url: "https://www.umgeni.co.za/tenders"
-    type: html
-    priority: 3
-    free: true
-
-  - id: mhlathuze_water_tenders
-    name: "Mhlathuze Water"
-    url: "https://www.mhlathuzewater.co.za/tenders"
-    type: html
-    priority: 3
-    free: true
-
-  - id: overberg_water_tenders
-    name: "Overberg Water"
-    url: "https://overbergwater.co.za/tenders"
-    type: html
-    priority: 3
-    free: true
-
-  - id: amatola_water_tenders
-    name: "Amatola Water"
-    url: "https://www.amatolawater.co.za/tenders"
-    type: html
-    priority: 3
-    free: true
-
-  - id: lepelle_water_tenders
-    name: "Lepelle Northern Water"
-    url: "https://www.lepellewater.co.za/tenders"
-    type: html
-    priority: 3
-    free: true
-
-  - id: magalies_water_tenders
-    name: "Magalies Water"
-    url: "https://www.magalieswater.co.za/tenders"
-    type: html
-    priority: 3
-    free: true
-
-  - id: bloem_water_tenders
-    name: "Bloem Water"
-    url: "https://www.bloemwater.co.za/tenders"
-    type: html
-    priority: 3
-    free: true
-
-  - id: sedibeng_water_tenders
-    name: "Sedibeng Water"
-    url: "https://www.sedibengwater.co.za/tenders"
-    type: html
-    priority: 3
-    free: true
-
-  - id: tcta_tenders
-    name: "Trans-Caledon Tunnel Authority"
-    url: "https://www.tcta.co.za/tenders"
-    type: html
-    priority: 3
-    free: true
-
-  # --- DFIs / Regulators ---
-  - id: dbsa_tenders
-    name: "Development Bank of Southern Africa"
-    url: "https://www.dbsa.org/tenders"
-    type: html
-    priority: 3
-    free: true
-
-  - id: idc_tenders
-    name: "Industrial Development Corporation"
-    url: "https://www.idc.co.za/tenders"
-    type: html
-    priority: 3
-    free: true
-
-  - id: sars_tenders
-    name: "South African Revenue Service"
-    url: "https://www.sars.gov.za/procurement/"
-    type: html
-    priority: 3
-    free: true
-
-  - id: samsa_tenders
-    name: "South African Maritime Safety Authority"
-    url: "https://www.samsa.org.za/tenders"
-    type: html
-    priority: 3
-    free: true
-
-  - id: sanparks_tenders
-    name: "South African National Parks"
-    url: "https://www.sanparks.org/about/doing_business/tenders"
-    type: html
-    priority: 3
-    free: true
-
-  - id: seda_tenders
-    name: "Small Enterprise Development Agency"
-    url: "https://www.seda.org.za/tenders"
-    type: html
-    priority: 3
-    free: true
-
-  - id: sefa_tenders
-    name: "Small Enterprise Finance Agency"
-    url: "https://www.sefa.org.za/tenders"
-    type: html
-    priority: 3
-    free: true
-
-  - id: raf_tenders
-    name: "Road Accident Fund"
-    url: "https://www.raf.co.za/tenders"
-    type: html
-    priority: 3
-    free: true
-
-  - id: compensation_fund_tenders
-    name: "Compensation Fund"
-    url: "https://www.labour.gov.za/compensation-fund-tenders"
-    type: html
-    priority: 3
-    free: true
-
-  - id: uif_tenders
-    name: "Unemployment Insurance Fund"
-    url: "https://www.labour.gov.za/uif-tenders"
-    type: html
-    priority: 3
-    free: true
-
-  # --- Research Councils ---
-  - id: csir_tenders
-    name: "Council for Scientific & Industrial Research"
-    url: "https://www.csir.co.za/tenders"
-    type: html
-    priority: 3
-    free: true
-
-  - id: nhls_tenders
-    name: "National Health Laboratory Service"
-    url: "https://www.nhls.ac.za/tenders"
-    type: html
-    priority: 3
-    free: true
-
-  - id: sansa_tenders
-    name: "South African National Space Agency"
-    url: "https://www.sansa.org.za/tenders"
-    type: html
-    priority: 3
-    free: true
-
-  - id: geoscience_tenders
-    name: "Council for Geoscience"
-    url: "https://www.geoscience.org.za/tenders"
-    type: html
-    priority: 3
-    free: true
-
-  - id: mintek_tenders
-    name: "Mintek"
-    url: "https://www.mintek.co.za/tenders"
-    type: html
-    priority: 3
-    free: true
-
-  - id: hsrc_tenders
-    name: "Human Sciences Research Council"
-    url: "https://www.hsrc.ac.za/tenders"
-    type: html
-    priority: 3
-    free: true
-
-  - id: wrc_tenders
-    name: "Water Research Commission"
-    url: "https://www.wrc.org.za/tenders"
-    type: html
-    priority: 3
-    free: true
-
-  - id: sabs_tenders
-    name: "South African Bureau of Standards"
-    url: "https://www.sabs.co.za/tenders"
-    type: html
-    priority: 3
-    free: true
-
-  # --- District Municipalities ---
-  - id: west_rand_tenders
-    name: "West Rand District Municipality"
-    url: "https://www.wrdm.gov.za/tenders"
-    type: html
-    priority: 2
-    free: true
-
-  - id: sedibeng_dm_tenders
-    name: "Sedibeng District Municipality"
-    url: "https://www.sedibeng.gov.za/tenders"
-    type: html
-    priority: 2
-    free: true
-
-  - id: cape_winelands_tenders
-    name: "Cape Winelands District Municipality"
-    url: "https://www.capewinelands.gov.za/tenders"
-    type: html
-    priority: 2
-    free: true
-
-  - id: garden_route_tenders
-    name: "Garden Route District Municipality"
-    url: "https://www.gardenroute.gov.za/tenders"
-    type: html
-    priority: 2
-    free: true
-
-  - id: king_cetshwayo_tenders
-    name: "King Cetshwayo District Municipality"
-    url: "https://www.kingcetshwayo.gov.za/tenders"
-    type: html
-    priority: 2
-    free: true
-
-  - id: ilembe_tenders
-    name: "iLembe District Municipality"
-    url: "https://www.ilembe.gov.za/tenders"
-    type: html
-    priority: 2
-    free: true
-
-  - id: or_tambo_tenders
-    name: "OR Tambo District Municipality"
-    url: "https://www.ortambodm.gov.za/tenders"
-    type: html
-    priority: 2
-    free: true
-
-  - id: capricorn_tenders
-    name: "Capricorn District Municipality"
-    url: "https://www.cdm.org.za/tenders"
-    type: html
-    priority: 2
-    free: true
-
-  - id: ehlanzeni_tenders
-    name: "Ehlanzeni District Municipality"
-    url: "https://www.ehlanzeni.gov.za/tenders"
-    type: html
-    priority: 2
-    free: true
-
-  # --- Provincial Infrastructure Departments ---
-  - id: gdid_tenders
-    name: "Gauteng Department of Infrastructure Development"
-    url: "https://www.gdid.gpg.gov.za/tenders"
-    type: html
-    priority: 2
-    free: true
-  - id: gdrt_tenders
-    name: "Gauteng Department of Roads and Transport"
-    url: "https://www.gdrt.gpg.gov.za/tenders"
-    type: html
-    priority: 2
-    free: true
-  - id: gde_tenders
-    name: "Gauteng Department of Education"
-    url: "https://www.education.gpg.gov.za/tenders"
-    type: html
-    priority: 2
-    free: true
-  - id: gdh_tenders
-    name: "Gauteng Department of Health"
-    url: "https://www.health.gpg.gov.za/tenders"
-    type: html
-    priority: 2
-    free: true
-  - id: wcdi_tenders
-    name: "Western Cape Department of Infrastructure"
-    url: "https://www.westerncape.gov.za/dept/infrastructure/tenders"
-    type: html
-    priority: 2
-    free: true
-  - id: wc_health_tenders
-    name: "Western Cape Department of Health & Wellness"
-    url: "https://www.westerncape.gov.za/dept/health/tenders"
-    type: html
-    priority: 2
-    free: true
-  - id: kzn_dot_tenders
-    name: "KwaZulu-Natal Department of Transport"
-    url: "https://www.kzntransport.gov.za/tenders"
-    type: html
-    priority: 2
-    free: true
-  - id: kzn_human_settlements_tenders
-    name: "KwaZulu-Natal Department of Human Settlements"
-    url: "https://www.kznsethuman.gov.za/tenders"
-    type: html
-    priority: 2
-    free: true
-  - id: ec_public_works_tenders
-    name: "Eastern Cape Department of Public Works"
-    url: "https://www.ecdpw.gov.za/tenders"
-    type: html
-    priority: 2
-    free: true
-  - id: ec_education_tenders
-    name: "Eastern Cape Department of Education"
-    url: "https://www.ecdoe.gov.za/tenders"
-    type: html
-    priority: 2
-    free: true
-  - id: fs_police_roads_tenders
-    name: "Free State Department of Police, Roads & Transport"
-    url: "https://www.pret.fs.gov.za/tenders"
-    type: html
-    priority: 2
-    free: true
-  - id: limpopo_pwri_tenders
-    name: "Limpopo Department of Public Works, Roads & Infrastructure"
-    url: "https://www.ldprr.gov.za/tenders"
-    type: html
-    priority: 2
-    free: true
-  - id: mpumalanga_education_tenders
-    name: "Mpumalanga Department of Education"
-    url: "https://www.mpumalanga.gov.za/education/tenders"
-    type: html
-    priority: 2
-    free: true
-  - id: nw_public_works_tenders
-    name: "North West Department of Public Works and Roads"
-    url: "https://www.nwpg.gov.za/publicworks/tenders"
-    type: html
-    priority: 2
-    free: true
-  - id: nc_roads_tenders
-    name: "Northern Cape Department of Roads and Public Works"
-    url: "https://ncrpw.ncpg.gov.za/tenders"
-    type: html
-    priority: 2
-    free: true
-  # --- National Government Departments ---
-  - id: saps_tenders
-    name: "South African Police Service"
-    url: "https://www.saps.gov.za/tenders"
-    type: html
-    priority: 2
-    free: true
-  - id: doel_tenders
-    name: "Department of Employment and Labour"
-    url: "https://www.labour.gov.za/tenders"
-    type: html
-    priority: 2
-    free: true
-  - id: dpwi_tenders
-    name: "Department of Public Works & Infrastructure"
-    url: "https://www.publicworks.gov.za/tenders"
-    type: html
-    priority: 2
-    free: true
-  - id: dws_tenders
-    name: "Department of Water and Sanitation"
-    url: "https://www.dws.gov.za/tenders"
-    type: html
-    priority: 2
-    free: true
-  - id: dod_tenders
-    name: "Department of Defence"
-    url: "https://www.dod.mil.za/tenders"
-    type: html
-    priority: 2
-    free: true
-  - id: doh_tenders
-    name: "Department of Health"
-    url: "https://www.health.gov.za/tenders"
-    type: html
-    priority: 2
-    free: true
-  - id: dbe_tenders
-    name: "Department of Basic Education"
-    url: "https://www.education.gov.za/tenders"
-    type: html
-    priority: 2
-    free: true
-  - id: dhet_tenders
-    name: "Department of Higher Education & Training"
-    url: "https://www.dhet.gov.za/tenders"
-    type: html
-    priority: 2
-    free: true
-  - id: dha_tenders
-    name: "Department of Home Affairs"
-    url: "https://www.dha.gov.za/tenders"
-    type: html
-    priority: 2
-    free: true
-  - id: dmre_tenders
-    name: "Department of Mineral Resources & Energy"
-    url: "https://www.dmre.gov.za/tenders"
-    type: html
-    priority: 2
-    free: true
-  - id: dalrrd_tenders
-    name: "Department of Agriculture, Land Reform & Rural Development"
-    url: "https://www.dalrrd.gov.za/tenders"
-    type: html
-    priority: 2
-    free: true
-  - id: dffe_tenders
-    name: "Department of Forestry, Fisheries & the Environment"
-    url: "https://www.dffe.gov.za/tenders"
-    type: html
-    priority: 2
-    free: true
-  - id: dot_tenders
-    name: "Department of Transport"
-    url: "https://www.transport.gov.za/tenders"
-    type: html
-    priority: 2
-    free: true
-  - id: national_treasury_tenders
-    name: "National Treasury"
-    url: "https://www.treasury.gov.za/tenders"
-    type: html
-    priority: 2
-    free: true
-  - id: dcs_tenders
-    name: "Department of Correctional Services"
-    url: "https://www.dcs.gov.za/tenders"
-    type: html
-    priority: 2
-    free: true
-  - id: tourism_tenders
-    name: "Department of Tourism"
-    url: "https://www.tourism.gov.za/tenders"
-    type: html
-    priority: 2
-    free: true
-  - id: dsac_tenders
-    name: "Department of Sports, Arts & Culture"
-    url: "https://www.dsac.gov.za/tenders"
-    type: html
-    priority: 2
-    free: true
-  - id: dsi_tenders
-    name: "Department of Science & Innovation"
-    url: "https://www.dst.gov.za/tenders"
-    type: html
-    priority: 2
-    free: true
-  - id: dcdt_tenders
-    name: "Department of Communications & Digital Technologies"
-    url: "https://www.dcdt.gov.za/tenders"
-    type: html
-    priority: 2
-    free: true
-  - id: dsbd_tenders
-    name: "Department of Small Business Development"
-    url: "https://www.dsbd.gov.za/tenders"
-    type: html
-    priority: 2
-    free: true
-  - id: dhs_tenders
-    name: "Department of Human Settlements"
-    url: "https://www.dhs.gov.za/tenders"
-    type: html
-    priority: 2
-    free: true
-  - id: cogta_tenders
-    name: "Department of Cooperative Governance & Traditional Affairs"
-    url: "https://www.cogta.gov.za/tenders"
-    type: html
-    priority: 2
-    free: true
-  - id: dpsa_tenders
-    name: "Department of Public Service & Administration"
-    url: "https://www.dpsa.gov.za/tenders"
-    type: html
-    priority: 2
-    free: true
-  - id: dtic_tenders
-    name: "Department of Trade, Industry & Competition"
-    url: "https://www.thedtic.gov.za/tenders"
-    type: html
-    priority: 2
-    free: true
-  - id: dpme_tenders
-    name: "Department of Planning, Monitoring & Evaluation"
-    url: "https://www.dpme.gov.za/tenders"
-    type: html
-    priority: 2
-    free: true
-  - id: presidency_tenders
-    name: "The Presidency"
-    url: "https://www.thepresidency.gov.za/tenders"
-    type: html
-    priority: 2
-    free: true
+- id: radio_702_tenders
+  name: Radio 702
+  url: https://www.702.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: aberdeen_plain_lm_tenders
+  name: Aberdeen Plain LM
+  url: https://www.aplm.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: acsa_alt_tenders
+  name: ACSA (alt)
+  url: https://www.airports.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: acsa_tenders
+  name: Airports Company South Africa
+  url: https://www.airports.co.za/business/tender-bulletin
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: afdb_tenders
+  name: AfDB (SA rep)
+  url: https://www.afdb.org/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: agriseta_tenders
+  name: Agricultural Sector Education and Training Authority (AgriSETA)
+  url: https://www.agriseta.co.za/?page_id=11000
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: agsa_tenders
+  name: Auditor-General South Africa (AGSA)
+  url: https://www.agsa.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: airports_company_tenders
+  name: ACSA (alt)
+  url: https://www.acsa.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: albert_luthuli_lm_tenders
+  name: Albert Luthuli LM
+  url: https://www.albertluthuli.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: alexkor_alt_tenders
+  name: Alexkor (alt)
+  url: https://www.alexkor.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: alexkor_tenders
+  name: Alexkor SOC Ltd
+  url: https://www.alexkor.co.za/tenders
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: alfred_duma_lm_tenders
+  name: Alfred Duma LM
+  url: https://www.alfredduma.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: alfred_nzo_dm_tenders
+  name: Alfred Nzo District Municipality
+  url: https://www.andm.gov.za/tenders
+  type: html
+  priority: 2
+  free: true
+  live: true
+- id: allied_health_council_tenders
+  name: Allied Health Council
+  url: https://www.ahpcsa.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: amajuba_dm_tenders
+  name: Amajuba District Municipality
+  url: https://www.amajuba.gov.za/tenders
+  type: html
+  priority: 2
+  free: true
+  live: true
+- id: amathole_dm_tenders
+  name: Amathole District Municipality
+  url: https://www.amathole.gov.za/tenders
+  type: html
+  priority: 2
+  free: true
+  live: true
+- id: amatola_water_tenders
+  name: Amatola Water
+  url: https://www.amatolawater.co.za/tenders
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: arc_tenders
+  name: Agricultural Research Council (ARC)
+  url: https://www.arc.agric.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: architectural_council_tenders
+  name: Architectural Council
+  url: https://www.sacapsa.com/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: armscor_tenders
+  name: Armscor (Armaments Corporation of SA)
+  url: https://www.armscor.co.za/tenders/
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: artscape_alt_tenders
+  name: Artscape (alt URL)
+  url: https://www.artscape.co.za/tenders
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: artscape_tenders
+  name: Artscape
+  url: https://www.artscape.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: atns_alt_tenders
+  name: ATNS (alt)
+  url: https://www.atns.com/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: atns_tenders
+  name: Air Traffic & Navigation Services
+  url: https://www.atns.com/tenders
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: audit_chamber_tenders
+  name: Auditor Chamber
+  url: https://www.irba.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: autopax_tenders
+  name: Autopax Passenger Services
+  url: https://www.autopax.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: ayurveda_council_tenders
+  name: Ayurveda Council
+  url: https://www.ahpcsa.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: ba_ba_phalaborwa_lm_tenders
+  name: Ba-Phalaborwa LM
+  url: https://www.baphalaborwa.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: ba_phalaborwa_lm_tenders
+  name: Ba-Phalaborwa LM
+  url: https://www.baphalaborwa.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: banking_association_tenders
+  name: Banking Association
+  url: https://www.banking.org.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: banking_ombud_tenders
+  name: Ombudsman for Banking Services
+  url: https://www.obssa.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: bankseta_tenders
+  name: Banking Sector Education and Training Authority (BANKSETA)
+  url: https://www.bankseta.org.za/tenders.php
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: beaufort_west_lm_tenders
+  name: Beaufort West Municipality
+  url: https://www.beaufortwestmun.co.za/tenders
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: bela_bela_lm_tenders
+  name: Bela-Bela LM
+  url: https://www.belabela.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: biokinetics_council_tenders
+  name: Biokinetics Council
+  url: https://www.biokinetics.org.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: bitou_lm_tenders
+  name: Bitou LM
+  url: https://www.bitou.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: bloem_water_tenders
+  name: "Bloem Water (legacy \u2013 merged into Vaal Central)"
+  url: https://www.bloemwater.co.za/tenders
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: blouberg_lm_tenders
+  name: Blouberg LM
+  url: https://www.blouberg.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: blue_gum_lm_tenders
+  name: Blue Gum LM
+  url: https://www.bluegum.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: bohlabela_dm_tenders
+  name: Bohlabela District Municipality
+  url: https://www.bohlabela.gov.za/tenders
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: bojanala_dm_tenders
+  name: Bojanala District Municipality
+  url: https://www.bojanala.gov.za/tenders
+  type: html
+  priority: 2
+  free: true
+  live: true
+- id: boland_tvet_tenders
+  name: Boland TVET College
+  url: https://www.bolandcollege.com/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: bosasa_tenders
+  name: Mining Qualifications Authority (already in setas/)
+  url: https://www.mqa.org.za/tenders
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: brand_sa_tenders
+  name: Brand South Africa
+  url: https://www.brandsouthafrica.com/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: breede_valley_alt_tenders
+  name: Breede Valley (alt)
+  url: https://www.bvmun.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: breede_valley_lm_tenders
+  name: Breede Valley Municipality
+  url: https://www.bvm.gov.za/tenders
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: broadband_infraco_alt_tenders
+  name: Infraco (alt)
+  url: https://www.infraco.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: buffalo_city_dm_legacy_tenders
+  name: Buffalo City (legacy DM code)
+  url: https://www.buffalocitydm.gov.za/tenders
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: buffalo_city_tenders
+  name: Buffalo City Metropolitan Municipality
+  url: https://www.buffalocity.gov.za/tenders.php
+  type: html
+  priority: 2
+  free: true
+  live: true
+- id: buffalo_city_tvet_tenders
+  name: Buffalo City TVET College
+  url: https://www.bctvet.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: cape_town_tvet_tenders
+  name: College of Cape Town TVET
+  url: https://www.capetowncollege.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: cape_winelands_dm_alt_tenders
+  name: Cape Winelands (DM alt URL)
+  url: https://www.cwdm.gov.za/tenders
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: cape_winelands_tenders
+  name: Cape Winelands District Municipality
+  url: https://www.capewinelands.gov.za/tenders
+  type: html
+  priority: 2
+  free: true
+  live: true
+- id: capenature_tenders
+  name: CapeNature (Western Cape)
+  url: https://www.capenature.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: capetown_tenders
+  name: City of Cape Town
+  url: https://web1.capetown.gov.za/web1/TenderPortal/
+  type: html
+  priority: 2
+  free: true
+  live: true
+- id: capricorn_tenders
+  name: Capricorn District Municipality
+  url: https://www.cdm.org.za/tenders
+  type: html
+  priority: 2
+  free: true
+  live: true
+- id: capricorn_tvet_tenders
+  name: Capricorn TVET College
+  url: https://www.capricorncollege.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: cathsseta_tenders
+  name: Culture, Arts, Tourism, Hospitality and Sport SETA (CATHSSETA)
+  url: https://www.cathsseta.org.za/tenders/
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: cedarville_lm_tenders
+  name: Cedarville LM
+  url: https://www.cedarville.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: cef_tenders
+  name: Central Energy Fund (CEF) SOC Ltd
+  url: https://www.cefgroup.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: central_johannesburg_tvet_tenders
+  name: Central Johannesburg TVET College
+  url: https://www.cjc.edu.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: central_karoo_dm_tenders
+  name: Central Karoo District Municipality
+  url: https://www.ckdm.co.za/tenders
+  type: html
+  priority: 2
+  free: true
+  live: true
+- id: ceta_tenders
+  name: Construction Education and Training Authority (CETA)
+  url: https://www.ceta.org.za/tenders/
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: cge_tenders
+  name: Commission for Gender Equality (CGE)
+  url: https://www.cge.org.za/tenders/
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: cgs_alt_tenders
+  name: CGS (alt)
+  url: https://www.cgs.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: cgs_legacy_tenders
+  name: Council for Geoscience (legacy URL)
+  url: https://www.geoscience.org.za/tenders
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: cgs_tenders
+  name: Council for Geoscience (already in research/)
+  url: https://www.geoscience.org.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: cgsi_tenders
+  name: CGSI
+  url: https://www.cgsi.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: chieta_tenders
+  name: Chemical Industries Education and Training Authority (CHIETA)
+  url: https://www.chieta.org.za/tenders/
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: chiro_practitioner_tenders
+  name: Chiro Council
+  url: https://www.ahpcsa.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: chiropractic_council_tenders
+  name: Chiropractic Council
+  url: https://www.chiropractic.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: chris_hani_dm_tenders
+  name: Chris Hani District Municipality
+  url: https://www.chrishanidm.gov.za/tenders
+  type: html
+  priority: 2
+  free: true
+  live: true
+- id: chris_hani_lm_tenders
+  name: Chris Hani LM
+  url: https://www.chrishanilm.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: cidb_itender
+  name: CIDB i-Tender
+  url: https://www.cidb.org.za/
+  type: html
+  priority: 2
+  free: true
+  live: true
+- id: cipc_tenders
+  name: Companies and Intellectual Property Commission (CIPC)
+  url: https://www.cipc.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: cipro_tenders
+  name: CIPRO (legacy CIPC)
+  url: https://www.cipro.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: civilian_secretariat_police_tenders
+  name: Civilian Secretariat for Police Service
+  url: https://www.policesecretariat.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: coct_electricity_tenders
+  name: City of Cape Town Electricity Services
+  url: https://www.capetown.gov.za/Electricity/procurement
+  type: html
+  priority: 2
+  free: true
+  live: true
+- id: coega_idz_lm_tenders
+  name: Coega IDZ
+  url: https://www.coega.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: coega_tenders
+  name: Coega Development Corporation (CDC)
+  url: https://www.coega.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: cogta_alt_tenders
+  name: COGTA (alt)
+  url: https://www.cogta.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: cogta_tenders
+  name: Department of Cooperative Governance & Traditional Affairs
+  url: https://www.cogta.gov.za/tenders
+  type: html
+  priority: 2
+  free: true
+  live: true
+- id: coj_city_power_tenders
+  name: City Power Johannesburg
+  url: https://www.citypower.co.za/procurement
+  type: html
+  priority: 2
+  free: true
+  live: true
+- id: coj_property_company_tenders
+  name: City of Joburg Property Company (JPC) SOC
+  url: https://www.jpc.co.za/tenders
+  type: html
+  priority: 2
+  free: true
+  live: true
+- id: coj_solid_waste_tenders
+  name: CoJ Solid Waste
+  url: https://www.joburg.org.za/SolidWaste/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: compensation_fund_alt_tenders
+  name: Compensation Fund (alt)
+  url: https://www.labour.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: compensation_fund_tenders
+  name: Compensation Fund
+  url: https://www.labour.gov.za/compensation-fund-tenders
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: competition_commission_tenders
+  name: Competition Commission
+  url: https://www.compcom.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: competition_tribunal_tenders
+  name: Competition Tribunal
+  url: https://www.comptrib.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: consumer_protection_tenders
+  name: Consumer Protection
+  url: https://www.thencc.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: cpe_tenders
+  name: Commission for the Promotion of Cultural Communities (CRL)
+  url: https://www.crlcommission.org.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: cpsi_tenders
+  name: Centre for Public Service Innovation (CPSI)
+  url: https://www.cpsi.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: cput_alt_tenders
+  name: CPUT (alt)
+  url: https://www.cput.ac.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: cput_tenders
+  name: Cape Peninsula University of Technology
+  url: https://www.cput.ac.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: crl_tenders
+  name: Commission for the Promotion and Protection of the Rights of Cultural, Religious and Linguistic Communities (CRL)
+  url: https://www.crlcommission.org.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: csir_tenders
+  name: Council for Scientific & Industrial Research
+  url: https://www.csir.co.za/tenders
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: csos_alt_tenders
+  name: CSOS (alt)
+  url: https://www.csos.org.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: csos_tenders
+  name: Community Schemes Ombud Service (CSOS)
+  url: https://www.csos.org.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: cut_alt_tenders
+  name: CUT (alt)
+  url: https://www.cut.ac.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: cut_tenders
+  name: Central University of Technology, Free State
+  url: https://www.cut.ac.za/procurement/tenders
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: dalrrd_tenders
+  name: Department of Agriculture, Land Reform & Rural Development
+  url: https://www.dalrrd.gov.za/tenders
+  type: html
+  priority: 2
+  free: true
+  live: true
+- id: dbe_alt_tenders
+  name: Department of Basic Education (alt URL)
+  url: https://www.education.gov.za/Tenders.aspx
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: dbe_tenders
+  name: Department of Basic Education
+  url: https://www.education.gov.za/tenders
+  type: html
+  priority: 2
+  free: true
+  live: true
+- id: dbsa_alt_tenders
+  name: DBSA (alt)
+  url: https://www.dbsa.org/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: dbsa_tenders
+  name: Development Bank of Southern Africa
+  url: https://www.dbsa.org/tenders
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: dcdt_tenders
+  name: Department of Communications & Digital Technologies
+  url: https://www.dcdt.gov.za/tenders
+  type: html
+  priority: 2
+  free: true
+  live: true
+- id: dcs_alt_tenders
+  name: Department of Correctional Services (alt URL)
+  url: https://www.dcs.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: dcs_tenders
+  name: Department of Correctional Services
+  url: https://www.dcs.gov.za/tenders
+  type: html
+  priority: 2
+  free: true
+  live: true
+- id: de_hoop_lm_tenders
+  name: De Hoop LM
+  url: https://www.dehoop.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: denel_aerostructures_tenders
+  name: Denel Aerostructures (SOC) Ltd
+  url: https://www.denelaerostructures.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: denel_alt_tenders
+  name: Denel (alt)
+  url: https://www.denel.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: denel_dynamics_tenders
+  name: Denel Dynamics
+  url: https://www.deneldynamics.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: denel_land_systems_tenders
+  name: Denel Land Systems
+  url: https://www.denells.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: denel_maritime_tenders
+  name: Denel Maritime
+  url: https://www.denelmaritime.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: denel_tenders
+  name: Denel SOC Ltd
+  url: https://www.denel.co.za/tenders
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: denel_vehicle_systems_tenders
+  name: Denel Vehicle Systems
+  url: https://www.denelvs.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: dental_council_tenders
+  name: Dental Council
+  url: https://www.sadentalcouncil.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: dffe_alt_tenders
+  name: DFFE (alt)
+  url: https://www.dffe.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: dffe_tenders
+  name: Department of Forestry, Fisheries & the Environment
+  url: https://www.dffe.gov.za/tenders
+  type: html
+  priority: 2
+  free: true
+  live: true
+- id: dha_tenders
+  name: Department of Home Affairs
+  url: https://www.dha.gov.za/tenders
+  type: html
+  priority: 2
+  free: true
+  live: true
+- id: dhet_alt_tenders
+  name: Department of Higher Education and Training (alt URL)
+  url: https://www.dhet.gov.za/Tenders
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: dhet_tenders
+  name: Department of Higher Education & Training
+  url: https://www.dhet.gov.za/tenders
+  type: html
+  priority: 2
+  free: true
+  live: true
+- id: dhs_tenders
+  name: Department of Human Settlements
+  url: https://www.dhs.gov.za/tenders
+  type: html
+  priority: 2
+  free: true
+  live: true
+- id: diamond_lm_tenders
+  name: Diamond LM
+  url: https://www.diamondlm.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: dietetics_council_tenders
+  name: Dietetics Council
+  url: https://www.adsa.org.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: dipaleseng_alt_tenders
+  name: Dipaleseng (alt)
+  url: https://www.dipaleseng.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: dipaleseng_lm_tenders
+  name: Dipaleseng Local Municipality
+  url: https://www.dipaleseng.gov.za/tenders
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: dirco_alt_tenders
+  name: DIRCO (alt)
+  url: https://www.dirco.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: dirco_tenders
+  name: Department of International Relations and Cooperation (DIRCO)
+  url: https://www.dirco.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: ditsobotla_lm_tenders
+  name: Ditsobotla LM
+  url: https://www.ditsobotla.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: ditsong_tenders
+  name: Ditsong Museums of South Africa
+  url: https://www.ditsong.org.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: dmre_tenders
+  name: Department of Mineral Resources & Energy
+  url: https://www.dmre.gov.za/tenders
+  type: html
+  priority: 2
+  free: true
+  live: true
+- id: dmv_tenders
+  name: Department of Military Veterans
+  url: https://www.dmv.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: dod_alt_tenders
+  name: Department of Defence (alt URL)
+  url: https://www.dod.mil.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: dod_tenders
+  name: Department of Defence
+  url: https://www.dod.mil.za/tenders
+  type: html
+  priority: 2
+  free: true
+  live: true
+- id: doel_tenders
+  name: Department of Employment and Labour
+  url: https://www.labour.gov.za/tenders
+  type: html
+  priority: 2
+  free: true
+  live: true
+- id: doh_tenders
+  name: Department of Health
+  url: https://www.health.gov.za/tenders
+  type: html
+  priority: 2
+  free: true
+  live: true
+- id: dojcd_tenders
+  name: Department of Justice and Constitutional Development
+  url: https://www.justice.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: dot_alt_tenders
+  name: DoT (alt)
+  url: https://www.transport.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: dot_tenders
+  name: Department of Transport
+  url: https://www.transport.gov.za/tenders
+  type: html
+  priority: 2
+  free: true
+  live: true
+- id: dpm_e_alt_tenders
+  name: DPME (alt URL)
+  url: https://www.dpme.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: dpme_tenders
+  name: Department of Planning, Monitoring & Evaluation
+  url: https://www.dpme.gov.za/tenders
+  type: html
+  priority: 2
+  free: true
+  live: true
+- id: dpsa_tenders
+  name: Department of Public Service & Administration
+  url: https://www.dpsa.gov.za/tenders
+  type: html
+  priority: 2
+  free: true
+  live: true
+- id: dpsac_alt_tenders
+  name: DPSA (alt)
+  url: https://www.dpsa.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: dpwi_tenders
+  name: Department of Public Works & Infrastructure
+  url: https://www.publicworks.gov.za/tenders
+  type: html
+  priority: 2
+  free: true
+  live: true
+- id: dr_kennga_kaunda_dm_tenders
+  name: Dr Kenneth Kaunda District Municipality
+  url: https://www.dkkdm.gov.za/tenders
+  type: html
+  priority: 2
+  free: true
+  live: true
+- id: dr_ruth_segomotsi_mompati_dm_tenders
+  name: Dr Ruth Segomotsi Mompati District Municipality
+  url: https://www.rsmdm.gov.za/tenders
+  type: html
+  priority: 2
+  free: true
+  live: true
+- id: dr_ruth_segomotsi_mompati_lm_tenders
+  name: Ruth Mompati LM
+  url: https://www.rsmdm.gov.za/tenders
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: drakenstein_alt_tenders
+  name: Drakenstein (alt)
+  url: https://www.drakenstein.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: drakenstein_lm_tenders
+  name: Drakenstein Municipality
+  url: https://www.drakenstein.gov.za/tenders
+  type: html
+  priority: 2
+  free: true
+  live: true
+- id: dsac_tenders
+  name: Department of Sports, Arts & Culture
+  url: https://www.dsac.gov.za/tenders
+  type: html
+  priority: 2
+  free: true
+  live: true
+- id: dsbd_tenders
+  name: Department of Small Business Development
+  url: https://www.dsbd.gov.za/tenders
+  type: html
+  priority: 2
+  free: true
+  live: true
+- id: dsd_tenders
+  name: Department of Social Development
+  url: https://www.dsd.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: dsi_tenders
+  name: Department of Science & Innovation
+  url: https://www.dst.gov.za/tenders
+  type: html
+  priority: 2
+  free: true
+  live: true
+- id: dtic_alt_tenders
+  name: DTIC (alt URL)
+  url: https://www.thedtic.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: dtic_tenders
+  name: Department of Trade, Industry & Competition
+  url: https://www.thedtic.gov.za/tenders
+  type: html
+  priority: 2
+  free: true
+  live: true
+- id: dut_alt_tenders
+  name: DUT (alt)
+  url: https://www.dut.ac.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: dut_tenders
+  name: Durban University of Technology
+  url: https://www.dut.ac.za/procurement/tenders/
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: dws_tenders
+  name: Department of Water and Sanitation
+  url: https://www.dws.gov.za/tenders
+  type: html
+  priority: 2
+  free: true
+  live: true
+- id: dwypd_tenders
+  name: Department of Women, Youth and Persons with Disabilities
+  url: https://www.dwypd.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: eThekwini_solid_waste_tenders
+  name: eThekwini Solid Waste Unit
+  url: https://www.durban.gov.za/SolidWaste/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: eastcape_midlands_tvet_tenders
+  name: Eastcape Midlands TVET College
+  url: https://www.emcol.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: easterncape_tenders
+  name: Eastern Cape Provincial Treasury
+  url: https://www.ecprov.gov.za/tenders
+  type: html
+  priority: 2
+  free: true
+  live: true
+- id: ec_agriculture_tenders
+  name: Eastern Cape Agriculture
+  url: https://www.ecagriculture.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: ec_education_tenders
+  name: Eastern Cape Department of Education
+  url: https://www.ecdoe.gov.za/tenders
+  type: html
+  priority: 2
+  free: true
+  live: true
+- id: ec_health_tenders
+  name: Eastern Cape Health
+  url: https://www.echealth.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: ec_heritage_tenders
+  name: Eastern Cape Heritage Council
+  url: https://www.echeritage.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: ec_housing_tenders
+  name: Eastern Cape Housing Board
+  url: https://www.echousing.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: ec_invest_tenders
+  name: Eastern Cape Investment Agency
+  url: https://www.ecsecc.org/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: ec_liquor_tenders
+  name: Eastern Cape Liquor Board
+  url: https://www.eclb.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: ec_parks_tenders
+  name: Eastern Cape Parks Board
+  url: https://www.ecpb.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: ec_public_works_tenders
+  name: Eastern Cape Department of Public Works
+  url: https://www.ecdpw.gov.za/tenders
+  type: html
+  priority: 2
+  free: true
+  live: true
+- id: ec_roads_tenders
+  name: Eastern Cape Roads Agency
+  url: https://www.ecra.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: ec_social_tenders
+  name: Eastern Cape Social Development
+  url: https://www.ecsd.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: ec_tourism_tenders
+  name: Eastern Cape Tourism
+  url: https://www.ectourism.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: ec_treasury_alt_tenders
+  name: EC Treasury (alt URL)
+  url: https://www.ecprov.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: ecdc_tenders
+  name: Eastern Cape Development Corporation (ECDC)
+  url: https://www.ecdc.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: ecsa_tenders
+  name: ECSA
+  url: https://www.ecsa.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: ehlanzeni_dm_alt_tenders
+  name: Ehlanzeni (DM alt URL)
+  url: https://www.ehlanzenidm.gov.za/tenders
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: ehlanzeni_tenders
+  name: Ehlanzeni District Municipality
+  url: https://www.ehlanzeni.gov.za/tenders
+  type: html
+  priority: 2
+  free: true
+  live: true
+- id: ehlanzeni_tvet_tenders
+  name: Ehlanzeni TVET College
+  url: https://www.ehlanzeni.org.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: ekurhuleni_east_tvet_tenders
+  name: Ekurhuleni East TVET College
+  url: https://www.eec.edu.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: ekurhuleni_tenders
+  name: Ekurhuleni Metropolitan Municipality
+  url: https://www.ekurhuleni.gov.za/tenders/
+  type: html
+  priority: 2
+  free: true
+  live: true
+- id: ekurhuleni_west_tvet_tenders
+  name: Ekurhuleni West TVET College
+  url: https://www.ewc.edu.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: elangeni_tvet_tenders
+  name: Elangeni TVET College
+  url: https://www.elangeni.edu.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: electricians_board_tenders
+  name: Electricians Board
+  url: https://www.ieb.org.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: elias_motsoaledi_alt_tenders
+  name: Elias Motsoaledi (alt)
+  url: https://www.eliasmotsoaledi.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: elias_motsoaledi_lm_tenders
+  name: Elias Motsoaledi Local Municipality
+  url: https://www.eliasmotsoaledi.gov.za/tenders
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: elundini_lm_tenders
+  name: Elundini LM
+  url: https://www.elundini.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: emalahleni_alt_tenders
+  name: Emalahleni (alt)
+  url: https://www.emalahleni.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: emalahleni_lm_tenders
+  name: Emalahleni Local Municipality (Mpumalanga)
+  url: https://www.emalahleni.gov.za/tenders
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: emfuleni_alt_tenders
+  name: Emfuleni (alt)
+  url: https://www.emfuleni.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: emfuleni_lm_tenders
+  name: Emfuleni Local Municipality
+  url: https://www.emfuleni.gov.za/tenders
+  type: html
+  priority: 2
+  free: true
+  live: true
+- id: engelbrecht_lm_tenders
+  name: Engelbrecht LM
+  url: https://www.engelbrecht.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: engineering_council_tenders
+  name: ECSA (alt)
+  url: https://www.ecsa.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: ephraim_mogale_alt_2_tenders
+  name: Ephraim Mogale (alt 2)
+  url: https://www.ephraimmogale.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: ephraim_mogale_lm_alt_tenders
+  name: Ephraim Mogale (alt)
+  url: https://www.emlm.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: ephraim_mogale_lm_tenders
+  name: Ephraim Mogale Local Municipality
+  url: https://www.emlm.gov.za/tenders
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: eshowe_tvet_tenders
+  name: Eshowe TVET College
+  url: https://www.eshowetvet.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: eskom_alt_tenders
+  name: Eskom (alt)
+  url: https://www.eskom.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: eskom_enterprises_tenders
+  name: Eskom Enterprises
+  url: https://www.eskomenterprises.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: eskom_finance_tenders
+  name: Eskom Finance Company
+  url: https://www.eskom.co.za/finance/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: eskom_rotek_tenders
+  name: Eskom Rotek Industries
+  url: https://www.eskom.co.za/rotek/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: eskom_tenders
+  name: Eskom Tender Bulletin
+  url: https://tenderbulletin.eskom.co.za/
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: estate_agents_board_tenders
+  name: EAAB
+  url: https://www.eaab.org.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: etdp_seta_tenders
+  name: Education, Training and Development Practices SETA (ETDP SETA)
+  url: https://www.etdpseta.org.za/tenders/
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: etenders_csv
+  name: National Treasury eTenders Bulk CSV
+  url: https://data.etenders.gov.za/
+  download_pattern: https://data.etenders.gov.za/Home/DownloadFile/?fileName=DDMMYYYY.csv
+  type: csv
+  priority: 1
+  free: true
+  live: true
+- id: etenders_ocds
+  name: National Treasury eTenders OCDS API
+  url: https://ocds-api.etenders.gov.za
+  swagger: https://ocds-api.etenders.gov.za/swagger/index.html
+  type: ocds_json
+  priority: 1
+  free: true
+  live: true
+- id: ethekwini_electricity_tenders
+  name: eThekwini Electricity
+  url: https://www.durban.gov.za/Electricity/procurement
+  type: html
+  priority: 2
+  free: true
+  live: true
+- id: ethekwini_tenders
+  name: eThekwini Metropolitan Municipality
+  url: https://www.durban.gov.za/pages/residents/tenders
+  type: html
+  priority: 2
+  free: true
+  live: true
+- id: ethekwini_water_tenders
+  name: eThekwini Water and Sanitation
+  url: https://www.durban.gov.za/Water/procurement
+  type: html
+  priority: 2
+  free: true
+  live: true
+- id: ewseta_tenders
+  name: Energy and Water Sector Education and Training Authority (EWSETA)
+  url: https://www.eseta.org.za/tenders/
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: faiss_ombud_tenders
+  name: Office of the Ombud for Financial Services Providers
+  url: https://www.faissombud.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: false_bay_tvet_tenders
+  name: False Bay TVET College
+  url: https://www.falsebaycollege.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: fasset_tenders
+  name: Finance and Accounting Services SETA (FASSET)
+  url: https://www.fasset.org.za/Pages/Tenders
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: fdc_tenders
+  name: Free State Development Corporation (FDC)
+  url: https://www.fdc.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: fedhasa_tenders
+  name: Federated Hospitality Association of SA
+  url: https://www.fedhasa.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: fetakgomo_alt_tenders
+  name: Fetakgomo (alt)
+  url: https://www.fetakgomo.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: fetakgomo_tubatse_lm_alt_tenders
+  name: Fetakgomo Tubatse (alt)
+  url: https://www.ftlm.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: fetakgomo_tubatse_lm_tenders
+  name: Fetakgomo Tubatse Local Municipality
+  url: https://www.ftlm.gov.za/tenders
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: fezile_dabi_dm_tenders
+  name: Fezile Dabi District Municipality
+  url: https://www.feziledabi.gov.za/tenders
+  type: html
+  priority: 2
+  free: true
+  live: true
+- id: ffc_tenders
+  name: Financial and Fiscal Commission (FFC)
+  url: https://www.ffc.co.za/tenders/
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: fidelity_tenders
+  name: Fidelity ADT (public procurement)
+  url: https://www.fidelity-adt.com/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: film_pub_board_tenders
+  name: Film and Publication Board
+  url: https://www.fpb.org.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: financial_intel_centre_tenders
+  name: Financial Intelligence Centre (FIC)
+  url: https://www.fic.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: flavius_mareka_tvet_tenders
+  name: Flavius Mareka TVET College
+  url: https://www.flaviusmareka.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: food_agency_tenders
+  name: Food Agency
+  url: https://www.foodagency.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: foodbev_tenders
+  name: Food and Beverage Manufacturing SETA (FoodBev)
+  url: https://www.foodbev.co.za/tenders/
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: fp_tenders
+  name: Film and Publication Board (already in research_extra/)
+  url: https://www.fpb.org.za/tenders
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: fpm_seta_tenders
+  name: Fibre Processing and Manufacturing SETA (FP&M SETA)
+  url: https://www.fpmseta.org.za/tenders/
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: francis_baard_dm_tenders
+  name: Francis Baard District Municipality
+  url: https://www.francisbaard.gov.za/tenders
+  type: html
+  priority: 2
+  free: true
+  live: true
+- id: freestate_tenders
+  name: Free State Provincial Treasury
+  url: http://www.treasury.fs.gov.za/tenders/
+  type: html
+  priority: 2
+  free: true
+  live: true
+- id: fs_agriculture_tenders
+  name: Free State Agriculture
+  url: https://www.fsagriculture.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: fs_health_tenders
+  name: Free State Health
+  url: https://www.fshealth.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: fs_heritage_tenders
+  name: Free State Heritage
+  url: https://www.fsheritage.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: fs_housing_tenders
+  name: Free State Housing
+  url: https://www.fshousing.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: fs_invest_tenders
+  name: Free State Investment
+  url: https://www.fsinvest.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: fs_liquor_tenders
+  name: Free State Gambling and Liquor
+  url: https://www.fsgla.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: fs_parks_tenders
+  name: Free State Parks
+  url: https://www.freestateparks.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: fs_police_roads_tenders
+  name: Free State Department of Police, Roads & Transport
+  url: https://www.pret.fs.gov.za/tenders
+  type: html
+  priority: 2
+  free: true
+  live: true
+- id: fs_roads_tenders
+  name: Free State Roads
+  url: https://www.fsroads.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: fs_social_tenders
+  name: Free State Social Development
+  url: https://www.socdev.fs.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: fs_tourism_tenders
+  name: Free State Tourism
+  url: https://www.fstourism.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: fsc_tenders
+  name: Financial Sector Conduct Authority (FSCA)
+  url: https://www.fsca.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: ga_segonyana_lm_tenders
+  name: Ga-Segonyana Local Municipality
+  url: https://www.gasegonyana.gov.za/tenders
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: gaming_board_tenders
+  name: Gaming Board
+  url: https://www.gamingboard.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: garden_route_dm_alt_tenders
+  name: Garden Route (DM alt URL)
+  url: https://www.grdm.gov.za/tenders
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: garden_route_tenders
+  name: Garden Route District Municipality
+  url: https://www.gardenroute.gov.za/tenders
+  type: html
+  priority: 2
+  free: true
+  live: true
+- id: gatedc_tenders
+  name: Gauteng Enterprise Propeller / TIK
+  url: https://www.tia.org.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: gauteng_etenders
+  name: Gauteng Provincial Treasury
+  url: https://etenders.gauteng.gov.za
+  type: html
+  priority: 2
+  free: true
+  live: true
+- id: gauteng_tourism_tenders
+  name: Gauteng Tourism Authority
+  url: https://www.gautengtourism.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: gc_tenders
+  name: Gauteng Convention Bureau
+  url: https://www.gconvention.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: gcis_tenders
+  name: Government Communication and Information System (GCIS)
+  url: https://www.gcis.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: gde_tenders
+  name: Gauteng Department of Education
+  url: https://www.education.gpg.gov.za/tenders
+  type: html
+  priority: 2
+  free: true
+  live: true
+- id: gdh_tenders
+  name: Gauteng Department of Health
+  url: https://www.health.gpg.gov.za/tenders
+  type: html
+  priority: 2
+  free: true
+  live: true
+- id: gdid_tenders
+  name: Gauteng Department of Infrastructure Development
+  url: https://www.gdid.gpg.gov.za/tenders
+  type: html
+  priority: 2
+  free: true
+  live: true
+- id: gdrt_tenders
+  name: Gauteng Department of Roads and Transport
+  url: https://www.gdrt.gpg.gov.za/tenders
+  type: html
+  priority: 2
+  free: true
+  live: true
+- id: george_lm_tenders
+  name: George Municipality
+  url: https://www.george.gov.za/tenders
+  type: html
+  priority: 2
+  free: true
+  live: true
+- id: geoscience_tenders
+  name: Council for Geoscience
+  url: https://www.geoscience.org.za/tenders
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: gert_sibande_dm_tenders
+  name: Gert Sibande District Municipality
+  url: https://www.gsibande.gov.za/tenders
+  type: html
+  priority: 2
+  free: true
+  live: true
+- id: gert_sibande_tvet_tenders
+  name: Gert Sibande TVET College
+  url: https://www.gscollege.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: goldfields_tvet_tenders
+  name: Goldfields TVET College
+  url: https://www.goldfieldstvet.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: gov_tech_tenders
+  name: GovTech SA
+  url: https://www.govtech.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: govan_mbeki_alt_tenders
+  name: Govan Mbeki (alt)
+  url: https://www.govanmbeki.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: govan_mbeki_lm_tenders
+  name: Govan Mbeki Local Municipality
+  url: https://www.govanmbeki.gov.za/tenders
+  type: html
+  priority: 2
+  free: true
+  live: true
+- id: gp_agriculture_tenders
+  name: Gauteng Agriculture and Rural Development
+  url: https://www.gdard.gpg.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: gp_health_tenders
+  name: Gauteng Health (alt)
+  url: https://www.health.gpg.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: gp_heritage_tenders
+  name: Gauteng Heritage Foundation
+  url: https://www.gp-heritage.org.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: gp_housing_tenders
+  name: Gauteng Housing Board
+  url: https://www.gphousing.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: gp_invest_tenders
+  name: Gauteng Investment Centre
+  url: https://www.gauteng-business.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: gp_liquor_tenders
+  name: Gauteng Liquor Board
+  url: https://www.gla.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: gp_parks_tenders
+  name: Gauteng Parks
+  url: https://www.gautengparks.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: gp_social_tenders
+  name: Gauteng Social Development
+  url: https://www.socialdev.gpg.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: gp_tourism_tenders
+  name: GP Tourism
+  url: https://www.gautengtourism.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: gpaa_tenders
+  name: Government Pensions Administration Agency (GPAA)
+  url: https://www.gpaa.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: greater_giyani_lm_tenders
+  name: Greater Giyani LM
+  url: https://www.giyani.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: greater_kruger_lm_tenders
+  name: Greater Kruger LM
+  url: https://www.greaterkruger.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: greater_lebowakgomo_lm_tenders
+  name: Greater Lebowakgomo LM
+  url: https://www.lebowakgomo.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: greater_letaba_lm_tenders
+  name: Greater Letaba LM
+  url: https://www.greaterletaba.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: greater_tubatse_lm_tenders
+  name: Greater Tubatse LM
+  url: https://www.greatertubatse.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: greater_tzaneen_lm_tenders
+  name: Greater Tzaneen LM
+  url: https://www.greatertzaneen.gov.za/tenders
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: harry_gwala_dm_tenders
+  name: Harry Gwala District Municipality
+  url: https://www.harrygwaladm.gov.za/tenders
+  type: html
+  priority: 2
+  free: true
+  live: true
+- id: hcps_tenders
+  name: Health Professions Council of South Africa (HPCSA)
+  url: https://www.hpcsa.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: hcpsa_tenders
+  name: Health Professions Council of South Africa (HPCSA)
+  url: https://www.hpcsa.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: hlabisa_lm_tenders
+  name: Hlabisa LM
+  url: https://www.hlabisa.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: hleni_tvet_tenders
+  name: Lephalale TVET College
+  url: https://www.ltvet.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: homeopathy_council_tenders
+  name: Homeopathy Council
+  url: https://www.ahpcsa.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: hpsca_tenders
+  name: Health Professions Council (alt)
+  url: https://www.hpsca.org.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: hsrc_tenders
+  name: Human Sciences Research Council
+  url: https://www.hsrc.ac.za/tenders
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: hwseta_tenders
+  name: Health and Welfare Sector Education and Training Authority (HWSETA)
+  url: https://www.hwseta.org.za/tenders/
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: iLembe_dm_alt_tenders
+  name: iLembe (DM legacy URL)
+  url: https://www.ilembeboard.co.za/tenders
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: ica_tenders
+  name: ICA (SA)
+  url: https://www.ica.org.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: icasa_alt_tenders
+  name: ICASA (alt URL)
+  url: https://www.icasa.org.za/tenders
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: icasa_tenders
+  name: Independent Communications Authority of South Africa (ICASA)
+  url: https://www.icasa.org.za/pages/tenders
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: idc_alt_tenders
+  name: IDC (alt)
+  url: https://www.idc.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: idc_tenders
+  name: Industrial Development Corporation
+  url: https://www.idc.co.za/tenders
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: iec_tenders
+  name: Independent Electoral Commission (IEC)
+  url: https://www.elections.org.za/content/Procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: igas_tenders
+  name: iGas (SA Gas Development Company)
+  url: https://www.igas.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: iit_tenders
+  name: Independent Institute of Technology
+  url: https://www.iit.org.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: ikhala_lm_tenders
+  name: Ikhala LM
+  url: https://www.ikhala.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: ikhala_tvet_tenders
+  name: Ikhala TVET College
+  url: https://www.ikhala.edu.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: ilembe_lm_tenders
+  name: iLembe District Municipality (LM form)
+  url: https://www.ilembe.gov.za/tenders
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: ilembe_tenders
+  name: iLembe District Municipality
+  url: https://www.ilembe.gov.za/tenders
+  type: html
+  priority: 2
+  free: true
+  live: true
+- id: indaka_lm_tenders
+  name: Indaka LM
+  url: https://www.indaka.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: inder_marks_lm_tenders
+  name: Inder Marks LM
+  url: https://www.indermarks.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: infraco_alt_tenders
+  name: Infraco (alt)
+  url: https://www.infraco.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: infraco_tenders
+  name: Broadband Infraco
+  url: https://www.infraco.co.za/tenders/
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: ingwe_lm_tenders
+  name: Ingwe LM
+  url: https://www.ingwe.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: ingwe_tvet_tenders
+  name: Ingwe TVET College
+  url: https://www.ingwecollege.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: inseta_tenders
+  name: Insurance Sector Education and Training Authority (INSETA)
+  url: https://www.inseta.org.za/pages/tenders
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: insurance_institute_tenders
+  name: Insurance Institute
+  url: https://www.iisa.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: insurance_ombud_tenders
+  name: Ombudsman for Short-Term Insurance
+  url: https://www.osti.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: intersite_tenders
+  name: PRASA Intersite Asset Management
+  url: https://www.intersite.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: inxuba_yethemba_lm_tenders
+  name: Inxuba Yethemba LM
+  url: https://www.inxubayethemba.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: ipid_tenders
+  name: Independent Police Investigative Directorate (IPID)
+  url: https://www.ipid.gov.za/tenders/
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: irba_tenders
+  name: Independent Regulatory Board for Auditors (IRBA)
+  url: https://www.irba.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: ithemba_tenders
+  name: iThemba Laboratory for Accelerator Based Sciences
+  url: https://tlabs.ac.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: iziko_alt_tenders
+  name: Iziko (alt URL)
+  url: https://www.iziko.org.za/about/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: iziko_tenders
+  name: Iziko Museums of South Africa
+  url: https://www.iziko.org.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: jakarta_lm_tenders
+  name: Jakarta LM
+  url: https://www.jakarta.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: joe_gqabi_dm_tenders
+  name: Joe Gqabi District Municipality
+  url: https://www.jgdm.gov.za/tenders
+  type: html
+  priority: 2
+  free: true
+  live: true
+- id: johannesburg_tenders
+  name: City of Johannesburg
+  url: https://joburg.org.za/work_/Pages/2025-Tenders-and-Quotations/Bid-Opening-Registers.aspx
+  type: html
+  priority: 2
+  free: true
+  live: true
+- id: john_taolo_gaetsewe_dm_tenders
+  name: John Taolo Gaetsewe District Municipality
+  url: https://www.jtgdm.gov.za/tenders
+  type: html
+  priority: 2
+  free: true
+  live: true
+- id: kagisano_lm_tenders
+  name: Kagisano LM
+  url: https://www.kagisano.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: kagisano_molopo_lm_tenders
+  name: Kagisano-Molopo LM
+  url: https://www.kagisanomolopo.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: kamiesberg_lm_tenders
+  name: Kamiesberg LM
+  url: https://www.kamiesberg.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: karoo_hoogland_lm_tenders
+  name: Karoo Hoogland LM
+  url: https://www.karoohoogland.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: kfm_tenders
+  name: KFM Radio
+  url: https://www.kfm.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: khara_hais_lm_alt_tenders
+  name: Khai-Ma (alt)
+  url: https://www.khara-hais.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: khara_hais_lm_tenders
+  name: Khai-Ma LM
+  url: https://www.khara-hais.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: khoisan_lm_tenders
+  name: Khoisan LM
+  url: https://www.khoisan.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: king_cetshwayo_tenders
+  name: King Cetshwayo District Municipality
+  url: https://www.kingcetshwayo.gov.za/tenders
+  type: html
+  priority: 2
+  free: true
+  live: true
+- id: king_cetshwayo_tvet_tenders
+  name: King Cetshwayo TVET College
+  url: https://www.kingcetshwayo.edu.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: king_hintsa_tvet_tenders
+  name: King Hintsa TVET College
+  url: https://www.kinghintsacollege.edu.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: king_sabata_dalindyebo_lm_tenders
+  name: King Sabata Dalindyebo Local Municipality
+  url: https://www.ksd.gov.za/tenders
+  type: html
+  priority: 2
+  free: true
+  live: true
+- id: knysna_alt_tenders
+  name: Knysna (alt)
+  url: https://www.knysna.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: knysna_lm_tenders
+  name: Knysna Municipality
+  url: https://www.knysna.gov.za/tenders
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: kopanong_lm_tenders
+  name: Kopanong LM
+  url: https://www.kopanong.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: kwazulu_lm_tenders
+  name: Kwazulu LM
+  url: https://www.kwazulu.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: kzn_agriculture_tenders
+  name: KZN Agriculture and Rural Development
+  url: https://www.kzndard.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: kzn_arts_tenders
+  name: KZN Arts and Culture Council
+  url: https://www.kznartscouncil.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: kzn_dot_tenders
+  name: KwaZulu-Natal Department of Transport
+  url: https://www.kzntransport.gov.za/tenders
+  type: html
+  priority: 2
+  free: true
+  live: true
+- id: kzn_health_tenders
+  name: KZN Health
+  url: https://www.kznhealth.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: kzn_housing_alt_tenders
+  name: KZN Housing (alt)
+  url: https://www.kznhs.org.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: kzn_human_settlements_tenders
+  name: KwaZulu-Natal Department of Human Settlements
+  url: https://www.kznsethuman.gov.za/tenders
+  type: html
+  priority: 2
+  free: true
+  live: true
+- id: kzn_iec_tenders
+  name: KZN Industrial Economic Cluster (alt)
+  url: https://www.kzniec.org.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: kzn_invest_tenders
+  name: Trade and Investment KZN (TIK)
+  url: https://www.tikzn.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: kzn_liquor_tenders
+  name: KZN Liquor Authority
+  url: https://www.kznliquor.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: kzn_roads_tenders
+  name: KZN Roads (DOT legacy)
+  url: https://www.kzntransport.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: kzn_social_tenders
+  name: KZN Social Development
+  url: https://www.kzndsd.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: kzn_tourism_tenders
+  name: KwaZulu-Natal Tourism Authority
+  url: https://www.zulu.org.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: kzn_treasury
+  name: KwaZulu-Natal Treasury
+  url: https://www.kzntreasury.gov.za
+  type: html
+  priority: 2
+  free: true
+  live: true
+- id: kzn_treasury_alt_tenders
+  name: KZN Treasury (alt URL)
+  url: https://www.kzntreasury.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: kzn_wildlife_tenders
+  name: Ezemvelo KZN Wildlife
+  url: https://www.kznwildlife.com/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: landbank_alt_tenders
+  name: Land Bank (alt)
+  url: https://landbank.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: landbank_tenders
+  name: Land and Agricultural Development Bank
+  url: https://landbank.co.za/Pages/Procurement.aspx
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: langeberg_lm_tenders
+  name: Langeberg LM
+  url: https://www.langeberg.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: legal_aid_alt_tenders
+  name: Legal Aid SA (alt URL)
+  url: https://www.legal-aid.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: legal_aid_sa_tenders
+  name: Legal Aid SA
+  url: https://www.legal-aid.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: legal_practice_council_tenders
+  name: Legal Practice Council
+  url: https://www.lpc.org.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: lejweleputswa_dm_tenders
+  name: Lejweleputswa District Municipality
+  url: https://www.lejwe.co.za/tenders
+  type: html
+  priority: 2
+  free: true
+  live: true
+- id: lekwetse_lm_tenders
+  name: Lekwetse LM
+  url: https://www.lekwetse.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: lepelle_water_tenders
+  name: "Lepelle Northern Water (legacy \u2013 merged into Vaal Central)"
+  url: https://www.lepellewater.co.za/tenders
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: lephalale_local_tenders
+  name: Lephalale Local
+  url: https://www.lephalale.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: lephalale_tvet_tenders
+  name: Lephalale TVET
+  url: https://www.ltvet.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: lesedi_lm_tenders
+  name: Lesedi Local Municipality
+  url: https://www.lesedi.gov.za/tenders
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: letaba_tvet_tenders
+  name: Letaba TVET College
+  url: https://www.letabacollege.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: lgseta_tenders
+  name: Local Government Sector Education and Training Authority (LGSETA)
+  url: https://www.lgseta.co.za/tenders/
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: limpopo_provincial_treasury_alt_2_tenders
+  name: LP Treasury (alt 2)
+  url: https://www.limpopo.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: limpopo_provincial_treasury_alt_tenders
+  name: LP Treasury (alt)
+  url: https://www.treasury.limpopo.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: limpopo_pwri_tenders
+  name: Limpopo Department of Public Works, Roads & Infrastructure
+  url: https://www.ldprr.gov.za/tenders
+  type: html
+  priority: 2
+  free: true
+  live: true
+- id: limpopo_tenders
+  name: Limpopo Provincial Treasury
+  url: https://www.limtreasury.gov.za/lim_admin_trea/pages/sites/tender_documents/index.php
+  type: html
+  priority: 2
+  free: true
+  live: true
+- id: liquor_board_tenders
+  name: Liquor Board (collective)
+  url: https://www.liquorboard.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: longterm_ins_ombud_tenders
+  name: Ombudsman for Long-Term Insurance
+  url: https://www.oltinsurance.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: lopapala_lm_tenders
+  name: Lopapala LM
+  url: https://www.lopapala.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: makhado_alt_2_lm_tenders
+  name: Makhado (alt)
+  url: https://www.loutrichardt.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: lovedale_tvet_tenders
+  name: Lovedale TVET College
+  url: https://www.lovedale.edu.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: lp_agriculture_tenders
+  name: Limpopo Agriculture
+  url: https://www.lda.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: lp_dev_tenders
+  name: Limpopo Economic Development Agency (LEDA)
+  url: https://www.leda.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: lp_health_tenders
+  name: Limpopo Health
+  url: https://www.ldoh.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: lp_heritage_tenders
+  name: Limpopo Heritage Foundation
+  url: https://www.limpopomuseum.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: lp_housing_tenders
+  name: Limpopo Housing
+  url: https://www.limpopohousing.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: lp_invest_tenders
+  name: Limpopo Investment
+  url: https://www.limpopo-investment.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: lp_liquor_tenders
+  name: Limpopo Liquor Board
+  url: https://www.limpopollb.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: lp_parks_tenders
+  name: Limpopo Parks Board
+  url: https://www.limpopoparks.org.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: lp_social_tenders
+  name: Limpopo Social Development
+  url: https://www.dsd.limpopo.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: lp_tourism_tenders
+  name: Limpopo Tourism Authority
+  url: https://www.golimpopo.com/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: maclear_lm_tenders
+  name: Maclear LM
+  url: https://www.maclear.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: magalies_water_tenders
+  name: Magalies Water
+  url: https://www.magalieswater.co.za/tenders
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: mahlangeni_lm_tenders
+  name: Mahlangeni LM
+  url: https://www.mahlangeni.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: majuba_tvet_tenders
+  name: Majuba TVET College
+  url: https://www.majuba.edu.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: makhado_lm_alt_2_tenders
+  name: Makhado (alt 2)
+  url: https://www.makhado.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: makhado_lm_tenders
+  name: Makhado Local Municipality
+  url: https://www.makhado.gov.za/tenders
+  type: html
+  priority: 2
+  free: true
+  live: true
+- id: makhuduthamaga_lm_tenders
+  name: Makhuduthamaga LM
+  url: https://www.makhuduthamaga.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: maletswai_lm_tenders
+  name: Maletswai LM
+  url: https://www.maletswai.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: maluti_tvet_tenders
+  name: Maluti TVET College
+  url: https://www.malutitvet.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: mandela_uni_tenders
+  name: Nelson Mandela University (legacy)
+  url: https://legacy.nelsonmandela.ac.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: mandeni_lm_tenders
+  name: Mandeni LM
+  url: https://www.mandeni.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: mangaung_tenders
+  name: Mangaung Metropolitan Municipality
+  url: http://www.mangaung.co.za/category/tenders/
+  type: html
+  priority: 2
+  free: true
+  live: true
+- id: manteng_lm_tenders
+  name: Manteng LM
+  url: https://www.manteng.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: mantsopa_alt_tenders
+  name: Mantsopa (alt)
+  url: https://www.mantsopa.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: mantsopa_lm_tenders
+  name: Mantsopa LM
+  url: https://www.mantsopa.gov.za/tenders
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: manuawe_lm_tenders
+  name: Mantsopa Local Municipality
+  url: https://www.mantsopa.gov.za/tenders
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: maquassi_hills_lm_tenders
+  name: Maquassi Hills Local Municipality
+  url: https://www.maquassi.co.za/tenders
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: masilonyana_lm_tenders
+  name: Masilonyana Local Municipality
+  url: https://www.masilonyana.gov.za/tenders
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: matjhabeng_alt_tenders
+  name: Matjhabeng (alt)
+  url: https://www.matjhabeng.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: matjhabeng_lm_tenders
+  name: Matjhabeng Local Municipality
+  url: https://www.matjhabeng.gov.za/tenders
+  type: html
+  priority: 2
+  free: true
+  live: true
+- id: matlosana_lm_tenders
+  name: Matlosana Local Municipality
+  url: https://www.matlosana.org.za/tenders
+  type: html
+  priority: 2
+  free: true
+  live: true
+- id: mbizana_lm_tenders
+  name: Mbizana LM
+  url: https://www.mbizana.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: mbombela_lm_tenders
+  name: Mbombela Local Municipality
+  url: https://www.mbombela.gov.za/tenders
+  type: html
+  priority: 2
+  free: true
+  live: true
+- id: mdb_tenders
+  name: Municipal Demarcation Board
+  url: https://www.demarcation.org.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: mdda_tenders
+  name: Media Development and Diversity Agency (MDDA)
+  url: https://www.mdda.org.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: medical_dental_board_tenders
+  name: Medical & Dental Board
+  url: https://www.hpcsa.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: merafong_lm_tenders
+  name: Merafong City Local Municipality
+  url: https://www.merafong.gov.za/tenders
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: merseta_tenders
+  name: Manufacturing, Engineering and Related Services SETA (merSETA)
+  url: https://www.merseta.org.za/tenders/
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: metro_fm_tenders
+  name: Metro FM
+  url: https://www.metrofm.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: metrorail_tenders
+  name: Metrorail
+  url: https://www.metrorail.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: metsimaholo_lm_tenders
+  name: Metsimaholo LM
+  url: https://www.metsimaholo.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: mhlathuze_water_tenders
+  name: "Mhlathuze Water (legacy \u2013 merged into uMngeni-uThukela)"
+  url: https://www.mhlathuzewater.co.za/tenders
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: mhlatuze_lm_alt_tenders
+  name: uMhlathuze (alt)
+  url: https://www.umhlathuze.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: mhlontlo_lm_tenders
+  name: Mhlontlo LM
+  url: https://www.mhlontlo.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: mhsc_tenders
+  name: Mine Health and Safety Council (MHSC)
+  url: https://www.mhsc.org.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: mict_seta_tenders
+  name: Media, Information and Communication Technologies SETA (MICT SETA)
+  url: https://www.mict.org.za/tenders/
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: midvaal_lm_alt_tenders
+  name: Midvaal (alt)
+  url: https://www.midvaal.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: midvaal_lm_tenders
+  name: Midvaal Local Municipality
+  url: https://www.midvaal.gov.za/tenders
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: mintek_tenders
+  name: Mintek
+  url: https://www.mintek.co.za/tenders
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: mkhambathini_lm_tenders
+  name: Mkhambathini LM
+  url: https://www.mkhambathini.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: mkhondo_lm_tenders
+  name: Mkhondo LM
+  url: https://www.mkhondo.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: mmabatho_lm_tenders
+  name: Mmabatho LM
+  url: https://www.mmabatho.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: mnambithi_tvet_tenders
+  name: Mnambithi TVET College
+  url: https://www.mnambithicollege.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: mnquma_lm_tenders
+  name: Mnquma LM
+  url: https://www.mnquma.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: modimolle_lm_alt_tenders
+  name: Modimolle (alt)
+  url: https://www.modimolle.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: modimolle_lm_tenders
+  name: Modimolle Local Municipality
+  url: https://www.modimolle.gov.za/tenders
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: mogale_city_lm_tenders
+  name: Mogale City Local Municipality
+  url: https://www.mogalecity.gov.za/tenders
+  type: html
+  priority: 2
+  free: true
+  live: true
+- id: molemole_lm_tenders
+  name: Molemole LM
+  url: https://www.molemole.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: mopani_dm_tenders
+  name: Mopani District Municipality
+  url: https://www.mopani.gov.za/tenders
+  type: html
+  priority: 2
+  free: true
+  live: true
+- id: mopani_east_tvet_tenders
+  name: Mopani East TVET College
+  url: https://www.metvet.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: mopani_west_tvet_tenders
+  name: Mopani West TVET College
+  url: https://www.mwtvetcollege.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: moqhaka_lm_tenders
+  name: Moqhaka LM
+  url: https://www.moqhaka.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: moretele_lm_tenders
+  name: Moretele LM
+  url: https://www.moretele.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: mossel_bay_alt_tenders
+  name: Mossel Bay (alt)
+  url: https://www.mosselbay.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: mossel_bay_lm_tenders
+  name: Mossel Bay Municipality
+  url: https://www.mosselbay.gov.za/tenders
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: motheo_tvet_tenders
+  name: Motheo TVET College
+  url: https://www.motheotvetcollege.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: mp_agriculture_tenders
+  name: Mpumalanga Agriculture
+  url: https://www.dardla.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: mp_dev_tenders
+  name: Mpumalanga Economic Growth Agency (MEGA)
+  url: https://www.mega.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: mp_health_tenders
+  name: Mpumalanga Health
+  url: https://www.mpuhealth.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: mp_heritage_tenders
+  name: Mpumalanga Heritage
+  url: https://www.mpumalangaheritage.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: mp_housing_tenders
+  name: Mpumalanga Housing Board
+  url: https://www.mphousing.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: mp_invest_tenders
+  name: Mpumalanga Investment
+  url: https://www.mpi.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: mp_liquor_tenders
+  name: Mpumalanga Liquor Board
+  url: https://www.mpulb.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: mp_parks_tenders
+  name: Mpumalanga Parks Board (MTPA)
+  url: https://www.mpumalanga.com/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: mp_roads_tenders
+  name: Mpumalanga Roads Agency
+  url: https://www.mraa.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: mp_social_tenders
+  name: Mpumalanga Social Development
+  url: https://www.dsdmp.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: mp_tourism_tenders
+  name: Mpumalanga Tourism Authority
+  url: https://www.mpumalanga.com/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: mpofana_lm_tenders
+  name: Mpofana LM
+  url: https://www.mpofana.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: mpsa_tenders
+  name: MPSA
+  url: https://www.mpsa.org.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: mpumalanga_education_tenders
+  name: Mpumalanga Department of Education
+  url: https://www.mpumalanga.gov.za/education/tenders
+  type: html
+  priority: 2
+  free: true
+  live: true
+- id: mpumalanga_tenders
+  name: Mpumalanga Provincial Treasury
+  url: https://www.mpumalanga.gov.za/finance/tenders.htm
+  type: html
+  priority: 2
+  free: true
+  live: true
+- id: mqa_tenders
+  name: Mining Qualifications Authority (MQA)
+  url: https://www.mqa.org.za/tenders/
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: msukaligwa_lm_tenders
+  name: Msukaligwa LM
+  url: https://www.msukaligwa.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: msunduzi_lm_tenders
+  name: Msunduzi Local Municipality (Pietermaritzburg)
+  url: https://www.msunduzi.gov.za/tenders
+  type: html
+  priority: 2
+  free: true
+  live: true
+- id: mthashana_tvet_tenders
+  name: Mthashana TVET College
+  url: https://www.mthashanacollege.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: mtubatuba_lm_tenders
+  name: Mtubatuba LM
+  url: https://www.mtubatuba.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: musina_lm_alt_tenders
+  name: Musina (alt)
+  url: https://www.musina.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: musina_lm_tenders
+  name: Musina Local Municipality
+  url: https://www.musina.gov.za/tenders
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: mutale_lm_tenders
+  name: Mutale LM
+  url: https://www.mutale.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: naledi_lm_alt_tenders
+  name: Naledi (alt)
+  url: https://www.naledi.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: naledi_lm_tenders
+  name: Naledi LM
+  url: https://www.naledi.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: namakwa_dm_tenders
+  name: Namakwa District Municipality
+  url: https://www.namakwa-dm.gov.za/tenders
+  type: html
+  priority: 2
+  free: true
+  live: true
+- id: namc_tenders
+  name: National Agricultural Marketing Council (NAMC)
+  url: https://www.namc.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: nasionale_tenders
+  name: Nasionale Pers
+  url: https://www.nasionale.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: national_gambling_board_tenders
+  name: NGB (alt)
+  url: https://www.ngb.org.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: national_gambling_tenders
+  name: NG (alt)
+  url: https://www.nationalgambling.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: national_lotteries_tenders
+  name: NL (alt)
+  url: https://www.nationallotteries.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: national_treasury_tenders
+  name: National Treasury
+  url: https://www.treasury.gov.za/tenders
+  type: html
+  priority: 2
+  free: true
+  live: true
+- id: naturopathy_council_tenders
+  name: Naturopathy Council
+  url: https://www.ahpcsa.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: nc_agriculture_tenders
+  name: Northern Cape Agriculture
+  url: https://www.ncad.agric.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: nc_dev_tenders
+  name: Northern Cape Economic Development Agency
+  url: https://www.ncEDA.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: nc_health_tenders
+  name: Northern Cape Health
+  url: https://www.nch.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: nc_heritage_tenders
+  name: Northern Cape Heritage
+  url: https://www.noordelike-erfenis.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: nc_housing_tenders
+  name: Northern Cape Housing
+  url: https://www.nchousing.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: nc_invest_tenders
+  name: Northern Cape Investment
+  url: https://www.ncinvest.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: nc_liquor_tenders
+  name: Northern Cape Liquor Board
+  url: https://www.ncliquor.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: nc_parks_tenders
+  name: Northern Cape Parks
+  url: https://www.sanparks.org/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: nc_roads_tenders
+  name: Northern Cape Department of Roads and Public Works
+  url: https://ncrpw.ncpg.gov.za/tenders
+  type: html
+  priority: 2
+  free: true
+  live: true
+- id: nc_social_tenders
+  name: Northern Cape Social Development
+  url: https://www.ncsd.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: nc_tourism_tenders
+  name: Northern Cape Tourism Authority
+  url: https://www.experiencenortherncape.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: nca_legacy_tenders
+  name: National Consumer Agency (legacy)
+  url: https://www.thenca.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: nca_tenders
+  name: National Consumer Commission
+  url: https://www.thencc.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: ncr_tenders
+  name: National Credit Regulator (NCR)
+  url: https://www.ncr.org.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: ndp_tenders
+  name: National Digital Platform
+  url: https://www.ndp.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: necsa_alt_tenders
+  name: NECSA (alt)
+  url: https://www.necsa.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: necsa_tenders
+  name: South African Nuclear Energy Corporation
+  url: https://www.necsa.co.za/tenders/
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: nehawu_tenders
+  name: NEHAWU
+  url: https://www.nehawu.org.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: nelsonmandelabay_tenders
+  name: Nelson Mandela Bay Metropolitan Municipality
+  url: https://www.nelsonmandelabay.gov.za/Tenders
+  type: html
+  priority: 2
+  free: true
+  live: true
+- id: nersa_tenders
+  name: National Energy Regulator of South Africa (NERSA)
+  url: https://www.nersa.org.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: newcastle_lm_tenders
+  name: Newcastle Local Municipality
+  url: https://www.newcastle.gov.za/tenders
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: ngaka_modiri_molema_dm_tenders
+  name: Ngaka Modiri Molema District Municipality
+  url: https://www.nmmdm.gov.za/tenders
+  type: html
+  priority: 2
+  free: true
+  live: true
+- id: ngaka_modiri_molema_lm_tenders
+  name: Ngaka Modiri Molema DM
+  url: https://www.nmmdm.gov.za/tenders
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: ngb_tenders
+  name: National Gambling Board (NGB)
+  url: https://www.ngb.org.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: ngcobo_lm_tenders
+  name: Ngcobo Local Municipality
+  url: https://www.ngcobomun.gov.za/tenders
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: ngqushwa_lm_alt_tenders
+  name: Ngqushwa LM (alt)
+  url: https://www.ngqushwa.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: ngqushwa_lm_tenders
+  name: Ngqushwa Local Municipality
+  url: https://www.ngqushwa.gov.za/tenders
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: nhbrc_alt_tenders
+  name: NHBRC (alt)
+  url: https://www.nhbrc.org.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: nhbrc_tenders
+  name: National Home Builders Registration Council (NHBRC)
+  url: https://www.nhbrc.org.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: nhc_tenders
+  name: National Heritage Council (NHC)
+  url: https://www.nhc.org.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: nhls_alt_tenders
+  name: NHLS (alt URL)
+  url: https://www.nhls.ac.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: nhls_tenders
+  name: National Health Laboratory Service
+  url: https://www.nhls.ac.za/tenders
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: nhrsc_tenders
+  name: National Health Research Ethics Council
+  url: https://www.nhrec.org.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: nkangala_dm_tenders
+  name: Nkangala District Municipality
+  url: https://www.nkangaladm.gov.za/tenders
+  type: html
+  priority: 2
+  free: true
+  live: true
+- id: nkangala_tvet_tenders
+  name: Nkangala TVET College
+  url: https://www.nkangalafet.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: nkonkobe_lm_tenders
+  name: Nkonkobe LM
+  url: https://www.nkonkobe.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: nkosi_lm_tenders
+  name: Nkosi LM
+  url: https://www.nkosi.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: nlc_tenders
+  name: National Lotteries Commission (NLC)
+  url: https://www.nlcsa.org.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: nmu_alt_tenders
+  name: NMU (alt)
+  url: https://www.nmmu.ac.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: nmu_tenders
+  name: Nelson Mandela University
+  url: https://www.mandela.ac.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: nnr_tenders
+  name: National Nuclear Regulator (NNR)
+  url: https://www.nnr.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: north_devon_lm_tenders
+  name: North Devon LM
+  url: https://www.northdevon.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: northern_cape_rural_tvet_tenders
+  name: Northern Cape Rural TVET College
+  url: https://www.ncrfet.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: northern_cape_urban_tvet_tenders
+  name: Northern Cape Urban TVET College
+  url: https://www.ncutvet.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: northerncape_tenders
+  name: Northern Cape Provincial Treasury
+  url: https://nctreasury.ncpg.gov.za/index.php/tenders
+  type: html
+  priority: 2
+  free: true
+  live: true
+- id: northlink_tvet_tenders
+  name: Northlink TVET College
+  url: https://www.northlink.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: northwest_tenders
+  name: North West Provincial Treasury
+  url: http://www.nwpg.gov.za/Treasury/Tenders.asp
+  type: html
+  priority: 2
+  free: true
+  live: true
+- id: npa_alt_tenders
+  name: NPA (alt)
+  url: https://www.npa.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: npa_tenders
+  name: National Prosecuting Authority (NPA)
+  url: https://www.npa.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: nquthu_lm_tenders
+  name: Nquthu LM
+  url: https://www.nquthu.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: nrf_alt_tenders
+  name: NRF (alt)
+  url: https://www.nrf.ac.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: nrf_tenders
+  name: National Research Foundation (NRF)
+  url: https://www.nrf.ac.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: nsdp_tenders
+  name: National Skills Development Programme
+  url: https://www.ndp.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: nsfas_tenders
+  name: National Student Financial Aid Scheme (NSFAS)
+  url: https://www.nsfas.org.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: nsg_tenders
+  name: National School of Government (NSG)
+  url: https://www.thensg.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: ntabankulu_lm_alt_tenders
+  name: Ntabankulu (alt)
+  url: https://www.ntabankulu.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: ntabankulu_lm_tenders
+  name: Ntabankulu LM
+  url: https://www.ntabankulu.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: ntsundwana_lm_tenders
+  name: Ntsundwana LM
+  url: https://www.ntsundwana.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: nu_tenders
+  name: National Union
+  url: https://www.nu.org.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: nursing_council_tenders
+  name: Nursing Council (alt)
+  url: https://www.sanc.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: nw_agriculture_tenders
+  name: North West Agriculture
+  url: https://www.dard.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: nw_dev_tenders
+  name: North West Development Corporation
+  url: https://www.nwdc.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: nw_health_tenders
+  name: North West Health
+  url: https://www.nwhealth.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: nw_heritage_tenders
+  name: North West Heritage Foundation
+  url: https://www.nwhf.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: nw_housing_tenders
+  name: North West Housing Board
+  url: https://www.nwhousing.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: nw_invest_tenders
+  name: North West Investment
+  url: https://www.nwipb.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: nw_liquor_tenders
+  name: North West Liquor Board
+  url: https://www.nwliquor.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: nw_parks_tenders
+  name: North West Parks Board
+  url: https://www.nwparks.org.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: nw_public_works_tenders
+  name: North West Department of Public Works and Roads
+  url: https://www.nwpg.gov.za/publicworks/tenders
+  type: html
+  priority: 2
+  free: true
+  live: true
+- id: nw_social_tenders
+  name: North West Social Development
+  url: https://www.nwsd.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: nw_tourism_tenders
+  name: North West Tourism Board
+  url: https://www.northwestprovince.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: nwu_alt_tenders
+  name: NWU (alt)
+  url: https://www.nwu.ac.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: nwu_tenders
+  name: North-West University
+  url: https://www.nwu.ac.za/procurement/tenders
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: nyandeni_lm_tenders
+  name: Nyandeni LM
+  url: https://www.nyandeni.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: nyda_alt_tenders
+  name: NYDA (alt URL)
+  url: https://www.nyda.gov.za/tenders
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: nyda_tenders
+  name: National Youth Development Agency (NYDA)
+  url: https://www.nyda.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: obpa_tenders
+  name: Onderstepoort Biological Products
+  url: https://www.obpvaccines.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: occupational_therapy_council_tenders
+  name: OT Council
+  url: https://www.otasa.org.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: ocj_tenders
+  name: Office of the Chief Justice (OCJ)
+  url: https://www.judiciary.org.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: okhahlamba_lm_alt_tenders
+  name: Okhahlamba (alt)
+  url: https://www.okhahlamba.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: okhahlamba_lm_tenders
+  name: Okhahlamba Local Municipality
+  url: https://www.okhahlamba.gov.za/tenders
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: oners_tenders
+  name: Office of the Registrar of Agricultural Inputs
+  url: https://www.fertilizer-assoc.org.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: oostenberg_lm_tenders
+  name: Oostenberg Municipality (legacy)
+  url: https://www.oostenberg.org.za/tenders
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: optometry_council_tenders
+  name: Optometry Council
+  url: https://www.saoa.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: or_tambo_tenders
+  name: OR Tambo District Municipality
+  url: https://www.ortambodm.gov.za/tenders
+  type: html
+  priority: 2
+  free: true
+  live: true
+- id: orbit_tvet_tenders
+  name: Orbit TVET College
+  url: https://www.orbitcollege.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: orenetal_dm_tenders
+  name: OR Tambo (DM-form legacy)
+  url: https://www.ortambodm.co.za/tenders
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: osteopathy_council_tenders
+  name: Osteopathy Council
+  url: https://www.ahpcsa.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: overberg_dm_tenders
+  name: Overberg District Municipality
+  url: https://www.odm.org.za/tenders
+  type: html
+  priority: 2
+  free: true
+  live: true
+- id: overberg_lm_tenders
+  name: Overberg LM
+  url: https://www.overberg.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: overberg_water_tenders
+  name: Overberg Water
+  url: https://overbergwater.co.za/tenders
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: overstrand_lm_alt_tenders
+  name: Overstrand (alt)
+  url: https://www.overstrand.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: overstrand_lm_tenders
+  name: Overstrand Municipality
+  url: https://www.overstrand.gov.za/tenders
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: pacofs_tenders
+  name: Performing Arts Centre of the Free State (PACOFS)
+  url: https://www.pacofs.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: pan_sa_taal_tenders
+  name: Pan South African Language Board (already in chapter9/)
+  url: https://www.pansalb.org/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: pansalb_tenders
+  name: Pan South African Language Board (PanSALB)
+  url: https://www.pansalb.org/tenders/
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: parliament_tenders
+  name: Parliament of South Africa
+  url: https://www.parliament.gov.za/storage/app/media/Tenders/index.html
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: pasa_tenders
+  name: Petroleum Agency SA (PASA)
+  url: https://www.petroleumagencysa.com/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: petroleum_refiners_tenders
+  name: National Petroleum Refiners (Natref)
+  url: https://www.natref.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: petrosa_alt_tenders
+  name: PetroSA (alt)
+  url: https://www.petrosa.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: petrosa_tenders
+  name: PetroSA
+  url: https://www.petrosa.co.za/tenders
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: pf_adjudicator_tenders
+  name: Pensions Fund Adjudicator
+  url: https://www.pfa.org.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: phalaborwa_lm_tenders
+  name: Phalaborwa LM
+  url: https://www.phalaborwa.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: pharma_council_tenders
+  name: Pharma Council
+  url: https://www.pharmacouncil.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: pic_tenders
+  name: Public Investment Corporation (PIC)
+  url: https://www.pic.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: pitso_tenders
+  name: Pitso ya Marena
+  url: https://www.marenas.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: pixley_ka_seme_dm_tenders
+  name: Pixley Ka Seme District Municipality
+  url: https://www.pksdm.gov.za/tenders
+  type: html
+  priority: 2
+  free: true
+  live: true
+- id: pixley_ka_seme_lm_tenders
+  name: Pixley Ka Seme LM
+  url: https://www.pixleykaseme.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: playhouse_tenders
+  name: Playhouse Company
+  url: https://www.playhouse.org.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: plp_tenders
+  name: Provincial Licensing Practitioners
+  url: https://www.plp.org.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: plumbers_board_tenders
+  name: Plumbers Board
+  url: https://www.iop.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: podiatry_council_tenders
+  name: Podiatry Council
+  url: https://www.hpcsa.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: polokwane_lm_alt_tenders
+  name: Polokwane (alt)
+  url: https://www.polokwane.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: polokwane_lm_tenders
+  name: Polokwane Local Municipality
+  url: https://www.polokwane.gov.za/tenders
+  type: html
+  priority: 2
+  free: true
+  live: true
+- id: popcru_tenders
+  name: POPCRU
+  url: https://www.popcru.org.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: port_elizabeth_lm_tenders
+  name: PE Municipality (legacy)
+  url: https://www.pemun.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: port_elizabeth_tvet_tenders
+  name: Port Elizabeth TVET College
+  url: https://www.petvet.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: port_st_johns_lm_alt_tenders
+  name: Port St Johns (alt)
+  url: https://www.psjmun.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: port_st_johns_lm_tenders
+  name: Port St Johns Local Municipality
+  url: https://www.psjmunicipality.gov.za/tenders
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: portsregulator_tenders
+  name: Ports Regulator of South Africa
+  url: https://www.portsregulator.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: ppecb_tenders
+  name: Perishable Products Export Control Board (PPECB)
+  url: https://www.ppecb.com/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: ppra_tenders
+  name: Property Practitioners Regulatory Authority (PPRA)
+  url: https://www.ppra.org.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: prasa_alt_tenders
+  name: PRASA (alt)
+  url: https://www.prasa.com/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: prasa_cres_tenders
+  name: PRASA CRES (Capital, Real Estate & Sustainability)
+  url: https://www.prasacres.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: prasa_tenders
+  name: Passenger Rail Agency of South Africa (PRASA)
+  url: https://www.prasa.com/tenders
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: presidency_tenders
+  name: The Presidency
+  url: https://www.thepresidency.gov.za/tenders
+  type: html
+  priority: 2
+  free: true
+  live: true
+- id: property_practitioners_tenders
+  name: PPRA (alt)
+  url: https://www.ppra.org.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: provincial_gambling_tenders
+  name: Provincial Gambling
+  url: https://www.provgambling.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: provincial_legislatures_tenders
+  name: Provincial Legislatures (collective)
+  url: https://provincial-legislatures.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: provincial_lottery_tenders
+  name: Provincial Lottery
+  url: https://www.provincial-lottery.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: prpa_tenders
+  name: Pension Funds Adjudicator (alt)
+  url: https://www.pfrfa.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: psc_tenders
+  name: Public Service Commission (PSC)
+  url: https://www.psc.gov.za/tenders/
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: pseta_tenders
+  name: Public Service Sector Education and Training Authority (PSETA)
+  url: https://www.pseta.org.za/tenders/
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: psira_tenders
+  name: Private Security Industry Regulatory Authority (PSIRA)
+  url: https://www.psira.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: psp_tenders
+  name: PSP
+  url: https://www.psp.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: psychology_council_tenders
+  name: Psych Council
+  url: https://www.hpssa.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: public_protector_tenders
+  name: Office of the Public Protector
+  url: https://www.publicprotector.org/tenders/
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: quantity_surveyors_council_tenders
+  name: QS Council
+  url: https://www.saqspa.org.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: radiography_council_tenders
+  name: Radiography Council
+  url: https://www.rad.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: raf_alt_tenders
+  name: RAF (alt)
+  url: https://www.raf.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: raf_tenders
+  name: Road Accident Fund
+  url: https://www.raf.co.za/tenders
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: railersafety_tenders
+  name: Rail Safety Regulator (RSR)
+  url: https://www.rsr.org.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: railsafety_tenders
+  name: Rail Safety Regulator (RSR)
+  url: https://www.rsr.org.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: ramotshere_moiloa_lm_tenders
+  name: Ramotshere Moiloa LM
+  url: https://www.ramotsheremoiloa.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: rand_water_tenders
+  name: Rand Water
+  url: https://www.randwater.co.za/tenders
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: randfontein_lm_tenders
+  name: Randfontein LM
+  url: https://www.randfontein.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: raymond_mhlaba_lm_tenders
+  name: Raymond Mhlaba LM
+  url: https://www.raymondmhlaba.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: rhodes_alt_tenders
+  name: Rhodes (alt)
+  url: https://www.ru.ac.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: rhodes_tenders
+  name: Rhodes University
+  url: https://www.ru.ac.za/procurement/tenders/
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: richards_bay_lm_tenders
+  name: Richards Bay (alt)
+  url: https://www.richardsbay.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: robben_island_tenders
+  name: Robben Island Museum
+  url: https://www.robben-island.org.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: rustenburg_alt_tenders
+  name: Rustenburg (alt)
+  url: https://www.rustenburg.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: rustenburg_lm_tenders
+  name: Rustenburg Local Municipality
+  url: https://www.rustenburg.gov.za/tenders
+  type: html
+  priority: 2
+  free: true
+  live: true
+- id: sa_library_blind_tenders
+  name: South African Library for the Blind
+  url: https://www.salb.org.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: saasta_tenders
+  name: South African Agency for Science and Technology Advancement (SAASTA)
+  url: https://www.saasta.ac.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: sabbsa_tenders
+  name: SABBSA
+  url: https://www.sabbusiness.org.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: sabc_alt_tenders
+  name: SABC (alt URL)
+  url: https://www.sabc.co.za/sabc/tenders
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: sabc_tenders
+  name: South African Broadcasting Corporation
+  url: https://www.sabc.co.za/sabc/tenders/
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: sabc_tv_licence_tenders
+  name: SABC TV Licence
+  url: https://www.tvlicence.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: sabs_tenders
+  name: South African Bureau of Standards
+  url: https://www.sabs.co.za/tenders
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: sac_tenders
+  name: South African Civil Aviation Authority (SACAA)
+  url: https://www.caa.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: sacaa_tenders
+  name: South African Civil Aviation Authority (SACAA)
+  url: https://www.caa.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: sadc_tenders
+  name: SADC
+  url: https://www.sadc.int/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: safcol_alt_tenders
+  name: SAFCOL (alt)
+  url: https://www.safcol.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: safcol_tenders
+  name: South African Forestry Company
+  url: https://www.safcol.co.za/tenders/
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: safo_tenders
+  name: SA Federation of Oil Trading Companies
+  url: https://www.safo.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: sahra_tenders
+  name: South African Heritage Resources Agency (SAHRA)
+  url: https://www.sahra.org.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: sahrc_tenders
+  name: South African Human Rights Commission (SAHRC)
+  url: https://www.sahrc.org.za/index.php/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: sakhisizwe_lm_alt_tenders
+  name: Sakhisizwe (alt)
+  url: https://www.sakhisizwe.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: sakhisizwe_lm_tenders
+  name: Sakhisizwe LM
+  url: https://www.sakhisizwe.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: saldanha_bay_alt_tenders
+  name: Saldanha Bay (alt)
+  url: https://www.saldanhabay.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: saldanha_bay_lm_tenders
+  name: Saldanha Bay Municipality
+  url: https://www.saldanhabay.gov.za/tenders
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: samrc_tenders
+  name: South African Medical Research Council (SAMRC)
+  url: https://www.samrc.ac.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: samsa_alt_tenders
+  name: SAMSA (alt)
+  url: https://www.samsa.org.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: samsa_tenders
+  name: South African Maritime Safety Authority
+  url: https://www.samsa.org.za/tenders
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: sanas_tenders
+  name: South African National Accreditation System (SANAS)
+  url: https://www.sanas.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: sanbi_tenders
+  name: South African National Biodiversity Institute (SANBI)
+  url: https://www.sanbi.org/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: sanbs_tenders
+  name: South African National Blood Service (SANBS)
+  url: https://www.sanbs.org.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: sanc_tenders
+  name: South African Nursing Council (SANC)
+  url: https://www.sanc.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: sanedi_tenders
+  name: South African National Energy Development Institute (SANEDI)
+  url: https://www.sanedi.org.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: sanparks_alt_tenders
+  name: SANParks (alt)
+  url: https://www.sanparks.org/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: sanparks_tenders
+  name: South African National Parks
+  url: https://www.sanparks.org/about/doing_business/tenders
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: sanral_alt_tenders
+  name: SANRAL (alt)
+  url: https://www.nra.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: sanral_tenders
+  name: SANRAL
+  url: https://www.nra.co.za/sanral-tenders/
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: sansa_tenders
+  name: South African National Space Agency
+  url: https://www.sansa.org.za/tenders
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: sapc_tenders
+  name: South African Pharmacy Council (SAPC)
+  url: https://www.pharmcouncil.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: sapo_tenders
+  name: South African Post Office (SAPO)
+  url: https://www.postoffice.co.za/about-us/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: sapower_tenders
+  name: SA Power Pool Operations
+  url: https://www.sappo.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: saps_tenders
+  name: South African Police Service
+  url: https://www.saps.gov.za/tenders
+  type: html
+  priority: 2
+  free: true
+  live: true
+- id: sapsa_admin_tenders
+  name: SA Public Service Association
+  url: https://www.sapsa.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: sapsa_tenders
+  name: South African Police Service Act (admin)
+  url: https://www.saps.gov.za/about/admin/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: sapu_tenders
+  name: SAPU
+  url: https://www.sapu.org.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: saqa_tenders
+  name: SAQA
+  url: https://www.saqa.org.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: sarah_baartman_dm_tenders
+  name: Sarah Baartman District Municipality
+  url: https://www.sbdm.co.za/tenders
+  type: html
+  priority: 2
+  free: true
+  live: true
+- id: sarfu_tenders
+  name: South African Rugby Football Union (Federation)
+  url: https://www.sarugby.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: sars_alt_2_tenders
+  name: SARS (alt URL 2)
+  url: https://www.sars.gov.za/procurement/index.html
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: sars_alt_tenders
+  name: SARS (alt URL)
+  url: https://www.sars.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: sars_tenders
+  name: South African Revenue Service
+  url: https://www.sars.gov.za/procurement/
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: sasseta_tenders
+  name: Safety and Security Sector Education and Training Authority (SASSETA)
+  url: https://www.sasseta.org.za/tenders/
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: sat_tenders
+  name: South African Tourism
+  url: https://www.southafrica.net/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: saws_tenders
+  name: South African Weather Service (SAWS)
+  url: https://www.weathersa.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: seda_alt_tenders
+  name: SEDA (alt)
+  url: https://www.seda.org.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: seda_tenders
+  name: Small Enterprise Development Agency
+  url: https://www.seda.org.za/tenders
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: sedibeng_dm_alt_tenders
+  name: Sedibeng District Municipality (alt URL)
+  url: https://www.sedibengdm.gov.za/tenders
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: sedibeng_dm_tenders
+  name: Sedibeng District Municipality
+  url: https://www.sedibeng.gov.za/tenders
+  type: html
+  priority: 2
+  free: true
+  live: true
+- id: sedibeng_tvet_tenders
+  name: Sedibeng TVET College
+  url: https://www.sedibengtvet.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: sedibeng_water_tenders
+  name: "Sedibeng Water (legacy \u2013 merged into Vaal Central)"
+  url: https://www.sedibengwater.co.za/tenders
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: sefa_alt_tenders
+  name: sefa (alt)
+  url: https://www.sefa.org.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: sefa_tenders
+  name: Small Enterprise Finance Agency
+  url: https://www.sefa.org.za/tenders
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: sekhukhune_dm_tenders
+  name: Sekhukhune District Municipality
+  url: https://www.sekhukhunedm.gov.za/tenders
+  type: html
+  priority: 2
+  free: true
+  live: true
+- id: sekhukhune_lm_tenders
+  name: Sekhukhune LM
+  url: https://www.sekhukhune.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: sekhukhune_tvet_tenders
+  name: Sekhukhune TVET College
+  url: https://www.sekhukhune.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: senqu_lm_tenders
+  name: Senqu LM
+  url: https://www.senqu.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: sentech_alt_tenders
+  name: Sentech (alt URL)
+  url: https://www.sentech.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: sentech_tenders
+  name: Sentech SOC Ltd
+  url: https://www.sentech.co.za/tenders
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: services_seta_tenders
+  name: Services Sector Education and Training Authority (Services SETA)
+  url: https://www.serviceseta.org.za/tenders/
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: setsoto_lm_tenders
+  name: Setsoto LM
+  url: https://www.setsoto.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: sff_tenders
+  name: Strategic Fuel Fund (SFF)
+  url: https://www.strategicfuelfund.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: sita_alt_tenders
+  name: SITA (alt URL)
+  url: https://www.sita.co.za/tenders
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: sita_tenders
+  name: State Information Technology Agency (SITA)
+  url: https://www.sita.co.za/tenders
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: siu_tenders
+  name: Special Investigating Unit (SIU)
+  url: https://www.siu.org.za/current-tenders/
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: siyancuma_lm_tenders
+  name: Siyancuma LM
+  url: https://www.siyancuma.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: siyathemba_lm_tenders
+  name: Siyathemba LM
+  url: https://www.siyathemba.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: smu_alt_tenders
+  name: SMU (alt)
+  url: https://www.smu.ac.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: smu_health_tenders
+  name: Sefako Makgatho Health Sciences University (alternate)
+  url: https://www.smu.ac.za/procurement/tenders
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: smu_tenders
+  name: Sefako Makgatho Health Sciences University
+  url: https://www.smu.ac.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: social_work_council_tenders
+  name: Social Work Council
+  url: https://www.saswcouncil.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: sol_plaatje_lm_alt_tenders
+  name: Sol Plaatje (alt)
+  url: https://www.solplaatje.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: sol_plaatje_lm_tenders
+  name: Sol Plaatje Local Municipality
+  url: https://www.solplaatje.org.za/tenders
+  type: html
+  priority: 2
+  free: true
+  live: true
+- id: solplaatje_alt_tenders
+  name: Sol Plaatje (alt)
+  url: https://www.spu.ac.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: solplaatje_tenders
+  name: Sol Plaatje University
+  url: https://www.spu.ac.za/procurement/
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: south_cape_tvet_tenders
+  name: South Cape TVET College
+  url: https://www.sccollege.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: south_west_gauteng_tvet_tenders
+  name: South West Gauteng TVET College
+  url: https://www.swgc.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: speech_therapy_council_tenders
+  name: Speech Council
+  url: https://www.saslha.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: state_theatre_tenders
+  name: South African State Theatre
+  url: https://www.statetheatre.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: stats_sa_tenders
+  name: Statistics South Africa
+  url: https://www.statssa.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: stellenbosch_alt_tenders
+  name: Stellenbosch (alt)
+  url: https://www.sun.ac.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: stellenbosch_lm_alt_tenders
+  name: Stellenbosch (alt)
+  url: https://www.stellenbosch.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: stellenbosch_lm_tenders
+  name: Stellenbosch Municipality
+  url: https://www.stellenbosch.gov.za/tenders
+  type: html
+  priority: 2
+  free: true
+  live: true
+- id: stellenbosch_tenders
+  name: Stellenbosch University
+  url: https://www.sun.ac.za/finance/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: stevetsberg_lm_tenders
+  name: Stevetsberg LM
+  url: https://www.stevetsberg.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: swartland_lm_alt_tenders
+  name: Swartland (alt)
+  url: https://www.swartland.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: swartland_lm_tenders
+  name: Swartland Municipality
+  url: https://www.swartland.org.za/tenders
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: taletso_tvet_tenders
+  name: Taletso TVET College
+  url: https://www.taletso.edu.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: tcta_tenders
+  name: Trans-Caledon Tunnel Authority
+  url: https://www.tcta.co.za/tenders
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: telkom_tenders
+  name: Telkom SA SOC Ltd
+  url: https://www.telkom.co.za/about-us/supplier-information
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: tep_tenders
+  name: Transnet Engineering (TEP)
+  url: https://www.transnetengineering.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: teta_tenders
+  name: Transport Education Training Authority (TETA)
+  url: https://www.teta.org.za/tenders/
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: tfr_tenders
+  name: Transnet Freight Rail (TFR)
+  url: https://www.transnetfreightrail.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: thabo_mofutsanyana_dm_tenders
+  name: Thabo Mofutsanyana District Municipality
+  url: https://www.tmsoa.gov.za/tenders
+  type: html
+  priority: 2
+  free: true
+  live: true
+- id: the_dti_alt_tenders
+  name: DTIC (legacy)
+  url: https://www.thedti.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: thekwini_tvet_tenders
+  name: Thekwini TVET College
+  url: https://www.thekwini.edu.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: thulamela_lm_tenders
+  name: Thulamela Local Municipality
+  url: https://www.thulamela.gov.za/tenders
+  type: html
+  priority: 2
+  free: true
+  live: true
+- id: tikzn_tenders
+  name: Trade and Investment KZN (TIK)
+  url: https://www.tikzn.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: times_media_tenders
+  name: Times Media
+  url: https://www.timesmedia.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: tnpa_tenders
+  name: Transnet National Ports Authority (TNPA)
+  url: https://www.transnetnationalportsauthority.net/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: tokologo_lm_tenders
+  name: Tokologo Local Municipality
+  url: https://www.tokologo.org.za/tenders
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: tourism_tenders
+  name: Department of Tourism
+  url: https://www.tourism.gov.za/tenders
+  type: html
+  priority: 2
+  free: true
+  live: true
+- id: tpe_tenders
+  name: Transnet Pipelines (TPE)
+  url: https://www.transnetpipelines.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: tpt_tenders
+  name: Transnet Port Terminals (TPT)
+  url: https://www.transnetportterminals.net/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: traditional_healers_council_tenders
+  name: Traditional Healers Council
+  url: https://www.iingsa.org.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: transnet_alt_tenders
+  name: Transnet (alt)
+  url: https://www.transnet.net/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: transnet_tenders
+  name: Transnet eTenders
+  url: https://transnetetenders.azurewebsites.net/
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: tshwane_energy_tenders
+  name: City of Tshwane Energy and Electricity Division
+  url: https://www.tshwane.gov.za/energy/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: tshwane_lm_alt_tenders
+  name: Tshwane (alt)
+  url: https://www.tshwane.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: tshwane_south_lm_tenders
+  name: Tshwane South LM
+  url: https://www.tshwanesouth.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: tshwane_tenders
+  name: City of Tshwane
+  url: https://www.tshwane.gov.za/?page_id=427
+  type: html
+  priority: 2
+  free: true
+  live: true
+- id: tshwane_water_tenders
+  name: City of Tshwane Water and Sanitation Division
+  url: https://www.tshwane.gov.za/water/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: tsolwana_lm_tenders
+  name: Tsolwana LM
+  url: https://www.tsolwana.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: tswaing_lm_tenders
+  name: Tswaing Local Municipality
+  url: https://www.tswaing.gov.za/tenders
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: tut_alt_tenders
+  name: TUT (alt)
+  url: https://www.tut.ac.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: tut_tenders
+  name: Tshwane University of Technology
+  url: https://www.tut.ac.za/website/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: tvet_tshwane_north_tenders
+  name: Tshwane North TVET College
+  url: https://www.tnc.edu.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: tvet_tshwane_south_tenders
+  name: Tshwane South TVET College
+  url: https://www.tsc.edu.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: ubuntu_lm_alt_tenders
+  name: Ubuntu (alt)
+  url: https://www.ubuntu.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: ubuntu_lm_tenders
+  name: Ubuntu LM
+  url: https://www.ubuntu.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: uct_alt_tenders
+  name: UCT (alt)
+  url: https://www.uct.ac.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: uct_tenders
+  name: University of Cape Town
+  url: https://www.uct.ac.za/procurement/tenders/
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: ufh_alt_tenders
+  name: UFH (alt)
+  url: https://www.ufh.ac.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: ufh_tenders
+  name: University of Fort Hare
+  url: https://www.ufh.ac.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: ufs_alt_tenders
+  name: UFS (alt)
+  url: https://www.ufs.ac.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: ufs_tenders
+  name: University of the Free State
+  url: https://www.ufs.ac.za/procurement/tenders
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: ugu_dm_tenders
+  name: Ugu District Municipality
+  url: https://www.ugu.gov.za/tenders
+  type: html
+  priority: 2
+  free: true
+  live: true
+- id: uif_alt_tenders
+  name: UIF (alt)
+  url: https://www.labour.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: uif_tenders
+  name: Unemployment Insurance Fund
+  url: https://www.labour.gov.za/uif-tenders
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: uj_alt_tenders
+  name: UJ (alt)
+  url: https://www.uj.ac.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: uj_tenders
+  name: University of Johannesburg
+  url: https://www.uj.ac.za/about/procurement/Pages/Tenders.aspx
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: ukzn_alt_tenders
+  name: UKZN (alt)
+  url: https://www.ukzn.ac.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: ukzn_tenders
+  name: University of KwaZulu-Natal
+  url: https://tenders.ukzn.ac.za/
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: ul_alt_tenders
+  name: UL (alt)
+  url: https://www.ul.ac.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: ul_tenders
+  name: University of Limpopo
+  url: https://www.ul.ac.za/procurement/
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: ulundi_lm_tenders
+  name: Ulundi LM
+  url: https://www.ulundi.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: umfolozi_tvet_tenders
+  name: uMfolozi TVET College
+  url: https://www.umfolozi.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: umgeni_water_tenders
+  name: "Umgeni Water (legacy \u2013 merged into uMngeni-uThukela)"
+  url: https://www.umgeni.co.za/tenders
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: umgungundlovu_dm_tenders
+  name: uMgungundlovu District Municipality
+  url: https://www.umdm.gov.za/tenders
+  type: html
+  priority: 2
+  free: true
+  live: true
+- id: umgungundlovu_tvet_tenders
+  name: uMgungundlovu TVET College
+  url: https://www.ufet.edu.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: umhlabuyalingana_lm_tenders
+  name: uMhlabuyalingana LM
+  url: https://www.umhlabuyalingana.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: umhlathuze_lm_tenders
+  name: uMhlathuze Local Municipality
+  url: https://www.umhlathuze.gov.za/tenders
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: umkhanyakude_dm_tenders
+  name: uMkhanyakude District Municipality
+  url: https://www.umdm.co.za/tenders
+  type: html
+  priority: 2
+  free: true
+  live: true
+- id: umlalazi_lm_tenders
+  name: uMlalazi LM
+  url: https://www.umlalazi.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: umngeni_lm_tenders
+  name: uMngeni LM
+  url: https://www.umgeni.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: umngeni_uthukela_water_tenders
+  name: 'uMngeni-uThukela Water (merged: Umgeni + Mhlathuze)'
+  url: https://www.umngeni-uthukela.co.za/tenders
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: ump_alt_tenders
+  name: UMP (alt)
+  url: https://www.ump.ac.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: ump_tenders
+  name: University of Mpumalanga
+  url: https://www.ump.ac.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: umsinga_lm_tenders
+  name: uMsinga LM
+  url: https://www.umsinga.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: umsobomvu_lm_tenders
+  name: Umsobomvu LM
+  url: https://www.umsobomvu.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: umuziwabantu_lm_tenders
+  name: uMuziwabantu LM
+  url: https://www.umuziwabantu.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: umvoti_lm_tenders
+  name: uMvoti LM
+  url: https://www.umvoti.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: umzimkhulu_lm_tenders
+  name: uMzimkhulu LM
+  url: https://www.umzimkhulu.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: umzimvubu_lm_tenders
+  name: uMzimvubu LM
+  url: https://www.umzimvubu.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: umzinyathi_dm_tenders
+  name: uMzinyathi District Municipality
+  url: https://www.umzinyathi.gov.za/tenders
+  type: html
+  priority: 2
+  free: true
+  live: true
+- id: umzinyathi_lm_tenders
+  name: uMzinyathi LM
+  url: https://www.umzinyathi.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: unisa_alt_tenders
+  name: UNISA (alt)
+  url: https://www.unisa.ac.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: unisa_tenders
+  name: University of South Africa (UNISA)
+  url: https://www.unisa.ac.za/sites/corporate/default/Procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: univen_alt_tenders
+  name: Univen (alt)
+  url: https://www.univen.ac.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: univen_tenders
+  name: University of Venda
+  url: https://www.univen.ac.za/procurement/
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: up_alt_tenders
+  name: UP (alt)
+  url: https://www.up.ac.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: up_tenders
+  name: University of Pretoria
+  url: https://www.up.ac.za/tender/
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: uphongolo_lm_tenders
+  name: uPhongolo LM
+  url: https://www.uphongolo.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: usaasa_tenders
+  name: Universal Service and Access Agency of South Africa (USAASA)
+  url: https://www.usaasa.org.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: uthukela_dm_tenders
+  name: uThukela District Municipality
+  url: https://www.uthukela.gov.za/tenders
+  type: html
+  priority: 2
+  free: true
+  live: true
+- id: uwc_alt_tenders
+  name: UWC (alt)
+  url: https://www.uwc.ac.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: uwc_legacy_tenders
+  name: University of the Western Cape (legacy)
+  url: https://www.uwc.ac.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: uwc_tenders
+  name: University of the Western Cape
+  url: https://www.uwc.ac.za/supply-chain-management/tenders
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: vaal_central_water_tenders
+  name: 'Vaal Central Water (merged: Bloem + Sedibeng + Lepelle)'
+  url: https://www.vaalcentralwater.co.za/tenders
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: vet_council_tenders
+  name: Vet Council
+  url: https://www.savc.org.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: vhembe_dm_tenders
+  name: Vhembe District Municipality
+  url: https://www.vhembe.gov.za/tenders
+  type: html
+  priority: 2
+  free: true
+  live: true
+- id: vhembe_tvet_tenders
+  name: Vhembe TVET College
+  url: https://www.vhembetvet.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: victor_khanye_lm_alt_tenders
+  name: Victor Khanye (alt)
+  url: https://www.victorkhanye.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: victor_khanye_lm_tenders
+  name: Victor Khanye Local Municipality
+  url: https://www.vkle.gov.za/tenders
+  type: html
+  priority: 2
+  free: true
+  live: true
+- id: vuselela_tvet_tenders
+  name: Vuselela TVET College
+  url: https://www.vuselela.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: walter_sisulu_lm_tenders
+  name: Walter Sisulu LM
+  url: https://www.waltersisulu.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: waterberg_dm_tenders
+  name: Waterberg District Municipality
+  url: https://www.waterberg.gov.za/tenders
+  type: html
+  priority: 2
+  free: true
+  live: true
+- id: waterberg_tvet_tenders
+  name: Waterberg TVET College
+  url: https://www.waterbergcollege.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: wc_agriculture_tenders
+  name: Western Cape Agriculture (Elsenburg)
+  url: https://www.elsenburg.com/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: wc_dev_tenders
+  name: Western Cape Development Corporation (Wesgro)
+  url: https://www.wesgro.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: wc_health_alt_tenders
+  name: Western Cape Health (alt URL)
+  url: https://www.westerncape.gov.za/dept/health/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: wc_health_tenders
+  name: Western Cape Department of Health & Wellness
+  url: https://www.westerncape.gov.za/dept/health/tenders
+  type: html
+  priority: 2
+  free: true
+  live: true
+- id: wc_heritage_tenders
+  name: Western Cape Heritage
+  url: https://www.wesgro.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: wc_housing_tenders
+  name: Western Cape Housing
+  url: https://www.wchousing.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: wc_invest_tenders
+  name: Wesgro (Western Cape)
+  url: https://www.wesgro.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: wc_liquor_tenders
+  name: Western Cape Liquor Authority
+  url: https://www.wcla.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: wc_parks_tenders
+  name: CapeNature
+  url: https://www.capenature.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: wc_social_tenders
+  name: Western Cape Social Development
+  url: https://www.westerncape.gov.za/dept/social-development/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: wc_tourism_tenders
+  name: Western Cape Tourism
+  url: https://www.wesgro.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: wcbs_tenders
+  name: Western Cape Blood Service (WCBS)
+  url: https://www.wcbs.org.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: wcdi_tenders
+  name: Western Cape Department of Infrastructure
+  url: https://www.westerncape.gov.za/dept/infrastructure/tenders
+  type: html
+  priority: 2
+  free: true
+  live: true
+- id: wcedu_tenders
+  name: Western Cape Education Department (alt)
+  url: https://www.wcedonline.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: west_coast_dm_tenders
+  name: West Coast District Municipality
+  url: https://www.wcdm.co.za/tenders
+  type: html
+  priority: 2
+  free: true
+  live: true
+- id: west_coast_tvet_tenders
+  name: West Coast TVET College
+  url: https://www.westcoastcollege.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: west_rand_tenders
+  name: West Rand District Municipality
+  url: https://www.wrdm.gov.za/tenders
+  type: html
+  priority: 2
+  free: true
+  live: true
+- id: western_cape_tvet_jhb_tenders
+  name: Western Cape TVET (JHB campus)
+  url: https://www.westerncape.co.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: westerncape_tenders
+  name: Western Cape Government Tenders
+  url: https://www.westerncape.gov.za/tenders
+  type: html
+  priority: 2
+  free: true
+  live: true
+- id: winnie_madikizela_mandela_lm_tenders
+  name: Winnie Madikizela-Mandela LM
+  url: https://www.wmm.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: wits_alt_tenders
+  name: Wits (alt)
+  url: https://www.wits.ac.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: wits_tenders
+  name: University of the Witwatersrand
+  url: https://www.wits.ac.za/purchase/tenders/
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: witzenberg_lm_tenders
+  name: Witzenberg LM
+  url: https://www.witzenberg.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: world_bank_sa_tenders
+  name: World Bank SA
+  url: https://www.worldbank.org/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: wrc_tenders
+  name: Water Research Commission
+  url: https://www.wrc.org.za/tenders
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: wrseta_tenders
+  name: Wholesale and Retail Sector Education and Training Authority (W&RSETA)
+  url: https://www.wrseta.org.za/tenders/
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: wsu_alt_tenders
+  name: WSU (alt)
+  url: https://www.wsu.ac.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: wsu_tenders
+  name: Walter Sisulu University
+  url: https://www.wsu.ac.za/wsu-tenders/
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: xharia_lm_tenders
+  name: Xharia LM
+  url: https://www.xharia.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: xhariep_dm_tenders
+  name: Xhariep District Municipality
+  url: https://www.xhariep.gov.za/tenders
+  type: html
+  priority: 2
+  free: true
+  live: true
+- id: z_f_mgcawu_lm_tenders
+  name: ZF Mgcawu LM
+  url: https://www.zfmcawu.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: zadna_tenders
+  name: ZA Domain Name Authority (ZADNA)
+  url: https://www.zadna.org.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: true
+- id: zamukulungisa_lm_tenders
+  name: Zamukulungisa LM
+  url: https://www.zamukulungisa.gov.za/procurement
+  type: html
+  priority: 3
+  free: true
+  live: false
+- id: zf_mgcawu_dm_tenders
+  name: ZF Mgcawu District Municipality
+  url: https://www.zfmcdm.gov.za/tenders
+  type: html
+  priority: 2
+  free: true
+  live: true
+- id: zululand_dm_tenders
+  name: Zululand District Municipality
+  url: https://www.zululand.org.za/tenders
+  type: html
+  priority: 2
+  free: true
+  live: true

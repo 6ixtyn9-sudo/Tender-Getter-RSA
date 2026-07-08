@@ -52,7 +52,7 @@ MOCK_ESKOM_HTML = """
 """
 
 class EskomSource:
-    source_id: str = "eskom"
+    source_id: str = "eskom_tenders"
 
     def __init__(self, url: str = "https://tenderbulletin.eskom.co.za/"):
         self.url = url

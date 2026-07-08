@@ -44,9 +44,16 @@ CPT/EE/2026/089,Cape Town Harbour Electrical Reticulation,City of Cape Town,2026
 
 def test_load_sources_returns_list():
     srcs = load_sources()
-    # Should return a list – empty if PyYAML not installed, else 9 entries
     assert isinstance(srcs, list)
     if srcs:
-        # If yaml is installed, check structure
-        assert srcs[0]["id"] == "etenders_ocds"
-        assert any(s["id"] == "etenders_csv" for s in srcs)
+        # If yaml is installed, check structure (alphabetically sorted)
+        ids = [s["id"] for s in srcs]
+        assert "etenders_ocds" in ids
+        assert "etenders_csv" in ids
+        assert "cidb_itender" in ids
+        # Every entry has the required fields
+        for s in srcs:
+            assert "id" in s
+            assert "name" in s
+            assert "url" in s
+            assert "live" in s

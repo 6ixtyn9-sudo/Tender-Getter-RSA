@@ -5,7 +5,7 @@ from tender_getter.schemas import TenderOpportunity
 
 def test_sanral_source_initialization():
     source = SANRALSource()
-    assert source.source_id == "sanral"
+    assert source.source_id == "sanral_tenders"
     assert "nra.co.za" in source.url
 
 def test_sanral_parse_mock_html():

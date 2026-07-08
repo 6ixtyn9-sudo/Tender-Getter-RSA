@@ -52,7 +52,7 @@ MOCK_TRANSNET_HTML = """
 """
 
 class TransnetSource:
-    source_id: str = "transnet"
+    source_id: str = "transnet_tenders"
 
     def __init__(self, url: str = "https://transnetetenders.azurewebsites.net/"):
         self.url = url
