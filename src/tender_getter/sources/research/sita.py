@@ -52,7 +52,7 @@ MOCK_SITA_HTML = """
 """
 
 class SITASource:
-    source_id: str = "sita"
+    source_id: str = "sita_tenders"
 
     def __init__(self, url: str = "https://www.sita.co.za/tenders/"):
         self.url = url

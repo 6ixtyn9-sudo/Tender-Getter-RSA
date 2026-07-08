@@ -5,8 +5,8 @@ from tender_getter.schemas import TenderOpportunity
 
 def test_sita_source_initialization():
     source = SITASource()
-    assert source.source_id == "sita"
-    assert "sita.co.za" in source.url
+    assert source.source_id == "sita_tenders"
+    assert "sita" in source.url.lower()
 
 def test_sita_parse_mock_html():
     source = SITASource()

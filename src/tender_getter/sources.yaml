@@ -596,6 +596,12 @@ sources:
     type: html
     priority: 2
     free: true
+  - id: nc_roads_tenders
+    name: "Northern Cape Department of Roads and Public Works"
+    url: "https://ncrpw.ncpg.gov.za/tenders"
+    type: html
+    priority: 2
+    free: true
   # --- National Government Departments ---
   - id: saps_tenders
     name: "South African Police Service"
