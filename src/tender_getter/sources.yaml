@@ -57,3 +57,24 @@ sources:
     url: "https://www.nra.co.za/sanral-tenders/"
     type: html
     priority: 3
+
+  - id: capetown_tenders
+    name: "City of Cape Town"
+    url: "https://web1.capetown.gov.za/web1/TenderPortal/"
+    type: html
+    priority: 2
+    free: true
+
+  - id: sita_tenders
+    name: "State Information Technology Agency (SITA)"
+    url: "https://www.sita.co.za/tenders"
+    type: html
+    priority: 3
+    free: true
+
+  - id: johannesburg_tenders
+    name: "City of Johannesburg"
+    url: "https://joburg.org.za/work_/Pages/2025-Tenders-and-Quotations/Bid-Opening-Registers.aspx"
+    type: html
+    priority: 2
+    free: true
