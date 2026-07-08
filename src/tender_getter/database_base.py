@@ -14,18 +14,18 @@ from typing import Optional
 
 from .schemas import CompanyProfile, TenderOpportunity, MatchResult
 
-
 class TenderDatabaseBase(ABC):
     """
     Abstract interface for Tender Getter RSA persistence drivers.
 
     Usage (concrete subclass):
-        class MyDriver(TenderDatabaseBase):
-            def connect(self): ...
-            def close(self): ...
-            def upsert_company(self, company): ...
-            def upsert_tender(self, tender): ...
-            def save_match(self, company, result): ...
+    class MyDriver(TenderDatabaseBase):
+        def connect(self): ...
+        def close(self): ...
+        def upsert_company(self, company): ...
+        def upsert_tender(self, tender): ...
+        def save_match(self, company, result): ...
+        def list_open_tenders(self, limit, province): ...
     """
 
     # -- Connection lifecycle ------------------------------------------------
@@ -37,7 +37,7 @@ class TenderDatabaseBase(ABC):
         schema migration checks, etc.).
 
         Must return `self` so that callers can chain:
-            db = MyDriver().connect()
+        db = MyDriver().connect()
         """
 
     @abstractmethod
@@ -72,6 +72,20 @@ class TenderDatabaseBase(ABC):
 
         Implementations must store closing_date in a timezone-aware format
         (ISO 8601 string for SQLite, TIMESTAMPTZ for PostgreSQL).
+        """
+
+    @abstractmethod
+    def list_open_tenders(self, limit: int = 50, province: Optional[str] = None) -> list[TenderOpportunity]:
+        """
+        Return open tenders, soonest closing first.
+
+        Args:
+            limit: Maximum number of tenders to return
+            province: If provided, filter to tenders matching this province,
+                      or National / NULL location_target (open to all)
+
+        Returns:
+            List of TenderOpportunity, ordered by closing_date ASC
         """
 
     # -- Match results -------------------------------------------------------

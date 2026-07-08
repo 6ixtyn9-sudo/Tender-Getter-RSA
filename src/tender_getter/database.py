@@ -16,7 +16,7 @@ import os
 import sqlite3
 import json
 from pathlib import Path
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Optional
 
 from .database_base import TenderDatabaseBase
@@ -219,6 +219,39 @@ class TenderDatabase(TenderDatabaseBase):
                     tender.location_target, tender.raw_document_url,
                 ),
             )
+
+    # -- Match results -------------------------------------------------------
+
+    def list_open_tenders(self, limit: int = 50, province: Optional[str] = None) -> list[TenderOpportunity]:
+        assert self._conn, "Call connect() first."
+        query = "SELECT * FROM tenders"
+        params = []
+        if province:
+            query += " WHERE location_target IS NULL OR lower(location_target) = 'national' OR lower(location_target) = ?"
+            params.append(province.lower())
+        query += " ORDER BY closing_date ASC LIMIT ?"
+        params.append(limit)
+        
+        cur = self._conn.execute(query, params)
+        results = []
+        for row in cur:
+            closing_date = datetime.fromisoformat(row["closing_date"])
+            if closing_date.tzinfo is None:
+                closing_date = closing_date.replace(tzinfo=timezone.utc)
+            results.append(TenderOpportunity(
+                tender_id=row["tender_id"],
+                title=row["title"],
+                issuing_entity=row["issuing_entity"],
+                closing_date=closing_date,
+                estimated_value=row["estimated_value"],
+                required_cidb_class=row["required_cidb_class"],
+                required_cidb_level=row["required_cidb_level"],
+                mandatory_csd=bool(row["mandatory_csd"]),
+                tax_compliance_required=bool(row["tax_compliance_required"]),
+                location_target=row["location_target"],
+                raw_document_url=row["raw_document_url"],
+            ))
+        return results
 
     # -- Match results -------------------------------------------------------
 

@@ -15,6 +15,7 @@ Supabase. This driver assumes the tables already exist.
 
 import json
 from typing import Optional
+from datetime import timezone
 
 from .database_base import TenderDatabaseBase
 from .schemas import CompanyProfile, TenderOpportunity, MatchResult
@@ -189,6 +190,44 @@ class PostgresDatabase(TenderDatabaseBase):
         except Exception:
             self._conn.rollback()
             raise
+        finally:
+            cur.close()
+
+    # -- Match results -------------------------------------------------------
+
+    def list_open_tenders(self, limit: int = 50, province: Optional[str] = None) -> list[TenderOpportunity]:
+        cur = self._cursor()
+        try:
+            query = "SELECT * FROM tenders"
+            params = []
+            if province:
+                query += " WHERE location_target IS NULL OR lower(location_target) = 'national' OR lower(location_target) = %s"
+                params.append(province.lower())
+            query += " ORDER BY closing_date ASC LIMIT %s"
+            params.append(limit)
+            
+            cur.execute(query, params)
+            colnames = [desc[0] for desc in cur.description]
+            results = []
+            for row in cur:
+                row_dict = dict(zip(colnames, row))
+                closing_date = row_dict["closing_date"]
+                if closing_date.tzinfo is None:
+                    closing_date = closing_date.replace(tzinfo=timezone.utc)
+                results.append(TenderOpportunity(
+                    tender_id=row_dict["tender_id"],
+                    title=row_dict["title"],
+                    issuing_entity=row_dict["issuing_entity"],
+                    closing_date=closing_date,
+                    estimated_value=row_dict["estimated_value"],
+                    required_cidb_class=row_dict["required_cidb_class"],
+                    required_cidb_level=row_dict["required_cidb_level"],
+                    mandatory_csd=bool(row_dict["mandatory_csd"]),
+                    tax_compliance_required=bool(row_dict["tax_compliance_required"]),
+                    location_target=row_dict["location_target"],
+                    raw_document_url=row_dict["raw_document_url"],
+                ))
+            return results
         finally:
             cur.close()
 

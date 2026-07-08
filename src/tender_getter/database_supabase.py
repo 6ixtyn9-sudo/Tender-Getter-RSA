@@ -1,6 +1,7 @@
 # database_supabase.py - Supabase PostgREST client for Tender Getter RSA
 import os
-from typing import Optional
+from typing import Optional, List
+from datetime import datetime, timezone
 from supabase import create_client, Client
 from .database_base import TenderDatabaseBase
 from .schemas import CompanyProfile, TenderOpportunity, MatchResult
@@ -19,6 +20,32 @@ class SupabaseDatabase(TenderDatabaseBase):
         self.client = None
     def __enter__(self): return self.connect()
     def __exit__(self, *a): self.close()
+
+    def _row_to_tender(self, r: dict) -> TenderOpportunity:
+        cd = r.get("closing_date")
+        if isinstance(cd, str):
+            try:
+                closing_date = datetime.fromisoformat(cd.replace("Z", "+00:00"))
+            except Exception:
+                closing_date = datetime(2099, 12, 31, tzinfo=timezone.utc)
+        else:
+            closing_date = cd
+        if closing_date.tzinfo is None:
+            closing_date = closing_date.replace(tzinfo=timezone.utc)
+        return TenderOpportunity(
+            tender_id=r["tender_id"],
+            title=r["title"],
+            issuing_entity=r["issuing_entity"],
+            closing_date=closing_date,
+            estimated_value=r.get("estimated_value"),
+            required_cidb_class=r.get("required_cidb_class"),
+            required_cidb_level=r.get("required_cidb_level"),
+            mandatory_csd=bool(r.get("mandatory_csd", True)),
+            tax_compliance_required=bool(r.get("tax_compliance_required", True)),
+            location_target=r.get("location_target"),
+            raw_document_url=r.get("raw_document_url"),
+        )
+
     def upsert_company(self, company: CompanyProfile) -> None:
         assert self.client
         payload = {
@@ -42,6 +69,7 @@ class SupabaseDatabase(TenderDatabaseBase):
         if company.cidb_gradings:
             gradings = [{"registration_number": company.registration_number, "class_code": g.class_code, "level": g.level} for g in company.cidb_gradings]
             self.client.table("cidb_gradings").insert(gradings).execute()
+
     def upsert_tender(self, tender: TenderOpportunity) -> None:
         assert self.client
         payload = {
@@ -58,6 +86,24 @@ class SupabaseDatabase(TenderDatabaseBase):
             "raw_document_url": str(tender.raw_document_url) if tender.raw_document_url else None,
         }
         self.client.table("tenders").upsert(payload, on_conflict="tender_id").execute()
+
+    def list_open_tenders(self, limit: int = 50, province: Optional[str] = None) -> List[TenderOpportunity]:
+        assert self.client
+        # Fetch a bit extra to allow client-side province filtering (PostgREST OR with NULL is fiddly)
+        fetch_limit = limit * 3 if province else limit
+        res = self.client.table("tenders").select("*").order("closing_date", desc=False).limit(fetch_limit).execute()
+        rows = res.data or []
+        tenders = [self._row_to_tender(r) for r in rows]
+        if province:
+            p = province.lower()
+            def keep(t: TenderOpportunity) -> bool:
+                if not t.location_target:
+                    return True
+                lt = t.location_target.lower()
+                return lt == "national" or lt == p
+            tenders = [t for t in tenders if keep(t)]
+        return tenders[:limit]
+
     def save_match(self, company: CompanyProfile, result: MatchResult) -> None:
         assert self.client
         payload = {
