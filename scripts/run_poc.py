@@ -232,7 +232,35 @@ def run_poc():
     except Exception as e:
         print(f"  Western Cape sync failed: {e}")
 
-    total_synced = ocds_count + csv_count + sanral_count + eskom_count + gauteng_count + cidb_count + westerncape_count
+    # 3h – SITA Scraping Ingestion Vector (New!)
+    sita_count = 0
+    try:
+        from tender_getter.sources import SITASource
+        sita_src = SITASource()
+        sita_tenders = sita_src.fetch()
+        for tender in sita_tenders:
+            db.upsert_tender(tender)
+            sita_count += 1
+        if sita_count > 0:
+            print(f"[3/4] SITA Scraper: {sita_count} high-value government ICT tenders synced")
+    except Exception as e:
+        print(f"  SITA sync failed: {e}")
+
+    # 3i – Transnet Scraping Ingestion Vector (New!)
+    transnet_count = 0
+    try:
+        from tender_getter.sources import TransnetSource
+        transnet_src = TransnetSource()
+        transnet_tenders = transnet_src.fetch()
+        for tender in transnet_tenders:
+            db.upsert_tender(tender)
+            transnet_count += 1
+        if transnet_count > 0:
+            print(f"[3/4] Transnet Scraper: {transnet_count} high-value freight & transport tenders synced")
+    except Exception as e:
+        print(f"  Transnet sync failed: {e}")
+
+    total_synced = ocds_count + csv_count + sanral_count + eskom_count + gauteng_count + cidb_count + westerncape_count + sita_count + transnet_count
 
     # Pull open tenders from DB – real data path
     try:
@@ -253,7 +281,7 @@ def run_poc():
         used_mocks = True
         print(f"[3/4] {len(MOCK_TENDERS)} mock tenders cached (live sources yielded 0).")
     else:
-        src = f"OCDS:{ocds_count} CSV:{csv_count} SANRAL:{sanral_count} ESKOM:{eskom_count} GAUTENG:{gauteng_count} CIDB:{cidb_count} WC:{westerncape_count}" if total_synced > 0 else "DB cache"
+        src = f"OCDS:{ocds_count} CSV:{csv_count} SANRAL:{sanral_count} ESKOM:{eskom_count} GAUTENG:{gauteng_count} CIDB:{cidb_count} WC:{westerncape_count} SITA:{sita_count} TRANSNET:{transnet_count}" if total_synced > 0 else "DB cache"
         print(f"[3/4] {len(tenders_to_match)} open tenders loaded from DB [{src}]")
 
     # Step 4: Match
