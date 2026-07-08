@@ -25,6 +25,18 @@ from .transnet import TransnetSource
 from .capetown import CapeTownSource
 from .kzn import KZNSource
 from .johannesburg import JohannesburgSource
+from .ethekwini import EthekwiniSource
+from .tshwane import TshwaneSource
+from .ekurhuleni import EkurhuleniSource
+from .nelson_mandela_bay import NelsonMandelaBaySource
+from .buffalo_city import BuffaloCitySource
+from .mangaung import MangaungSource
+from .easterncape import EasternCapeSource
+from .freestate import FreeStateSource
+from .limpopo import LimpopoSource
+from .mpumalanga import MpumalangaSource
+from .northwest import NorthWestSource
+from .northerncape import NorthernCapeSource
 from .common import re_search_cidb, province_from_text
 
 def load_sources() -> List[Dict[str, Any]]:
@@ -55,6 +67,18 @@ __all__ = [
     "CapeTownSource",
     "KZNSource",
     "JohannesburgSource",
+    "EthekwiniSource",
+    "TshwaneSource",
+    "EkurhuleniSource",
+    "NelsonMandelaBaySource",
+    "BuffaloCitySource",
+    "MangaungSource",
+    "EasternCapeSource",
+    "FreeStateSource",
+    "LimpopoSource",
+    "MpumalangaSource",
+    "NorthWestSource",
+    "NorthernCapeSource",
     "re_search_cidb", "province_from_text",
     "load_sources",
 ]

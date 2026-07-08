@@ -78,3 +78,87 @@ sources:
     type: html
     priority: 2
     free: true
+
+  - id: ethekwini_tenders
+    name: "eThekwini Metropolitan Municipality"
+    url: "https://www.durban.gov.za/pages/residents/tenders"
+    type: html
+    priority: 2
+    free: true
+
+  - id: tshwane_tenders
+    name: "City of Tshwane"
+    url: "https://www.tshwane.gov.za/?page_id=427"
+    type: html
+    priority: 2
+    free: true
+
+  - id: ekurhuleni_tenders
+    name: "Ekurhuleni Metropolitan Municipality"
+    url: "https://www.ekurhuleni.gov.za/tenders/"
+    type: html
+    priority: 2
+    free: true
+
+  - id: nelsonmandelabay_tenders
+    name: "Nelson Mandela Bay Metropolitan Municipality"
+    url: "https://www.nelsonmandelabay.gov.za/Tenders"
+    type: html
+    priority: 2
+    free: true
+
+  - id: buffalo_city_tenders
+    name: "Buffalo City Metropolitan Municipality"
+    url: "https://www.buffalocity.gov.za/tenders.php"
+    type: html
+    priority: 2
+    free: true
+
+  - id: mangaung_tenders
+    name: "Mangaung Metropolitan Municipality"
+    url: "http://www.mangaung.co.za/category/tenders/"
+    type: html
+    priority: 2
+    free: true
+
+  - id: easterncape_tenders
+    name: "Eastern Cape Provincial Treasury"
+    url: "https://www.ecprov.gov.za/tenders"
+    type: html
+    priority: 2
+    free: true
+
+  - id: freestate_tenders
+    name: "Free State Provincial Treasury"
+    url: "http://www.treasury.fs.gov.za/tenders/"
+    type: html
+    priority: 2
+    free: true
+
+  - id: limpopo_tenders
+    name: "Limpopo Provincial Treasury"
+    url: "https://www.limtreasury.gov.za/lim_admin_trea/pages/sites/tender_documents/index.php"
+    type: html
+    priority: 2
+    free: true
+
+  - id: mpumalanga_tenders
+    name: "Mpumalanga Provincial Treasury"
+    url: "https://www.mpumalanga.gov.za/finance/tenders.htm"
+    type: html
+    priority: 2
+    free: true
+
+  - id: northwest_tenders
+    name: "North West Provincial Treasury"
+    url: "http://www.nwpg.gov.za/Treasury/Tenders.asp"
+    type: html
+    priority: 2
+    free: true
+
+  - id: northerncape_tenders
+    name: "Northern Cape Provincial Treasury"
+    url: "https://nctreasury.ncpg.gov.za/index.php/tenders"
+    type: html
+    priority: 2
+    free: true
