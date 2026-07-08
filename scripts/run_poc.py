@@ -176,7 +176,63 @@ def run_poc():
     except Exception as e:
         print(f"  SANRAL sync failed: {e}")
 
-    total_synced = ocds_count + csv_count + sanral_count
+    # 3d – Eskom Scraping Ingestion Vector (New!)
+    eskom_count = 0
+    try:
+        from tender_getter.sources import EskomSource
+        eskom_src = EskomSource()
+        eskom_tenders = eskom_src.fetch()
+        for tender in eskom_tenders:
+            db.upsert_tender(tender)
+            eskom_count += 1
+        if eskom_count > 0:
+            print(f"[3/4] Eskom Scraper: {eskom_count} high-value energy & engineering tenders synced")
+    except Exception as e:
+        print(f"  Eskom sync failed: {e}")
+
+    # 3e – Gauteng eTenders Scraping Ingestion Vector (New!)
+    gauteng_count = 0
+    try:
+        from tender_getter.sources import GautengSource
+        gauteng_src = GautengSource()
+        gauteng_tenders = gauteng_src.fetch()
+        for tender in gauteng_tenders:
+            db.upsert_tender(tender)
+            gauteng_count += 1
+        if gauteng_count > 0:
+            print(f"[3/4] Gauteng eTenders: {gauteng_count} provincial tenders synced")
+    except Exception as e:
+        print(f"  Gauteng eTenders sync failed: {e}")
+
+    # 3f – CIDB i-Tender Scraping Ingestion Vector (New!)
+    cidb_count = 0
+    try:
+        from tender_getter.sources import CIDBSource
+        cidb_src = CIDBSource()
+        cidb_tenders = cidb_src.fetch()
+        for tender in cidb_tenders:
+            db.upsert_tender(tender)
+            cidb_count += 1
+        if cidb_count > 0:
+            print(f"[3/4] CIDB i-Tenders: {cidb_count} national construction tenders synced")
+    except Exception as e:
+        print(f"  CIDB sync failed: {e}")
+
+    # 3g – Western Cape eTenders Scraping Ingestion Vector (New!)
+    westerncape_count = 0
+    try:
+        from tender_getter.sources import WesternCapeSource
+        wc_src = WesternCapeSource()
+        wc_tenders = wc_src.fetch()
+        for tender in wc_tenders:
+            db.upsert_tender(tender)
+            westerncape_count += 1
+        if westerncape_count > 0:
+            print(f"[3/4] Western Cape eTenders: {westerncape_count} provincial tenders synced")
+    except Exception as e:
+        print(f"  Western Cape sync failed: {e}")
+
+    total_synced = ocds_count + csv_count + sanral_count + eskom_count + gauteng_count + cidb_count + westerncape_count
 
     # Pull open tenders from DB – real data path
     try:
@@ -197,7 +253,7 @@ def run_poc():
         used_mocks = True
         print(f"[3/4] {len(MOCK_TENDERS)} mock tenders cached (live sources yielded 0).")
     else:
-        src = f"OCDS:{ocds_count} CSV:{csv_count} SANRAL:{sanral_count}" if total_synced > 0 else "DB cache"
+        src = f"OCDS:{ocds_count} CSV:{csv_count} SANRAL:{sanral_count} ESKOM:{eskom_count} GAUTENG:{gauteng_count} CIDB:{cidb_count} WC:{westerncape_count}" if total_synced > 0 else "DB cache"
         print(f"[3/4] {len(tenders_to_match)} open tenders loaded from DB [{src}]")
 
     # Step 4: Match

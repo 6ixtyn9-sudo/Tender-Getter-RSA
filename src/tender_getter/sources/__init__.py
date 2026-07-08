@@ -16,6 +16,10 @@ class TenderSource(Protocol):
 from .etenders_ocds import sync_live_tenders, parse_ocds_release_to_tender
 from .etenders_csv import sync_csv_tenders, parse_csv_row_to_tender
 from .sanral import SANRALSource
+from .eskom import EskomSource
+from .gauteng import GautengSource
+from .cidb import CIDBSource
+from .westerncape import WesternCapeSource
 from .common import re_search_cidb, province_from_text
 
 def load_sources() -> List[Dict[str, Any]]:
@@ -37,6 +41,10 @@ __all__ = [
     "sync_live_tenders", "parse_ocds_release_to_tender",
     "sync_csv_tenders", "parse_csv_row_to_tender",
     "SANRALSource",
+    "EskomSource",
+    "GautengSource",
+    "CIDBSource",
+    "WesternCapeSource",
     "re_search_cidb", "province_from_text",
     "load_sources",
 ]
