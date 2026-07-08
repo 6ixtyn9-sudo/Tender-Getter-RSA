@@ -260,7 +260,35 @@ def run_poc():
     except Exception as e:
         print(f"  Transnet sync failed: {e}")
 
-    total_synced = ocds_count + csv_count + sanral_count + eskom_count + gauteng_count + cidb_count + westerncape_count + sita_count + transnet_count
+    # 3j – City of Cape Town Scraping Ingestion Vector (New!)
+    capetown_count = 0
+    try:
+        from tender_getter.sources import CapeTownSource
+        coct_src = CapeTownSource()
+        coct_tenders = coct_src.fetch()
+        for tender in coct_tenders:
+            db.upsert_tender(tender)
+            capetown_count += 1
+        if capetown_count > 0:
+            print(f"[3/4] City of Cape Town Scraper: {capetown_count} municipal tenders synced")
+    except Exception as e:
+        print(f"  Cape Town sync failed: {e}")
+
+    # 3k – KZN Treasury Scraping Ingestion Vector (New!)
+    kzn_count = 0
+    try:
+        from tender_getter.sources import KZNSource
+        kzn_src = KZNSource()
+        kzn_tenders = kzn_src.fetch()
+        for tender in kzn_tenders:
+            db.upsert_tender(tender)
+            kzn_count += 1
+        if kzn_count > 0:
+            print(f"[3/4] KZN Treasury Scraper: {kzn_count} provincial tenders synced")
+    except Exception as e:
+        print(f"  KZN Treasury sync failed: {e}")
+
+    total_synced = ocds_count + csv_count + sanral_count + eskom_count + gauteng_count + cidb_count + westerncape_count + sita_count + transnet_count + capetown_count + kzn_count
 
     # Pull open tenders from DB – real data path
     try:
@@ -281,7 +309,7 @@ def run_poc():
         used_mocks = True
         print(f"[3/4] {len(MOCK_TENDERS)} mock tenders cached (live sources yielded 0).")
     else:
-        src = f"OCDS:{ocds_count} CSV:{csv_count} SANRAL:{sanral_count} ESKOM:{eskom_count} GAUTENG:{gauteng_count} CIDB:{cidb_count} WC:{westerncape_count} SITA:{sita_count} TRANSNET:{transnet_count}" if total_synced > 0 else "DB cache"
+        src = f"OCDS:{ocds_count} CSV:{csv_count} SANRAL:{sanral_count} ESKOM:{eskom_count} GAUTENG:{gauteng_count} CIDB:{cidb_count} WC:{westerncape_count} SITA:{sita_count} TRANSNET:{transnet_count} COCT:{capetown_count} KZN:{kzn_count}" if total_synced > 0 else "DB cache"
         print(f"[3/4] {len(tenders_to_match)} open tenders loaded from DB [{src}]")
 
     # Step 4: Match

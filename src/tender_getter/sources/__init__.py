@@ -22,6 +22,8 @@ from .cidb import CIDBSource
 from .westerncape import WesternCapeSource
 from .sita import SITASource
 from .transnet import TransnetSource
+from .capetown import CapeTownSource
+from .kzn import KZNSource
 from .common import re_search_cidb, province_from_text
 
 def load_sources() -> List[Dict[str, Any]]:
@@ -49,6 +51,8 @@ __all__ = [
     "WesternCapeSource",
     "SITASource",
     "TransnetSource",
+    "CapeTownSource",
+    "KZNSource",
     "re_search_cidb", "province_from_text",
     "load_sources",
 ]
