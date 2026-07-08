@@ -1,23 +1,6 @@
-"""
-run_poc.py - Tender Getter RSA: Proof of Concept CLI Runner
-
-Usage:
- PYTHONPATH=src:. python scripts/run_poc.py
- Set SUPABASE_URL / SUPABASE_SERVICE_ROLE_KEY in .env to write to Supabase,
- otherwise falls back to local SQLite.
-
-This script:
- 1. Initialises the database via get_database_client() (Supabase/Postgres/SQLite).
- 2. Creates a mock company profile (Sipho Electrical and Civils).
- 3. Tries to sync live tenders from data.etenders.gov.za CSV,
-    falls back to 3 mock tenders if offline.
- 4. Runs the matching engine.
- 5. Prints a formatted terminal scorecard.
-"""
-
 import sys
 from pathlib import Path
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 
 # Load .env automatically if python-dotenv is installed
 try:
@@ -26,7 +9,7 @@ try:
 except Exception:
     pass
 
-# Ensure project root is on the path when running directly
+# Ensure src is on path when running directly
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
 from tender_getter.schemas import (
@@ -34,7 +17,7 @@ from tender_getter.schemas import (
 )
 from tender_getter.matcher import match
 from tender_getter.database import get_database_client
-from tender_getter.source_sync import sync_csv_tenders
+from tender_getter.source_sync import sync_live_tenders, sync_csv_tenders
 
 # ---------------------------------------------------------------------------
 # Mock company
@@ -63,7 +46,7 @@ MOCK_COMPANY = CompanyProfile(
     is_active=True,
 )
 
-# Fallback mock tenders – used if live CSV sync fails / returns 0
+# Fallback mock tenders – used if live sources yield 0
 MOCK_TENDERS = [
     TenderOpportunity(
         tender_id="COJ/EE/2026/012",
@@ -127,67 +110,99 @@ def run_poc():
 
     # Step 2: Save company
     db.upsert_company(MOCK_COMPANY)
-    cidb_str = ", ".join(
-        f"{g.class_code}{g.level}" for g in MOCK_COMPANY.cidb_gradings
-    )
+    cidb_str = ", ".join(f"{g.class_code}{g.level}" for g in MOCK_COMPANY.cidb_gradings)
     print(f"[2/4] Client Profile Saved: {MOCK_COMPANY.company_name} (CIDB: {cidb_str})")
 
-    # Step 3: Sync live tenders – try CSV bulk first
-    # data.etenders.gov.za publishes daily OCDS CSVs – try recent dates
-    # Fall back to mock data if offline
-    live_count = 0
+    # Step 3: Sync live tenders
+    ocds_count = 0
+    csv_count = 0
+
+    # 3a – OCDS API first (usually most current)
     try:
-        # Try latest daily CSV – eTenders uses DDMMYYYY.csv
-        # Try a few recent dates to find a non-empty file
-        from datetime import timedelta
+        ocds_count = sync_live_tenders(db, max_pages=2)
+        if ocds_count > 0:
+            print(f"[3/4] OCDS API: {ocds_count} tenders synced")
+    except Exception as e:
+        print(f"  OCDS sync failed: {e}")
+
+    # 3b – CSV bulk fallback / supplement – eTenders CSV dumps are typically monthly
+    # Try: last 90 days weekly, plus first-of-month for last 6 months
+    if ocds_count == 0:
         today = datetime.now(timezone.utc)
-        for days_back in range(0, 7):
-            d = today - timedelta(days=days_back)
+        tried = set()
+        dates_to_try = []
+        # weekly backoff, 90 days
+        for days_back in range(0, 90, 7):
+            dates_to_try.append(today - timedelta(days=days_back))
+        # first-of-month, last 6 months
+        for m in range(0, 6):
+            year = today.year
+            month = today.month - m
+            while month < 1:
+                month += 12
+                year -= 1
+            dates_to_try.append(datetime(year, month, 1, tzinfo=timezone.utc))
+        
+        for d in dates_to_try:
             csv_url = f"https://data.etenders.gov.za/Home/DownloadFile/?fileName={d.strftime('%d%m%Y')}.csv"
+            if csv_url in tried:
+                continue
+            tried.add(csv_url)
             try:
-                live_count = sync_csv_tenders(db, csv_url)
-                if live_count > 0:
-                    print(f"[3/4] {live_count} live tenders synced from eTenders CSV: {csv_url}")
-                    break
+                n = sync_csv_tenders(db, csv_url)
+                csv_count += n
+                if n > 0:
+                    print(f"  CSV hit: {d.strftime('%Y-%m-%d')} → {n} tenders")
+                    # keep going – collect from multiple files, but stop after 3 successful hits to avoid API burn
+                    if csv_count >= 50:
+                        break
             except Exception:
                 continue
-    except Exception as e:
-        print(f"Live CSV sync failed: {e}")
+        
+        if csv_count > 0:
+            print(f"[3/4] CSV bulk: {csv_count} total tenders synced from {len(tried)} URLs probed")
+    
+    total_synced = ocds_count + csv_count
 
-    # Fallback to mock tenders if live sync yielded nothing
-    if live_count == 0:
+    # Pull open tenders from DB – real data path
+    try:
+        # Try province-filtered first, fall back to national
+        tenders_to_match = db.list_open_tenders(limit=25, province=MOCK_COMPANY.location.province)
+        if not tenders_to_match:
+            tenders_to_match = db.list_open_tenders(limit=25)
+    except Exception as e:
+        print(f"  list_open_tenders failed: {e}")
+        tenders_to_match = []
+
+    # Fallback to mocks if DB is empty
+    used_mocks = False
+    if not tenders_to_match:
         for tender in MOCK_TENDERS:
             db.upsert_tender(tender)
-        print(f"[3/4] {len(MOCK_TENDERS)} mock tenders cached (live source offline).")
         tenders_to_match = MOCK_TENDERS
+        used_mocks = True
+        print(f"[3/4] {len(MOCK_TENDERS)} mock tenders cached (live sources yielded 0).")
     else:
-        # Pull back the tenders we just saved – for POC, re-match the mock company
-        # against whatever came in from the CSV. Simplest: query via DB if available,
-        # otherwise just use the mock list for display.
-        # Here we keep it simple: if we got live data, we can't easily list it without
-        # a list_tenders() method, so fall back to matching the mock set for a stable demo.
-        # TODO: add list_open_tenders() to TenderDatabaseBase
-        tenders_to_match = MOCK_TENDERS
-        print(f"[3/4] Live tenders saved to DB – running matcher against demo set for stable output.")
+        src = f"OCDS:{ocds_count} CSV:{csv_count}" if total_synced > 0 else "DB cache"
+        print(f"[3/4] {len(tenders_to_match)} open tenders loaded from DB [{src}]")
 
     # Step 4: Match
     print("\n[4/4] Running Automated Matching Core...\n")
 
     print_separator()
     print(f"MATCH REPORT FOR: {MOCK_COMPANY.company_name}")
-    bbbee_label = (
-        "Non-Compliant" if MOCK_COMPANY.bbbee_level == 9
-        else f"Level {MOCK_COMPANY.bbbee_level}"
-    )
-    print(
-        f"Province: {MOCK_COMPANY.location.province} | "
-        f"B-BBEE: {bbbee_label}"
-    )
+    bbbee_label = "Non-Compliant" if MOCK_COMPANY.bbbee_level == 9 else f"Level {MOCK_COMPANY.bbbee_level}"
+    print(f"Province: {MOCK_COMPANY.location.province} | B-BBEE: {bbbee_label}")
+    if not used_mocks and total_synced > 0:
+        print(f"Source: Live – {total_synced} tenders ingested this run")
     print_separator()
 
-    for tender in tenders_to_match:
+    eligible_count = 0
+    for tender in tenders_to_match[:25]:  # cap output at 25 for readability
         result = match(MOCK_COMPANY, tender)
         db.save_match(MOCK_COMPANY, result)
+        if result.is_eligible:
+            eligible_count += 1
 
         status_icon = "✅ ELIGIBLE" if result.is_eligible else "❌ DISQUALIFIED"
         print(f"Tender ID : {result.tender_id}")
@@ -200,8 +215,9 @@ def run_poc():
         print_separator()
 
     db.close()
-    print("\nAll results persisted.")
+    print(f"\nEvaluated {len(tenders_to_match[:25])} tenders – {eligible_count} eligible")
     print(f"DB driver: {type(db).__name__}")
+    print(f"Results persisted to matches table")
     print("Day 2 milestone: COMPLETE ✅\n")
 
 if __name__ == "__main__":
