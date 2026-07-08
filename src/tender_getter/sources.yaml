@@ -1,0 +1,60 @@
+# Tender-Getter RSA – tender source registry
+# Priority 1 = wire first, free, machine-readable
+sources:
+  - id: etenders_ocds
+    name: "National Treasury eTenders OCDS API"
+    url: "https://ocds-api.etenders.gov.za"
+    swagger: "https://ocds-api.etenders.gov.za/swagger/index.html"
+    type: ocds_json
+    priority: 1
+    free: true
+
+  - id: etenders_csv
+    name: "National Treasury eTenders Bulk CSV"
+    url: "https://data.etenders.gov.za/"
+    download_pattern: "https://data.etenders.gov.za/Home/DownloadFile/?fileName=DDMMYYYY.csv"
+    type: csv
+    priority: 1
+    free: true
+
+  - id: cidb_itender
+    name: "CIDB i-Tender"
+    url: "https://www.cidb.org.za/"
+    type: html
+    priority: 2
+
+  - id: gauteng_etenders
+    name: "Gauteng eTenders"
+    url: "https://etenders.gauteng.gov.za"
+    type: html
+    priority: 2
+
+  - id: westerncape_tenders
+    name: "Western Cape Government Tenders"
+    url: "https://www.westerncape.gov.za/tenders"
+    type: html
+    priority: 2
+
+  - id: kzn_treasury
+    name: "KwaZulu-Natal Treasury"
+    url: "https://www.kzntreasury.gov.za"
+    type: html
+    priority: 2
+
+  - id: eskom
+    name: "Eskom Tender Bulletin"
+    url: "https://tenderbulletin.eskom.co.za/"
+    type: html
+    priority: 3
+
+  - id: transnet
+    name: "Transnet eTenders"
+    url: "https://transnetetenders.azurewebsites.net/"
+    type: html
+    priority: 3
+
+  - id: sanral
+    name: "SANRAL"
+    url: "https://www.nra.co.za/sanral-tenders/"
+    type: html
+    priority: 3
