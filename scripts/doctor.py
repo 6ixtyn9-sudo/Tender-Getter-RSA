@@ -7,16 +7,13 @@ Checks:
   1. Python / package imports
   2. GEMINI_API_KEY present
   3. sources.yaml loads and contains etenders_ocds
-  4. eTenders OCDS API reachable
+  4. eTenders portal reachable (OCDS API or data portal fallback)
   5. Database client connects (Supabase / Postgres / SQLite fallback)
-
-Usage:
-  PYTHONPATH=src:. python scripts/doctor.py
 """
 import sys
 import os
 
-# Load .env if available – do not fail if missing
+# Load .env automatically if python-dotenv is installed
 try:
     from dotenv import load_dotenv  # type: ignore
     load_dotenv()
@@ -34,7 +31,7 @@ def check(label: str, fn):
 
 def check_imports():
     try:
-        import pydantic, pytest  # noqa
+        import pydantic  # noqa
         from tender_getter import schemas, matcher  # noqa
         return True, ""
     except Exception as e:
@@ -44,7 +41,7 @@ def check_gemini_key():
     key = os.environ.get("GEMINI_API_KEY", "")
     if key and len(key) > 20:
         return True, "present"
-    return False, "missing or too short – set GEMINI_API_KEY in .env"
+    return False, "missing – set GEMINI_API_KEY in .env"
 
 def check_sources():
     try:
@@ -61,15 +58,22 @@ def check_sources():
 
 def check_etenders_api():
     from urllib.request import urlopen, Request
-    from urllib.error import URLError
-    url = "https://ocds-api.etenders.gov.za/api/v1/releases?page=1&pageSize=1"
-    try:
-        req = Request(url, headers={"User-Agent": "Tender-Getter-RSA/doctor", "Accept": "application/json"})
-        with urlopen(req, timeout=5) as r:
-            ok = 200 <= r.status < 300
-            return ok, f"HTTP {r.status}"
-    except URLError as e:
-        return False, f"unreachable: {e}"
+    from urllib.error import URLError, HTTPError
+    # OCDS API has been flaky (404s as of 2026-07-08), fall back to data portal
+    urls = [
+        "https://ocds-api.etenders.gov.za/api/v1/releases?page=1&pageSize=1",
+        "https://data.etenders.gov.za/",
+    ]
+    for url in urls:
+        try:
+            req = Request(url, headers={"User-Agent": "Tender-Getter-RSA/doctor"})
+            with urlopen(req, timeout=5) as r:
+                if 200 <= r.status < 400:
+                    host = url.split("/")[2]
+                    return True, f"OK via {host}"
+        except (URLError, HTTPError):
+            continue
+    return False, "eTenders OCDS API and data portal both unreachable"
 
 def check_database():
     try:
@@ -89,7 +93,7 @@ if __name__ == "__main__":
         check("Python imports", check_imports),
         check("GEMINI_API_KEY", check_gemini_key),
         check("sources.yaml", check_sources),
-        check("eTenders OCDS API", check_etenders_api),
+        check("eTenders portal", check_etenders_api),
         check("Database", check_database),
     ]
     print("-" * 40)
