@@ -4,7 +4,8 @@ Strategy layers (fastest → most expensive):
   1. Static HTML parse of the target URL
   2. Discovered subpage parse (follows href links containing tender keywords)
   3. Playwright render (only when TENDER_AUTO_PLAYWRIGHT != 0)
-  4. Mock-HTML fallback
+  4. TenderBulletins.co.za aggregator fallback (when source_id + slug known)
+  5. Mock-HTML fallback
 
 Environment controls:
   TENDER_FETCH_TIMEOUT   seconds for HTTP requests (default 10)
@@ -12,6 +13,7 @@ Environment controls:
   TENDER_AUTO_PLAYWRIGHT "0"    → disabled (default)
                          "auto" → only when page looks JS-rendered
                          "1" or "force" → always try for zero-yield sources
+  TENDER_AGGREGATOR_FB   set to "0" to disable TenderBulletins fallback
 """
 from __future__ import annotations
 
@@ -38,6 +40,7 @@ _ACCEPT = "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"
 _FETCH_TIMEOUT = int(os.environ.get("TENDER_FETCH_TIMEOUT", "10"))
 _SKIP_SSL = os.environ.get("TENDER_SSL_VERIFY", "0") != "1"
 _AUTO_PLAYWRIGHT = os.environ.get("TENDER_AUTO_PLAYWRIGHT", "0").lower()
+_AGGREGATOR_FB = os.environ.get("TENDER_AGGREGATOR_FB", "1").lower() != "0"
 
 _TR_PATTERN = re.compile(r"<tr[^>]*>(.*?)</tr>", re.DOTALL | re.IGNORECASE)
 _TD_PATTERN = re.compile(r"<td[^>]*>(.*?)</td>", re.DOTALL | re.IGNORECASE)
@@ -197,6 +200,8 @@ def standard_fetch(
     mock_html: str,
     html_content: Optional[str] = None,
     limit: Optional[int] = None,
+    source_id: str = "",
+    issuing_entity: str = "",
 ) -> List[TenderOpportunity]:
     """Standard fetch+parse+fallback flow used by most per-source files.
 
@@ -205,7 +210,8 @@ def standard_fetch(
       2. Try live static fetch.
       3. If 0 results: try discovered tender subpages.
       4. If still 0 and Playwright enabled: try Playwright render.
-      5. If still 0: engage mock fallback.
+      5. If still 0 and source_id known: try TenderBulletins.co.za aggregator.
+      6. If still 0: engage mock fallback.
     """
     if html_content is not None:
         tenders = parse_html_table(html_content, limit)
@@ -255,7 +261,27 @@ def standard_fetch(
                 if tenders:
                     logger.info("Playwright recovered %d tenders from %s", len(tenders), url)
 
-    # --- Step 4: Mock fallback ---
+    # --- Step 4: TenderBulletins.co.za aggregator fallback ---
+    if not tenders and _AGGREGATOR_FB and source_id:
+        try:
+            from .aggregators.tenderbulletins import fetch_tenderbulletins, resolve_slug
+            slug = resolve_slug(source_id, issuing_entity or "")
+            if slug:
+                logger.info("Trying TenderBulletins aggregator for source_id='%s' slug='%s'",
+                            source_id, slug)
+                tenders = fetch_tenderbulletins(
+                    slug,
+                    issuing_entity=issuing_entity or "",
+                    limit=limit,
+                    max_pages=3,
+                )
+                if tenders:
+                    logger.info("TenderBulletins recovered %d tenders for %s",
+                                len(tenders), source_id)
+        except Exception as exc:
+            logger.debug("TenderBulletins fallback failed for %s: %s", source_id, exc)
+
+    # --- Step 5: Mock fallback ---
     if not tenders:
         logger.info("All live strategies yielded 0 tenders for %s – engaging mock fallback.", url)
         tenders = parse_html_table(mock_html, limit)
