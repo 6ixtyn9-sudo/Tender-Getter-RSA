@@ -1,4 +1,11 @@
-"""City of Tshwane Metropolitan Municipality Tender Source Plugin"""
+"""City of Tshwane Metropolitan Municipality Tender Source Plugin
+
+Uses TenderBulletins.co.za as the primary source since the official
+Tshwane portal blocks automated access (403) and has migrated to
+the Ariba e-procurement portal which requires interactive login.
+
+Mock HTML fallback is preserved as a safety net of last resort.
+"""
 import logging
 import re
 from datetime import datetime, timezone
@@ -8,11 +15,11 @@ from urllib.error import URLError, HTTPError
 
 from ...schemas import TenderOpportunity
 from ..common import re_search_cidb, province_from_text, parse_closing_date
+from ..aggregators.tenderbulletins import fetch_tenderbulletins
 
 logger = logging.getLogger(__name__)
 
-# High-fidelity mock HTML fallback to ensure robust parsing and ingestion in POC
-# even when the live Metropolitan municipal portal has network timeouts or structural updates.
+# High-fidelity mock HTML fallback (safety net of last resort)
 MOCK_TSHWANE_HTML = """
 <!DOCTYPE html>
 <html>
@@ -52,6 +59,7 @@ MOCK_TSHWANE_HTML = """
 
 """
 
+
 class TshwaneSource:
     source_id: str = "tshwane"
 
@@ -60,31 +68,57 @@ class TshwaneSource:
 
     def fetch(self, limit: Optional[int] = None, html_content: Optional[str] = None) -> List[TenderOpportunity]:
         """
-        Fetches and parses active City of Tshwane Metropolitan Municipality tenders.
-        If html_content is provided, parses it directly (useful for testing/mocking).
+        Fetches City of Tshwane tenders.
+
+        Strategy:
+          1. Try TenderBulletins.co.za aggregator (most reliable for Tshwane)
+          2. Try official Tshwane portal (usually 403/blocked)
+          3. Mock HTML fallback (last resort)
         """
-        engaged_fallback = False
+        # --- Strategy 1: TenderBulletins.co.za aggregator ---
+        if html_content is None:
+            try:
+                tenders = fetch_tenderbulletins(
+                    "city-of-tshwane",
+                    issuing_entity="City of Tshwane Metropolitan Municipality",
+                    limit=limit,
+                    max_pages=5,
+                )
+                if tenders:
+                    logger.info(
+                        "Tshwane: %d real tenders via TenderBulletins.co.za",
+                        len(tenders),
+                    )
+                    return tenders
+            except Exception as exc:
+                logger.warning("TenderBulletins fallback failed for Tshwane: %s", exc)
+
+        # --- Strategy 2: Official Tshwane portal ---
         if html_content is None:
             try:
                 req = Request(self.url, headers={
-                    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
-                    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"
+                    "User-Agent": (
+                        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
+                        "(KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
+                    ),
+                    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
                 })
                 with urlopen(req, timeout=8) as resp:
                     html_content = resp.read().decode("utf-8", errors="replace")
             except (URLError, HTTPError, Exception) as exc:
-                logger.warning("Failed to fetch Metropolitan tenders live from %s (%s). Engaging high-fidelity local fallback.", self.url, exc)
-                html_content = MOCK_TSHWANE_HTML
-                engaged_fallback = True
+                logger.debug("Official Tshwane portal failed (%s) – expected.", exc)
+                html_content = None
 
-        tenders = self.parse_html(html_content, limit)
+        # Parse official site HTML if we got some
+        if html_content:
+            tenders = self.parse_html(html_content, limit)
+            if tenders:
+                logger.info("Tshwane: %d tenders from official portal", len(tenders))
+                return tenders
 
-        # Fallback if parsing yielded 0
-        if not tenders and not engaged_fallback:
-            logger.info("Metropolitan live page parsing yielded 0 results. Engaging high-fidelity local fallback.")
-            tenders = self.parse_html(MOCK_TSHWANE_HTML, limit)
-
-        return tenders
+        # --- Strategy 3: Mock fallback (last resort) ---
+        logger.info("Tshwane: all live strategies yielded 0 results – engaging mock fallback.")
+        return self.parse_html(MOCK_TSHWANE_HTML, limit)
 
     def parse_html(self, html: str, limit: Optional[int] = None) -> List[TenderOpportunity]:
         """

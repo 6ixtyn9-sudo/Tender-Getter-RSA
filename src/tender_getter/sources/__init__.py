@@ -29,7 +29,11 @@ class TenderSource(Protocol):
 # Unique-parser plug-ins are explicitly imported for clarity
 from .national.etenders_ocds import sync_live_tenders, parse_ocds_release_to_tender
 from .national.etenders_csv import sync_csv, parse_csv_row_to_tender
+from .national.etenders_web import fetch_etenders_web, ETendersWebSource
 from .national.cidb import CIDBSource
+
+# Aggregator fallback sources
+from .aggregators.tenderbulletins import TenderBulletinsSource, fetch_tenderbulletins, SLUG_MAP
 
 # Shared parsing utilities
 from .generic import standard_fetch, parse_html_table
@@ -57,7 +61,12 @@ __all__ = [
     "parse_ocds_release_to_tender",
     "sync_csv",
     "parse_csv_row_to_tender",
+    "fetch_etenders_web",
+    "ETendersWebSource",
     "CIDBSource",
+    "TenderBulletinsSource",
+    "fetch_tenderbulletins",
+    "SLUG_MAP",
     "standard_fetch",
     "parse_html_table",
     "re_search_cidb",
