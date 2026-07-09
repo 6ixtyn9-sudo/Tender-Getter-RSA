@@ -79,7 +79,7 @@ sources:
 - id: amajuba_dm
   name: Amajuba Dm
   live: false
-  url: https://www.amajuba.gov.za/tenders
+  url: https://www.amajuba.gov.za/procurement
   type: html
   priority: 2
   free: true
@@ -247,7 +247,7 @@ sources:
 - id: bojanala_dm
   name: Bojanala Dm
   live: false
-  url: https://www.bojanala.gov.za/tenders
+  url: https://www.bojanala.gov.za/procurement
   type: html
   priority: 2
   free: true
@@ -281,8 +281,8 @@ sources:
   free: true
 - id: buffalo_city
   name: Buffalo City
-  live: false
-  url: https://www.buffalocity.gov.za/tenders.php
+  live: true
+  url: https://www.buffalocity.gov.za/tender_documents.php?year=2026&type=Annual+Tender
   type: html
   priority: 2
   free: true
@@ -604,14 +604,14 @@ sources:
 - id: dalrrd
   name: Dalrrd
   live: false
-  url: https://www.dalrrd.gov.za/tenders
+  url: https://www.dalrrd.gov.za/Branches/corporate-services/procurement
   type: html
   priority: 2
   free: true
 - id: dbe
   name: Dbe
-  live: false
-  url: https://www.education.gov.za/tenders
+  live: true
+  url: https://www.education.gov.za/Programmes/Tenders.aspx
   type: html
   priority: 2
   free: true
@@ -631,8 +631,8 @@ sources:
   free: true
 - id: dcs
   name: Dcs
-  live: false
-  url: https://www.dcs.gov.za/tenders
+  live: true
+  url: https://www.dcs.gov.za/Procurement.aspx
   type: html
   priority: 2
   free: true
@@ -652,14 +652,14 @@ sources:
   free: true
 - id: denel_aerostructures
   name: Denel Aerostructures
-  live: false
+  live: true
   url: https://www.denelaerostructures.co.za/procurement
   type: html
   priority: 3
   free: true
 - id: denel_dynamics
   name: Denel Dynamics
-  live: false
+  live: true
   url: https://www.deneldynamics.co.za/procurement
   type: html
   priority: 3
@@ -701,15 +701,15 @@ sources:
   free: true
 - id: dha
   name: Dha
-  live: false
-  url: https://www.dha.gov.za/tenders
+  live: true
+  url: https://www.dha.gov.za/index.php/procurement
   type: html
   priority: 2
   free: true
 - id: dhet
   name: Dhet
-  live: false
-  url: https://www.dhet.gov.za/tenders
+  live: true
+  url: https://www.dhet.gov.za/SitePages/Tenders.aspx
   type: html
   priority: 2
   free: true
@@ -779,7 +779,7 @@ sources:
 - id: dod
   name: Dod
   live: false
-  url: https://www.dod.mil.za/tenders
+  url: https://www.dod.mil.za/Procurement.html
   type: html
   priority: 2
   free: true
@@ -807,28 +807,28 @@ sources:
 - id: dot
   name: Dot
   live: false
-  url: https://www.transport.gov.za/tenders
+  url: https://www.transport.gov.za/Procurement.aspx
   type: html
   priority: 2
   free: true
 - id: dpme
   name: Dpme
   live: false
-  url: https://www.dpme.gov.za/tenders
+  url: https://www.dpme.gov.za/procurement
   type: html
   priority: 2
   free: true
 - id: dpsa
   name: Dpsa
   live: false
-  url: https://www.dpsa.gov.za/tenders
+  url: https://www.dpsa.gov.za/procurement
   type: html
   priority: 2
   free: true
 - id: dpwi
   name: Dpwi
-  live: false
-  url: https://www.publicworks.gov.za/tenders
+  live: true
+  url: https://www.publicworks.gov.za/Pages/Tenders.aspx
   type: html
   priority: 2
   free: true
@@ -856,14 +856,14 @@ sources:
 - id: drakenstein_lm
   name: Drakenstein Lm
   live: false
-  url: https://www.drakenstein.gov.za/tenders
+  url: https://www.drakenstein.gov.za/procurement
   type: html
   priority: 2
   free: true
 - id: dsac
   name: Dsac
   live: false
-  url: https://www.dsac.gov.za/tenders
+  url: https://www.dsac.gov.za/procurement
   type: html
   priority: 2
   free: true
@@ -876,15 +876,15 @@ sources:
   free: true
 - id: dsd
   name: Dsd
-  live: false
+  live: true
   url: https://www.dsd.gov.za/procurement
   type: html
   priority: 3
   free: true
 - id: dsi
   name: Dsi
-  live: false
-  url: https://www.dst.gov.za/tenders
+  live: true
+  url: https://www.dst.gov.za/procurement
   type: html
   priority: 2
   free: true
@@ -904,8 +904,8 @@ sources:
   free: true
 - id: dws
   name: Dws
-  live: false
-  url: https://www.dws.gov.za/tenders
+  live: true
+  url: https://www.dws.gov.za/Procurement/Pages/Tenders.aspx
   type: html
   priority: 2
   free: true
@@ -933,7 +933,7 @@ sources:
 - id: easterncape
   name: Easterncape
   live: false
-  url: https://www.ecprov.gov.za/tenders
+  url: https://www.ecprov.gov.za/procurement
   type: html
   priority: 2
   free: true
@@ -1108,7 +1108,7 @@ sources:
 - id: emfuleni_lm
   name: Emfuleni Lm
   live: false
-  url: https://www.emfuleni.gov.za/tenders
+  url: https://www.emfuleni.gov.za/procurement
   type: html
   priority: 2
   free: true
@@ -1198,22 +1198,22 @@ sources:
   free: true
 - id: ethekwini
   name: Ethekwini
-  live: false
-  url: https://www.durban.gov.za/pages/residents/tenders
+  live: true
+  url: https://durban.gov.za/pages/business/procurement
   type: html
   priority: 2
   free: true
 - id: ethekwini_electricity
   name: Ethekwini Electricity
   live: false
-  url: https://www.durban.gov.za/Electricity/procurement
+  url: https://durban.gov.za/pages/business/procurement
   type: html
   priority: 2
   free: true
 - id: ethekwini_water
   name: Ethekwini Water
   live: false
-  url: https://www.durban.gov.za/Water/procurement
+  url: https://durban.gov.za/pages/business/procurement
   type: html
   priority: 2
   free: true
@@ -1346,7 +1346,7 @@ sources:
 - id: freestate
   name: Freestate
   live: false
-  url: http://www.treasury.fs.gov.za/tenders/
+  url: https://www.treasury.fs.gov.za/Tenders
   type: html
   priority: 2
   free: true
@@ -1990,7 +1990,7 @@ sources:
 - id: king_cetshwayo
   name: King Cetshwayo
   live: false
-  url: https://www.kingcetshwayo.gov.za/tenders
+  url: https://www.kingcetshwayo.gov.za/procurement
   type: html
   priority: 2
   free: true
@@ -2214,7 +2214,7 @@ sources:
 - id: limpopo
   name: Limpopo
   live: false
-  url: https://www.limtreasury.gov.za/lim_admin_trea/pages/sites/tender_documents/index.php
+  url: https://www.limtreasury.gov.za/tenders
   type: html
   priority: 2
   free: true
@@ -2361,7 +2361,7 @@ sources:
 - id: makhado_lm
   name: Makhado Lm
   live: false
-  url: https://www.makhado.gov.za/tenders
+  url: https://www.makhado.gov.za/procurement
   type: html
   priority: 2
   free: true
@@ -2402,8 +2402,8 @@ sources:
   free: true
 - id: mangaung
   name: Mangaung
-  live: false
-  url: http://www.mangaung.co.za/category/tenders/
+  live: true
+  url: https://www.mangaung.co.za/procurement
   type: html
   priority: 2
   free: true
@@ -2445,7 +2445,7 @@ sources:
 - id: matjhabeng_lm
   name: Matjhabeng Lm
   live: false
-  url: https://www.matjhabeng.gov.za/tenders
+  url: https://www.matjhabeng.gov.za/procurement
   type: html
   priority: 2
   free: true
@@ -2767,7 +2767,7 @@ sources:
 - id: mpumalanga
   name: Mpumalanga
   live: false
-  url: https://www.mpumalanga.gov.za/finance/tenders.htm
+  url: https://www.mpumalanga.gov.za/procurement
   type: html
   priority: 2
   free: true
@@ -3166,7 +3166,7 @@ sources:
 - id: northerncape
   name: Northerncape
   live: false
-  url: https://nctreasury.ncpg.gov.za/index.php/tenders
+  url: https://www.northerncape.gov.za/procurement
   type: html
   priority: 2
   free: true
@@ -3404,7 +3404,7 @@ sources:
 - id: or_tambo
   name: Or Tambo
   live: false
-  url: https://www.ortambodm.gov.za/tenders
+  url: https://www.ortambodm.gov.za/procurement
   type: html
   priority: 2
   free: true
@@ -3641,8 +3641,8 @@ sources:
   free: true
 - id: prasa
   name: Prasa
-  live: false
-  url: https://www.prasa.com/tenders
+  live: true
+  url: https://www.prasa.com/procurement
   type: html
   priority: 3
   free: true
@@ -3831,7 +3831,7 @@ sources:
 - id: rustenburg_lm
   name: Rustenburg Lm
   live: false
-  url: https://www.rustenburg.gov.za/tenders
+  url: https://www.rustenburg.gov.za/procurement
   type: html
   priority: 2
   free: true
@@ -4034,7 +4034,7 @@ sources:
 - id: saps
   name: Saps
   live: false
-  url: https://www.saps.gov.za/tenders
+  url: https://www.saps.gov.za/procurement/
   type: html
   priority: 2
   free: true
@@ -4146,7 +4146,7 @@ sources:
 - id: sekhukhune_dm
   name: Sekhukhune Dm
   live: false
-  url: https://www.sekhukhunedm.gov.za/tenders
+  url: https://www.sekhukhunedm.gov.za/procurement
   type: html
   priority: 2
   free: true
@@ -4307,7 +4307,7 @@ sources:
 - id: stellenbosch_lm
   name: Stellenbosch Lm
   live: false
-  url: https://www.stellenbosch.gov.za/tenders
+  url: https://www.stellenbosch.gov.za/procurement
   type: html
   priority: 2
   free: true
@@ -4342,7 +4342,7 @@ sources:
 - id: telkom
   name: Telkom
   live: false
-  url: https://www.telkom.co.za/about-us/supplier-information
+  url: https://www.telkom.co.za/about-us/supplier-information/
   type: html
   priority: 3
   free: true
@@ -4370,7 +4370,7 @@ sources:
 - id: thabo_mofutsanyana_dm
   name: Thabo Mofutsanyana Dm
   live: false
-  url: https://www.tmsoa.gov.za/tenders
+  url: https://www.tmsoa.gov.za/procurement
   type: html
   priority: 2
   free: true
@@ -4453,7 +4453,7 @@ sources:
   free: true
 - id: tshwane
   name: Tshwane
-  live: false
+  live: true
   url: https://www.tshwane.gov.za/?page_id=427
   type: html
   priority: 2
@@ -4790,7 +4790,7 @@ sources:
 - id: vhembe_dm
   name: Vhembe Dm
   live: false
-  url: https://www.vhembe.gov.za/tenders
+  url: https://www.vhembe.gov.za/procurement
   type: html
   priority: 2
   free: true
