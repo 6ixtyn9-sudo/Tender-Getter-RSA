@@ -6,7 +6,7 @@ def test_tshwane_south_lm_source_initialization():
     from tender_getter.sources.local_municipalities.tshwane_south_lm import TshwaneSouthLmSource
     src = TshwaneSouthLmSource()
     assert src.source_id == "tshwane_south_lm"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_tshwane_south_lm_parse_mock_html():

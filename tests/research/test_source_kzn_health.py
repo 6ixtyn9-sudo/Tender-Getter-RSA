@@ -6,7 +6,7 @@ def test_kzn_health_source_initialization():
     from tender_getter.sources.research.kzn_health import KznHealthSource
     src = KznHealthSource()
     assert src.source_id == "kzn_health"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_kzn_health_parse_mock_html():

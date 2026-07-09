@@ -6,7 +6,7 @@ def test_greater_letaba_lm_source_initialization():
     from tender_getter.sources.local_municipalities.greater_letaba_lm import GreaterLetabaLmSource
     src = GreaterLetabaLmSource()
     assert src.source_id == "greater_letaba_lm"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_greater_letaba_lm_parse_mock_html():

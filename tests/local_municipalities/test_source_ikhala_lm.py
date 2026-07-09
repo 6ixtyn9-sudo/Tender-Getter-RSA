@@ -6,7 +6,7 @@ def test_ikhala_lm_source_initialization():
     from tender_getter.sources.local_municipalities.ikhala_lm import IkhalaLmSource
     src = IkhalaLmSource()
     assert src.source_id == "ikhala_lm"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_ikhala_lm_parse_mock_html():

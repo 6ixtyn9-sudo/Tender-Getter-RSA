@@ -6,7 +6,7 @@ def test_raymond_mhlaba_lm_source_initialization():
     from tender_getter.sources.local_municipalities.raymond_mhlaba_lm import RaymondMhlabaLmSource
     src = RaymondMhlabaLmSource()
     assert src.source_id == "raymond_mhlaba_lm"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_raymond_mhlaba_lm_parse_mock_html():

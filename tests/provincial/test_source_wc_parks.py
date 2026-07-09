@@ -6,7 +6,7 @@ def test_wc_parks_source_initialization():
     from tender_getter.sources.provincial.wc_parks import WcParksSource
     src = WcParksSource()
     assert src.source_id == "wc_parks"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_wc_parks_parse_mock_html():

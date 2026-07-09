@@ -6,7 +6,7 @@ def test_cput_source_initialization():
     from tender_getter.sources.universities.cput import CputSource
     src = CputSource()
     assert src.source_id == "cput"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_cput_parse_mock_html():

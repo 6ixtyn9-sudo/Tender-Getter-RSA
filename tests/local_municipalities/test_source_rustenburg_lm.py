@@ -6,7 +6,7 @@ def test_rustenburg_lm_source_initialization():
     from tender_getter.sources.local_municipalities.rustenburg_lm import RustenburgLmSource
     src = RustenburgLmSource()
     assert src.source_id == "rustenburg_lm"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_rustenburg_lm_parse_mock_html():

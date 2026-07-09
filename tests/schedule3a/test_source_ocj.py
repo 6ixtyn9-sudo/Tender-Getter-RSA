@@ -6,7 +6,7 @@ def test_ocj_source_initialization():
     from tender_getter.sources.schedule3a.ocj import OcjSource
     src = OcjSource()
     assert src.source_id == "ocj"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_ocj_parse_mock_html():

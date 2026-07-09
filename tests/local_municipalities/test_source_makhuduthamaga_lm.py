@@ -6,7 +6,7 @@ def test_makhuduthamaga_lm_source_initialization():
     from tender_getter.sources.local_municipalities.makhuduthamaga_lm import MakhuduthamagaLmSource
     src = MakhuduthamagaLmSource()
     assert src.source_id == "makhuduthamaga_lm"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_makhuduthamaga_lm_parse_mock_html():

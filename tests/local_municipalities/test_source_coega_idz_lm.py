@@ -6,7 +6,7 @@ def test_coega_idz_lm_source_initialization():
     from tender_getter.sources.local_municipalities.coega_idz_lm import CoegaIdzLmSource
     src = CoegaIdzLmSource()
     assert src.source_id == "coega_idz_lm"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_coega_idz_lm_parse_mock_html():

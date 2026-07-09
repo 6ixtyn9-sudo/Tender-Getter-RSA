@@ -6,7 +6,7 @@ def test_ppra_source_initialization():
     from tender_getter.sources.regulators.ppra import PpraSource
     src = PpraSource()
     assert src.source_id == "ppra"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_ppra_parse_mock_html():

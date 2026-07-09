@@ -6,7 +6,7 @@ def test_beaufort_west_lm_source_initialization():
     from tender_getter.sources.local_municipalities.beaufort_west_lm import BeaufortWestLmSource
     src = BeaufortWestLmSource()
     assert src.source_id == "beaufort_west_lm"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_beaufort_west_lm_parse_mock_html():

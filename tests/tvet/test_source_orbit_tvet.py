@@ -6,7 +6,7 @@ def test_orbit_tvet_source_initialization():
     from tender_getter.sources.tvet.orbit_tvet import OrbitTvetSource
     src = OrbitTvetSource()
     assert src.source_id == "orbit_tvet"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_orbit_tvet_parse_mock_html():

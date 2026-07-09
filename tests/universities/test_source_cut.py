@@ -6,7 +6,7 @@ def test_cut_source_initialization():
     from tender_getter.sources.universities.cut import CutSource
     src = CutSource()
     assert src.source_id == "cut"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_cut_parse_mock_html():

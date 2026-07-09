@@ -8,7 +8,7 @@ sources:
   free: true
 - id: acsa
   name: Acsa
-  live: true
+  live: false
   url: https://www.airports.co.za/business/tender-bulletin
   type: html
   priority: 3
@@ -22,28 +22,28 @@ sources:
   free: true
 - id: agriseta
   name: Agriseta
-  live: true
-  url: https://www.agriseta.co.za/?page_id=11000
+  live: false
+  url: https://www.agriseta.co.za/tenders
   type: html
   priority: 3
   free: true
 - id: agsa
   name: Agsa
-  live: true
+  live: false
   url: https://www.agsa.co.za/procurement
   type: html
   priority: 3
   free: true
 - id: airports_company
   name: Airports Company
-  live: true
+  live: false
   url: https://www.acsa.co.za/procurement
   type: html
   priority: 3
   free: true
 - id: albert_luthuli_lm
   name: Albert Luthuli Lm
-  live: false
+  live: true
   url: https://www.albertluthuli.gov.za/procurement
   type: html
   priority: 3
@@ -57,8 +57,8 @@ sources:
   free: true
 - id: alfred_duma_lm
   name: Alfred Duma Lm
-  live: true
-  url: https://www.alfredduma.gov.za/procurement
+  live: false
+  url: https://www.alfredduma.gov.za/supply-chain-management
   type: html
   priority: 3
   free: true
@@ -78,7 +78,7 @@ sources:
   free: true
 - id: amajuba_dm
   name: Amajuba Dm
-  live: true
+  live: false
   url: https://www.amajuba.gov.za/tenders
   type: html
   priority: 2
@@ -92,14 +92,14 @@ sources:
   free: true
 - id: amatola_water
   name: Amatola Water
-  live: true
+  live: false
   url: https://www.amatolawater.co.za/tenders
   type: html
   priority: 3
   free: true
 - id: arc
   name: Arc
-  live: true
+  live: false
   url: https://www.arc.agric.za/procurement
   type: html
   priority: 3
@@ -120,21 +120,21 @@ sources:
   free: true
 - id: artscape
   name: Artscape
-  live: true
-  url: https://www.artscape.co.za/procurement
+  live: false
+  url: https://www.artscape.co.za/tenders
   type: html
   priority: 3
   free: true
 - id: atns
   name: Atns
-  live: true
+  live: false
   url: https://www.atns.com/tenders
   type: html
   priority: 3
   free: true
 - id: audit_chamber
   name: Audit Chamber
-  live: true
+  live: false
   url: https://www.irba.co.za/procurement
   type: html
   priority: 3
@@ -176,21 +176,21 @@ sources:
   free: true
 - id: banking_ombud
   name: Banking Ombud
-  live: true
+  live: false
   url: https://www.obssa.co.za/procurement
   type: html
   priority: 3
   free: true
 - id: bankseta
   name: Bankseta
-  live: true
-  url: https://www.bankseta.org.za/tenders.php
+  live: false
+  url: https://www.bankseta.org.za/procurement
   type: html
   priority: 3
   free: true
 - id: beaufort_west_lm
   name: Beaufort West Lm
-  live: true
+  live: false
   url: https://www.beaufortwestmun.co.za/tenders
   type: html
   priority: 3
@@ -198,7 +198,7 @@ sources:
 - id: bela_bela_lm
   name: Bela Bela Lm
   live: false
-  url: https://www.belabela.gov.za/procurement
+  url: https://www.belabela.gov.za/tenders
   type: html
   priority: 3
   free: true
@@ -212,7 +212,7 @@ sources:
 - id: bitou_lm
   name: Bitou Lm
   live: false
-  url: https://www.bitou.gov.za/procurement
+  url: https://www.bitou.gov.za/tenders
   type: html
   priority: 3
   free: true
@@ -246,42 +246,42 @@ sources:
   free: true
 - id: bojanala_dm
   name: Bojanala Dm
-  live: true
+  live: false
   url: https://www.bojanala.gov.za/tenders
   type: html
   priority: 2
   free: true
 - id: boland_tvet
   name: Boland Tvet
-  live: true
-  url: https://www.bolandcollege.com/procurement
+  live: false
+  url: https://www.bolandcollege.com/tenders
   type: html
   priority: 3
   free: true
 - id: bosasa
   name: Bosasa
-  live: true
-  url: https://www.mqa.org.za/tenders
+  live: false
+  url: https://www.mqa.org.za/tender/
   type: html
   priority: 3
   free: true
 - id: brand_sa
   name: Brand Sa
-  live: true
+  live: false
   url: https://www.brandsouthafrica.com/procurement
   type: html
   priority: 3
   free: true
 - id: breede_valley_lm
   name: Breede Valley Lm
-  live: true
+  live: false
   url: https://www.bvm.gov.za/tenders
   type: html
   priority: 3
   free: true
 - id: buffalo_city
   name: Buffalo City
-  live: true
+  live: false
   url: https://www.buffalocity.gov.za/tenders.php
   type: html
   priority: 2
@@ -295,14 +295,14 @@ sources:
   free: true
 - id: buffalo_city_tvet
   name: Buffalo City Tvet
-  live: true
+  live: false
   url: https://www.bctvet.co.za/procurement
   type: html
   priority: 3
   free: true
 - id: cape_town_tvet
   name: Cape Town Tvet
-  live: true
+  live: false
   url: https://www.capetowncollege.co.za/procurement
   type: html
   priority: 3
@@ -316,7 +316,7 @@ sources:
   free: true
 - id: capenature
   name: Capenature
-  live: true
+  live: false
   url: https://www.capenature.co.za/procurement
   type: html
   priority: 3
@@ -330,21 +330,21 @@ sources:
   free: true
 - id: capricorn
   name: Capricorn
-  live: true
-  url: https://www.cdm.org.za/tenders
+  live: false
+  url: https://www.cdm.org.za/procurement
   type: html
   priority: 2
   free: true
 - id: capricorn_tvet
   name: Capricorn Tvet
-  live: true
+  live: false
   url: https://www.capricorncollege.co.za/procurement
   type: html
   priority: 3
   free: true
 - id: cathsseta
   name: Cathsseta
-  live: true
+  live: false
   url: https://www.cathsseta.org.za/tenders/
   type: html
   priority: 3
@@ -358,21 +358,21 @@ sources:
   free: true
 - id: cef
   name: Cef
-  live: true
-  url: https://www.cefgroup.co.za/procurement
+  live: false
+  url: https://www.cefgroup.co.za/current-tenders
   type: html
   priority: 3
   free: true
 - id: central_johannesburg_tvet
   name: Central Johannesburg Tvet
-  live: true
-  url: https://www.cjc.edu.za/procurement
+  live: false
+  url: https://www.cjc.edu.za/tenders
   type: html
   priority: 3
   free: true
 - id: central_karoo_dm
   name: Central Karoo Dm
-  live: true
+  live: false
   url: https://www.ckdm.co.za/tenders
   type: html
   priority: 2
@@ -393,15 +393,15 @@ sources:
   free: true
 - id: cgs
   name: Cgs
-  live: true
-  url: https://www.geoscience.org.za/procurement
+  live: false
+  url: https://www.geoscience.org.za/tender/
   type: html
   priority: 3
   free: true
 - id: cgs_legacy
   name: Cgs Legacy
-  live: true
-  url: https://www.geoscience.org.za/tenders
+  live: false
+  url: https://www.geoscience.org.za/tender/
   type: html
   priority: 3
   free: true
@@ -450,13 +450,13 @@ sources:
 - id: cidb_itender
   name: CIDB iTender
   live: false
-  url: https://www.cidb.org.za/itender
+  url: https://www.cidb.org.za/procurement
   type: html
   priority: 1
   free: true
 - id: cipc
   name: Cipc
-  live: true
+  live: false
   url: https://www.cipc.co.za/procurement
   type: html
   priority: 3
@@ -470,14 +470,14 @@ sources:
   free: true
 - id: civilian_secretariat_police
   name: Civilian Secretariat Police
-  live: true
-  url: https://www.policesecretariat.gov.za/procurement
+  live: false
+  url: https://www.policesecretariat.gov.za/tenders
   type: html
   priority: 3
   free: true
 - id: coct_electricity
   name: Coct Electricity
-  live: true
+  live: false
   url: https://www.capetown.gov.za/Electricity/procurement
   type: html
   priority: 2
@@ -498,7 +498,7 @@ sources:
   free: true
 - id: cogta
   name: Cogta
-  live: true
+  live: false
   url: https://www.cogta.gov.za/tenders
   type: html
   priority: 2
@@ -512,126 +512,126 @@ sources:
   free: true
 - id: coj_property_company
   name: Coj Property Company
-  live: true
+  live: false
   url: https://www.jpc.co.za/tenders
   type: html
   priority: 2
   free: true
 - id: coj_solid_waste
   name: Coj Solid Waste
-  live: true
-  url: https://www.joburg.org.za/SolidWaste/procurement
+  live: false
+  url: https://www.joburg.org.za/procurement
   type: html
   priority: 3
   free: true
 - id: compensation_fund
   name: Compensation Fund
-  live: true
-  url: https://www.labour.gov.za/compensation-fund-tenders
+  live: false
+  url: https://www.labour.gov.za/tenders
   type: html
   priority: 3
   free: true
 - id: competition_commission
   name: Competition Commission
-  live: true
-  url: https://www.compcom.co.za/procurement
+  live: false
+  url: https://www.compcom.co.za/tenders
   type: html
   priority: 3
   free: true
 - id: competition_tribunal
   name: Competition Tribunal
-  live: false
+  live: true
   url: https://www.comptrib.co.za/procurement
   type: html
   priority: 3
   free: true
 - id: consumer_protection
   name: Consumer Protection
-  live: true
+  live: false
   url: https://www.thencc.gov.za/procurement
   type: html
   priority: 3
   free: true
 - id: cpe
   name: Cpe
-  live: true
+  live: false
   url: https://www.crlcommission.org.za/procurement
   type: html
   priority: 3
   free: true
 - id: cpsi
   name: Cpsi
-  live: true
+  live: false
   url: https://www.cpsi.co.za/procurement
   type: html
   priority: 3
   free: true
 - id: cput
   name: Cput
-  live: true
+  live: false
   url: https://www.cput.ac.za/procurement
   type: html
   priority: 3
   free: true
 - id: crl
   name: Crl
-  live: true
+  live: false
   url: https://www.crlcommission.org.za/procurement
   type: html
   priority: 3
   free: true
 - id: csir
   name: Csir
-  live: true
-  url: https://www.csir.co.za/tenders
+  live: false
+  url: https://www.csir.co.za/tender/
   type: html
   priority: 3
   free: true
 - id: csos
   name: Csos
-  live: true
-  url: https://www.csos.org.za/procurement
+  live: false
+  url: https://www.csos.org.za/tenders
   type: html
   priority: 3
   free: true
 - id: cut
   name: Cut
-  live: true
-  url: https://www.cut.ac.za/procurement/tenders
+  live: false
+  url: https://www.cut.ac.za/tenders
   type: html
   priority: 3
   free: true
 - id: dalrrd
   name: Dalrrd
-  live: true
+  live: false
   url: https://www.dalrrd.gov.za/tenders
   type: html
   priority: 2
   free: true
 - id: dbe
   name: Dbe
-  live: true
+  live: false
   url: https://www.education.gov.za/tenders
   type: html
   priority: 2
   free: true
 - id: dbsa
   name: Dbsa
-  live: true
-  url: https://www.dbsa.org/tenders
+  live: false
+  url: https://www.dbsa.org/procurement
   type: html
   priority: 3
   free: true
 - id: dcdt
   name: Dcdt
-  live: true
+  live: false
   url: https://www.dcdt.gov.za/tenders
   type: html
   priority: 2
   free: true
 - id: dcs
   name: Dcs
-  live: true
+  live: false
   url: https://www.dcs.gov.za/tenders
   type: html
   priority: 2
@@ -652,21 +652,21 @@ sources:
   free: true
 - id: denel_aerostructures
   name: Denel Aerostructures
-  live: true
+  live: false
   url: https://www.denelaerostructures.co.za/procurement
   type: html
   priority: 3
   free: true
 - id: denel_dynamics
   name: Denel Dynamics
-  live: true
+  live: false
   url: https://www.deneldynamics.co.za/procurement
   type: html
   priority: 3
   free: true
 - id: denel_land_systems
   name: Denel Land Systems
-  live: true
+  live: false
   url: https://www.denells.co.za/procurement
   type: html
   priority: 3
@@ -680,7 +680,7 @@ sources:
   free: true
 - id: denel_vehicle_systems
   name: Denel Vehicle Systems
-  live: true
+  live: false
   url: https://www.denelvs.co.za/procurement
   type: html
   priority: 3
@@ -701,14 +701,14 @@ sources:
   free: true
 - id: dha
   name: Dha
-  live: true
+  live: false
   url: https://www.dha.gov.za/tenders
   type: html
   priority: 2
   free: true
 - id: dhet
   name: Dhet
-  live: true
+  live: false
   url: https://www.dhet.gov.za/tenders
   type: html
   priority: 2
@@ -743,8 +743,8 @@ sources:
   free: true
 - id: dirco
   name: Dirco
-  live: true
-  url: https://www.dirco.gov.za/procurement
+  live: false
+  url: https://www.dirco.gov.za/tenders
   type: html
   priority: 3
   free: true
@@ -757,28 +757,28 @@ sources:
   free: true
 - id: ditsong
   name: Ditsong
-  live: true
+  live: false
   url: https://www.ditsong.org.za/procurement
   type: html
   priority: 3
   free: true
 - id: dmre
   name: Dmre
-  live: true
+  live: false
   url: https://www.dmre.gov.za/tenders
   type: html
   priority: 2
   free: true
 - id: dmv
   name: Dmv
-  live: true
+  live: false
   url: https://www.dmv.gov.za/procurement
   type: html
   priority: 3
   free: true
 - id: dod
   name: Dod
-  live: true
+  live: false
   url: https://www.dod.mil.za/tenders
   type: html
   priority: 2
@@ -799,70 +799,70 @@ sources:
   free: true
 - id: dojcd
   name: Dojcd
-  live: true
+  live: false
   url: https://www.justice.gov.za/procurement
   type: html
   priority: 3
   free: true
 - id: dot
   name: Dot
-  live: true
+  live: false
   url: https://www.transport.gov.za/tenders
   type: html
   priority: 2
   free: true
 - id: dpme
   name: Dpme
-  live: true
+  live: false
   url: https://www.dpme.gov.za/tenders
   type: html
   priority: 2
   free: true
 - id: dpsa
   name: Dpsa
-  live: true
+  live: false
   url: https://www.dpsa.gov.za/tenders
   type: html
   priority: 2
   free: true
 - id: dpwi
   name: Dpwi
-  live: true
+  live: false
   url: https://www.publicworks.gov.za/tenders
   type: html
   priority: 2
   free: true
 - id: dr_kennga_kaunda_dm
   name: Dr Kennga Kaunda Dm
-  live: true
+  live: false
   url: https://www.dkkdm.gov.za/tenders
   type: html
   priority: 2
   free: true
 - id: dr_ruth_segomotsi_mompati_dm
   name: Dr Ruth Segomotsi Mompati Dm
-  live: true
+  live: false
   url: https://www.rsmdm.gov.za/tenders
   type: html
   priority: 2
   free: true
 - id: dr_ruth_segomotsi_mompati_lm
   name: Dr Ruth Segomotsi Mompati Lm
-  live: true
+  live: false
   url: https://www.rsmdm.gov.za/tenders
   type: html
   priority: 3
   free: true
 - id: drakenstein_lm
   name: Drakenstein Lm
-  live: true
+  live: false
   url: https://www.drakenstein.gov.za/tenders
   type: html
   priority: 2
   free: true
 - id: dsac
   name: Dsac
-  live: true
+  live: false
   url: https://www.dsac.gov.za/tenders
   type: html
   priority: 2
@@ -876,14 +876,14 @@ sources:
   free: true
 - id: dsd
   name: Dsd
-  live: true
+  live: false
   url: https://www.dsd.gov.za/procurement
   type: html
   priority: 3
   free: true
 - id: dsi
   name: Dsi
-  live: true
+  live: false
   url: https://www.dst.gov.za/tenders
   type: html
   priority: 2
@@ -897,42 +897,42 @@ sources:
   free: true
 - id: dut
   name: Dut
-  live: true
+  live: false
   url: https://www.dut.ac.za/procurement/tenders/
   type: html
   priority: 3
   free: true
 - id: dws
   name: Dws
-  live: true
+  live: false
   url: https://www.dws.gov.za/tenders
   type: html
   priority: 2
   free: true
 - id: dwypd
   name: Dwypd
-  live: true
-  url: https://www.dwypd.gov.za/procurement
+  live: false
+  url: https://www.dwypd.gov.za/tenders
   type: html
   priority: 3
   free: true
 - id: eThekwini_solid_waste
   name: Ethekwini Solid Waste
-  live: true
+  live: false
   url: https://www.durban.gov.za/SolidWaste/procurement
   type: html
   priority: 3
   free: true
 - id: eastcape_midlands_tvet
   name: Eastcape Midlands Tvet
-  live: true
+  live: false
   url: https://www.emcol.co.za/procurement
   type: html
   priority: 3
   free: true
 - id: easterncape
   name: Easterncape
-  live: true
+  live: false
   url: https://www.ecprov.gov.za/tenders
   type: html
   priority: 2
@@ -953,7 +953,7 @@ sources:
   free: true
 - id: ec_health
   name: Ec Health
-  live: true
+  live: false
   url: https://www.echealth.gov.za/procurement
   type: html
   priority: 3
@@ -988,7 +988,7 @@ sources:
   free: true
 - id: ec_parks
   name: Ec Parks
-  live: true
+  live: false
   url: https://www.ecpb.co.za/procurement
   type: html
   priority: 3
@@ -1016,22 +1016,22 @@ sources:
   free: true
 - id: ec_tourism
   name: Ec Tourism
-  live: false
+  live: true
   url: https://www.ectourism.co.za/procurement
   type: html
   priority: 3
   free: true
 - id: ecdc
   name: Ecdc
-  live: true
+  live: false
   url: https://www.ecdc.co.za/procurement
   type: html
   priority: 3
   free: true
 - id: ecsa
   name: Ecsa
-  live: true
-  url: https://www.ecsa.co.za/procurement
+  live: false
+  url: https://www.ecsa.co.za/tenders
   type: html
   priority: 3
   free: true
@@ -1044,7 +1044,7 @@ sources:
   free: true
 - id: ehlanzeni_tvet
   name: Ehlanzeni Tvet
-  live: true
+  live: false
   url: https://www.ehlanzeni.org.za/procurement
   type: html
   priority: 3
@@ -1058,22 +1058,22 @@ sources:
   free: true
 - id: ekurhuleni_east_tvet
   name: Ekurhuleni East Tvet
-  live: true
+  live: false
   url: https://www.eec.edu.za/procurement
   type: html
   priority: 3
   free: true
 - id: ekurhuleni_west_tvet
   name: Ekurhuleni West Tvet
-  live: true
+  live: false
   url: https://www.ewc.edu.za/procurement
   type: html
   priority: 3
   free: true
 - id: elangeni_tvet
   name: Elangeni Tvet
-  live: true
-  url: https://www.elangeni.edu.za/procurement
+  live: false
+  url: https://www.elangeni.edu.za/tenders
   type: html
   priority: 3
   free: true
@@ -1086,28 +1086,28 @@ sources:
   free: true
 - id: elias_motsoaledi_lm
   name: Elias Motsoaledi Lm
-  live: true
+  live: false
   url: https://www.eliasmotsoaledi.gov.za/tenders
   type: html
   priority: 3
   free: true
 - id: elundini_lm
   name: Elundini Lm
-  live: false
+  live: true
   url: https://www.elundini.gov.za/procurement
   type: html
   priority: 3
   free: true
 - id: emalahleni_lm
   name: Emalahleni Lm
-  live: true
+  live: false
   url: https://www.emalahleni.gov.za/tenders
   type: html
   priority: 3
   free: true
 - id: emfuleni_lm
   name: Emfuleni Lm
-  live: true
+  live: false
   url: https://www.emfuleni.gov.za/tenders
   type: html
   priority: 2
@@ -1121,21 +1121,21 @@ sources:
   free: true
 - id: engineering_council
   name: Engineering Council
-  live: true
-  url: https://www.ecsa.co.za/procurement
+  live: false
+  url: https://www.ecsa.co.za/tenders
   type: html
   priority: 3
   free: true
 - id: ephraim_mogale_lm
   name: Ephraim Mogale Lm
-  live: true
+  live: false
   url: https://www.emlm.gov.za/tenders
   type: html
   priority: 3
   free: true
 - id: eshowe_tvet
   name: Eshowe Tvet
-  live: true
+  live: false
   url: https://www.eshowetvet.co.za/procurement
   type: html
   priority: 3
@@ -1149,14 +1149,14 @@ sources:
   free: true
 - id: eskom_enterprises
   name: Eskom Enterprises
-  live: true
+  live: false
   url: https://www.eskomenterprises.co.za/procurement
   type: html
   priority: 3
   free: true
 - id: eskom_finance
   name: Eskom Finance
-  live: false
+  live: true
   url: https://www.eskom.co.za/finance/procurement
   type: html
   priority: 3
@@ -1170,14 +1170,14 @@ sources:
   free: true
 - id: estate_agents_board
   name: Estate Agents Board
-  live: true
+  live: false
   url: https://www.eaab.org.za/procurement
   type: html
   priority: 3
   free: true
 - id: etdp_seta
   name: Etdp Seta
-  live: true
+  live: false
   url: https://www.etdpseta.org.za/tenders/
   type: html
   priority: 3
@@ -1198,21 +1198,21 @@ sources:
   free: true
 - id: ethekwini
   name: Ethekwini
-  live: true
+  live: false
   url: https://www.durban.gov.za/pages/residents/tenders
   type: html
   priority: 2
   free: true
 - id: ethekwini_electricity
   name: Ethekwini Electricity
-  live: true
+  live: false
   url: https://www.durban.gov.za/Electricity/procurement
   type: html
   priority: 2
   free: true
 - id: ethekwini_water
   name: Ethekwini Water
-  live: true
+  live: false
   url: https://www.durban.gov.za/Water/procurement
   type: html
   priority: 2
@@ -1226,7 +1226,7 @@ sources:
   free: true
 - id: faiss_ombud
   name: Faiss Ombud
-  live: true
+  live: false
   url: https://www.faissombud.co.za/procurement
   type: html
   priority: 3
@@ -1261,7 +1261,7 @@ sources:
   free: true
 - id: fetakgomo_tubatse_lm
   name: Fetakgomo Tubatse Lm
-  live: true
+  live: false
   url: https://www.ftlm.gov.za/tenders
   type: html
   priority: 3
@@ -1275,7 +1275,7 @@ sources:
   free: true
 - id: ffc
   name: Ffc
-  live: true
+  live: false
   url: https://www.ffc.co.za/tenders/
   type: html
   priority: 3
@@ -1289,8 +1289,8 @@ sources:
   free: true
 - id: film_pub_board
   name: Film Pub Board
-  live: true
-  url: https://www.fpb.org.za/procurement
+  live: false
+  url: https://www.fpb.org.za/tenders
   type: html
   priority: 3
   free: true
@@ -1303,8 +1303,8 @@ sources:
   free: true
 - id: flavius_mareka_tvet
   name: Flavius Mareka Tvet
-  live: true
-  url: https://www.flaviusmareka.co.za/procurement
+  live: false
+  url: https://www.flaviusmareka.co.za/tenders
   type: html
   priority: 3
   free: true
@@ -1331,21 +1331,21 @@ sources:
   free: true
 - id: fpm_seta
   name: Fpm Seta
-  live: true
-  url: https://www.fpmseta.org.za/tenders/
+  live: false
+  url: https://www.fpmseta.org.za/for-my-business/tenders/
   type: html
   priority: 3
   free: true
 - id: francis_baard_dm
   name: Francis Baard Dm
-  live: true
+  live: false
   url: https://www.francisbaard.gov.za/tenders
   type: html
   priority: 2
   free: true
 - id: freestate
   name: Freestate
-  live: true
+  live: false
   url: http://www.treasury.fs.gov.za/tenders/
   type: html
   priority: 2
@@ -1359,7 +1359,7 @@ sources:
   free: true
 - id: fs_health
   name: Fs Health
-  live: true
+  live: false
   url: https://www.fshealth.gov.za/procurement
   type: html
   priority: 3
@@ -1401,7 +1401,7 @@ sources:
   free: true
 - id: fs_police_roads
   name: Fs Police Roads
-  live: true
+  live: false
   url: https://www.pret.fs.gov.za/tenders
   type: html
   priority: 2
@@ -1429,14 +1429,14 @@ sources:
   free: true
 - id: fsc
   name: Fsc
-  live: true
+  live: false
   url: https://www.fsca.co.za/procurement
   type: html
   priority: 3
   free: true
 - id: ga_segonyana_lm
   name: Ga Segonyana Lm
-  live: true
+  live: false
   url: https://www.gasegonyana.gov.za/tenders
   type: html
   priority: 3
@@ -1458,7 +1458,7 @@ sources:
 - id: gatedc
   name: Gatedc
   live: false
-  url: https://www.tia.org.za/procurement
+  url: https://www.tia.org.za/tender/
   type: html
   priority: 3
   free: true
@@ -1485,35 +1485,35 @@ sources:
   free: true
 - id: gcis
   name: Gcis
-  live: true
+  live: false
   url: https://www.gcis.gov.za/procurement
   type: html
   priority: 3
   free: true
 - id: gde
   name: Gde
-  live: true
+  live: false
   url: https://www.education.gpg.gov.za/tenders
   type: html
   priority: 2
   free: true
 - id: gdh
   name: Gdh
-  live: true
+  live: false
   url: https://www.health.gpg.gov.za/tenders
   type: html
   priority: 2
   free: true
 - id: gdid
   name: Gdid
-  live: true
+  live: false
   url: https://www.gdid.gpg.gov.za/tenders
   type: html
   priority: 2
   free: true
 - id: gdrt
   name: Gdrt
-  live: true
+  live: false
   url: https://www.gdrt.gpg.gov.za/tenders
   type: html
   priority: 2
@@ -1527,21 +1527,21 @@ sources:
   free: true
 - id: geoscience
   name: Geoscience
-  live: true
-  url: https://www.geoscience.org.za/tenders
+  live: false
+  url: https://www.geoscience.org.za/tender/
   type: html
   priority: 3
   free: true
 - id: gert_sibande_dm
   name: Gert Sibande Dm
-  live: true
+  live: false
   url: https://www.gsibande.gov.za/tenders
   type: html
   priority: 2
   free: true
 - id: gert_sibande_tvet
   name: Gert Sibande Tvet
-  live: true
+  live: false
   url: https://www.gscollege.co.za/procurement
   type: html
   priority: 3
@@ -1569,14 +1569,14 @@ sources:
   free: true
 - id: gp_agriculture
   name: Gp Agriculture
-  live: true
+  live: false
   url: https://www.gdard.gpg.gov.za/procurement
   type: html
   priority: 3
   free: true
 - id: gp_health
   name: Gp Health
-  live: true
+  live: false
   url: https://www.health.gpg.gov.za/procurement
   type: html
   priority: 3
@@ -1632,7 +1632,7 @@ sources:
   free: true
 - id: gpaa
   name: Gpaa
-  live: true
+  live: false
   url: https://www.gpaa.gov.za/procurement
   type: html
   priority: 3
@@ -1681,7 +1681,7 @@ sources:
   free: true
 - id: harry_gwala_dm
   name: Harry Gwala Dm
-  live: true
+  live: false
   url: https://www.harrygwaladm.gov.za/tenders
   type: html
   priority: 2
@@ -1709,7 +1709,7 @@ sources:
   free: true
 - id: hleni_tvet
   name: Hleni Tvet
-  live: true
+  live: false
   url: https://www.ltvet.co.za/procurement
   type: html
   priority: 3
@@ -1737,8 +1737,8 @@ sources:
   free: true
 - id: hwseta
   name: Hwseta
-  live: true
-  url: https://www.hwseta.org.za/tenders/
+  live: false
+  url: https://www.hwseta.org.za/tender/
   type: html
   priority: 3
   free: true
@@ -1751,8 +1751,8 @@ sources:
   free: true
 - id: icasa
   name: Icasa
-  live: true
-  url: https://www.icasa.org.za/pages/tenders
+  live: false
+  url: https://www.icasa.org.za/tenders
   type: html
   priority: 3
   free: true
@@ -1765,14 +1765,14 @@ sources:
   free: true
 - id: iec
   name: Iec
-  live: true
+  live: false
   url: https://www.elections.org.za/content/Procurement
   type: html
   priority: 3
   free: true
 - id: igas
   name: Igas
-  live: true
+  live: false
   url: https://www.igas.co.za/procurement
   type: html
   priority: 3
@@ -1793,22 +1793,22 @@ sources:
   free: true
 - id: ikhala_tvet
   name: Ikhala Tvet
-  live: true
+  live: false
   url: https://www.ikhala.edu.za/procurement
   type: html
   priority: 3
   free: true
 - id: ilembe
   name: Ilembe
-  live: true
-  url: https://www.ilembe.gov.za/tenders
+  live: false
+  url: https://www.ilembe.gov.za/procurement
   type: html
   priority: 2
   free: true
 - id: ilembe_lm
   name: Ilembe Lm
   live: false
-  url: https://www.ilembe.gov.za/tenders
+  url: https://www.ilembe.gov.za/procurement
   type: html
   priority: 3
   free: true
@@ -1842,7 +1842,7 @@ sources:
   free: true
 - id: ingwe_tvet
   name: Ingwe Tvet
-  live: true
+  live: false
   url: https://www.ingwecollege.co.za/procurement
   type: html
   priority: 3
@@ -1857,20 +1857,20 @@ sources:
 - id: insurance_institute
   name: Insurance Institute
   live: false
-  url: https://www.iisa.co.za/procurement
+  url: https://www.iisa.co.za/tenders
   type: html
   priority: 3
   free: true
 - id: insurance_ombud
   name: Insurance Ombud
-  live: true
+  live: false
   url: https://www.osti.co.za/procurement
   type: html
   priority: 3
   free: true
 - id: intersite
   name: Intersite
-  live: true
+  live: false
   url: https://www.intersite.co.za/procurement
   type: html
   priority: 3
@@ -1884,29 +1884,29 @@ sources:
   free: true
 - id: ipid
   name: Ipid
-  live: true
+  live: false
   url: https://www.ipid.gov.za/tenders/
   type: html
   priority: 3
   free: true
 - id: irba
   name: Irba
-  live: true
+  live: false
   url: https://www.irba.co.za/procurement
   type: html
   priority: 3
   free: true
 - id: ithemba
   name: Ithemba
-  live: true
-  url: https://tlabs.ac.za/procurement
+  live: false
+  url: https://tlabs.ac.za/supply-chain
   type: html
   priority: 3
   free: true
 - id: iziko
   name: Iziko
-  live: true
-  url: https://www.iziko.org.za/procurement
+  live: false
+  url: https://www.iziko.org.za/tenders
   type: html
   priority: 3
   free: true
@@ -1933,7 +1933,7 @@ sources:
   free: true
 - id: john_taolo_gaetsewe_dm
   name: John Taolo Gaetsewe Dm
-  live: true
+  live: false
   url: https://www.jtgdm.gov.za/tenders
   type: html
   priority: 2
@@ -1961,14 +1961,14 @@ sources:
   free: true
 - id: karoo_hoogland_lm
   name: Karoo Hoogland Lm
-  live: false
+  live: true
   url: https://www.karoohoogland.gov.za/procurement
   type: html
   priority: 3
   free: true
 - id: kfm
   name: Kfm
-  live: false
+  live: true
   url: https://www.kfm.co.za/procurement
   type: html
   priority: 3
@@ -1989,21 +1989,21 @@ sources:
   free: true
 - id: king_cetshwayo
   name: King Cetshwayo
-  live: true
+  live: false
   url: https://www.kingcetshwayo.gov.za/tenders
   type: html
   priority: 2
   free: true
 - id: king_cetshwayo_tvet
   name: King Cetshwayo Tvet
-  live: true
+  live: false
   url: https://www.kingcetshwayo.edu.za/procurement
   type: html
   priority: 3
   free: true
 - id: king_hintsa_tvet
   name: King Hintsa Tvet
-  live: true
+  live: false
   url: https://www.kinghintsacollege.edu.za/procurement
   type: html
   priority: 3
@@ -2017,7 +2017,7 @@ sources:
   free: true
 - id: knysna_lm
   name: Knysna Lm
-  live: true
+  live: false
   url: https://www.knysna.gov.za/tenders
   type: html
   priority: 3
@@ -2038,8 +2038,8 @@ sources:
   free: true
 - id: kzn_agriculture
   name: Kzn Agriculture
-  live: true
-  url: https://www.kzndard.gov.za/procurement
+  live: false
+  url: https://www.kzndard.gov.za/tenders
   type: html
   priority: 3
   free: true
@@ -2052,21 +2052,21 @@ sources:
   free: true
 - id: kzn_dot
   name: Kzn Dot
-  live: true
+  live: false
   url: https://www.kzntransport.gov.za/tenders
   type: html
   priority: 2
   free: true
 - id: kzn_health
   name: Kzn Health
-  live: true
-  url: https://www.kznhealth.gov.za/procurement
+  live: false
+  url: https://www.kznhealth.gov.za/tenders
   type: html
   priority: 3
   free: true
 - id: kzn_human_settlements
   name: Kzn Human Settlements
-  live: true
+  live: false
   url: https://www.kznsethuman.gov.za/tenders
   type: html
   priority: 2
@@ -2080,8 +2080,8 @@ sources:
   free: true
 - id: kzn_invest
   name: Kzn Invest
-  live: true
-  url: https://www.tikzn.co.za/procurement
+  live: false
+  url: https://www.tikzn.co.za/tenders
   type: html
   priority: 3
   free: true
@@ -2094,7 +2094,7 @@ sources:
   free: true
 - id: kzn_roads
   name: Kzn Roads
-  live: true
+  live: false
   url: https://www.kzntransport.gov.za/procurement
   type: html
   priority: 3
@@ -2108,7 +2108,7 @@ sources:
   free: true
 - id: kzn_tourism
   name: Kzn Tourism
-  live: false
+  live: true
   url: https://www.zulu.org.za/procurement
   type: html
   priority: 3
@@ -2129,8 +2129,8 @@ sources:
   free: true
 - id: landbank
   name: Landbank
-  live: true
-  url: https://landbank.co.za/Pages/Procurement.aspx
+  live: false
+  url: https://landbank.co.za/supply-chain
   type: html
   priority: 3
   free: true
@@ -2143,21 +2143,21 @@ sources:
   free: true
 - id: legal_aid_sa
   name: Legal Aid Sa
-  live: true
-  url: https://www.legal-aid.co.za/procurement
+  live: false
+  url: https://www.legal-aid.co.za/tenders
   type: html
   priority: 3
   free: true
 - id: legal_practice_council
   name: Legal Practice Council
-  live: true
+  live: false
   url: https://www.lpc.org.za/procurement
   type: html
   priority: 3
   free: true
 - id: lejweleputswa_dm
   name: Lejweleputswa Dm
-  live: true
+  live: false
   url: https://www.lejwe.co.za/tenders
   type: html
   priority: 2
@@ -2185,21 +2185,21 @@ sources:
   free: true
 - id: lephalale_tvet
   name: Lephalale Tvet
-  live: true
+  live: false
   url: https://www.ltvet.co.za/procurement
   type: html
   priority: 3
   free: true
 - id: lesedi_lm
   name: Lesedi Lm
-  live: true
+  live: false
   url: https://www.lesedi.gov.za/tenders
   type: html
   priority: 3
   free: true
 - id: letaba_tvet
   name: Letaba Tvet
-  live: true
+  live: false
   url: https://www.letabacollege.co.za/procurement
   type: html
   priority: 3
@@ -2213,14 +2213,14 @@ sources:
   free: true
 - id: limpopo
   name: Limpopo
-  live: true
+  live: false
   url: https://www.limtreasury.gov.za/lim_admin_trea/pages/sites/tender_documents/index.php
   type: html
   priority: 2
   free: true
 - id: limpopo_pwri
   name: Limpopo Pwri
-  live: true
+  live: false
   url: https://www.ldprr.gov.za/tenders
   type: html
   priority: 2
@@ -2234,7 +2234,7 @@ sources:
   free: true
 - id: longterm_ins_ombud
   name: Longterm Ins Ombud
-  live: true
+  live: false
   url: https://www.oltinsurance.co.za/procurement
   type: html
   priority: 3
@@ -2269,7 +2269,7 @@ sources:
   free: true
 - id: lp_health
   name: Lp Health
-  live: true
+  live: false
   url: https://www.ldoh.gov.za/procurement
   type: html
   priority: 3
@@ -2318,7 +2318,7 @@ sources:
   free: true
 - id: lp_tourism
   name: Lp Tourism
-  live: false
+  live: true
   url: https://www.golimpopo.com/procurement
   type: html
   priority: 3
@@ -2346,7 +2346,7 @@ sources:
   free: true
 - id: majuba_tvet
   name: Majuba Tvet
-  live: true
+  live: false
   url: https://www.majuba.edu.za/procurement
   type: html
   priority: 3
@@ -2360,7 +2360,7 @@ sources:
   free: true
 - id: makhado_lm
   name: Makhado Lm
-  live: true
+  live: false
   url: https://www.makhado.gov.za/tenders
   type: html
   priority: 2
@@ -2381,28 +2381,28 @@ sources:
   free: true
 - id: maluti_tvet
   name: Maluti Tvet
-  live: true
-  url: https://www.malutitvet.co.za/procurement
+  live: false
+  url: https://www.malutitvet.co.za/tenders
   type: html
   priority: 3
   free: true
 - id: mandela_uni
   name: Mandela Uni
-  live: true
+  live: false
   url: https://legacy.nelsonmandela.ac.za/procurement
   type: html
   priority: 3
   free: true
 - id: mandeni_lm
   name: Mandeni Lm
-  live: false
+  live: true
   url: https://www.mandeni.gov.za/procurement
   type: html
   priority: 3
   free: true
 - id: mangaung
   name: Mangaung
-  live: true
+  live: false
   url: http://www.mangaung.co.za/category/tenders/
   type: html
   priority: 2
@@ -2416,42 +2416,42 @@ sources:
   free: true
 - id: mantsopa_lm
   name: Mantsopa Lm
-  live: true
+  live: false
   url: https://www.mantsopa.gov.za/tenders
   type: html
   priority: 3
   free: true
 - id: manuawe_lm
   name: Manuawe Lm
-  live: true
+  live: false
   url: https://www.mantsopa.gov.za/tenders
   type: html
   priority: 3
   free: true
 - id: maquassi_hills_lm
   name: Maquassi Hills Lm
-  live: true
+  live: false
   url: https://www.maquassi.co.za/tenders
   type: html
   priority: 3
   free: true
 - id: masilonyana_lm
   name: Masilonyana Lm
-  live: true
+  live: false
   url: https://www.masilonyana.gov.za/tenders
   type: html
   priority: 3
   free: true
 - id: matjhabeng_lm
   name: Matjhabeng Lm
-  live: true
+  live: false
   url: https://www.matjhabeng.gov.za/tenders
   type: html
   priority: 2
   free: true
 - id: matlosana_lm
   name: Matlosana Lm
-  live: true
+  live: false
   url: https://www.matlosana.org.za/tenders
   type: html
   priority: 2
@@ -2472,14 +2472,14 @@ sources:
   free: true
 - id: mdb
   name: Mdb
-  live: true
-  url: https://www.demarcation.org.za/procurement
+  live: false
+  url: https://www.demarcation.org.za/tenders
   type: html
   priority: 3
   free: true
 - id: mdda
   name: Mdda
-  live: true
+  live: false
   url: https://www.mdda.org.za/procurement
   type: html
   priority: 3
@@ -2514,7 +2514,7 @@ sources:
   free: true
 - id: metrorail
   name: Metrorail
-  live: true
+  live: false
   url: https://www.metrorail.co.za/procurement
   type: html
   priority: 3
@@ -2522,7 +2522,7 @@ sources:
 - id: metsimaholo_lm
   name: Metsimaholo Lm
   live: false
-  url: https://www.metsimaholo.gov.za/procurement
+  url: https://www.metsimaholo.gov.za/tenders
   type: html
   priority: 3
   free: true
@@ -2542,15 +2542,15 @@ sources:
   free: true
 - id: mhsc
   name: Mhsc
-  live: true
-  url: https://www.mhsc.org.za/procurement
+  live: false
+  url: https://www.mhsc.org.za/tenders
   type: html
   priority: 3
   free: true
 - id: mict_seta
   name: Mict Seta
-  live: true
-  url: https://www.mict.org.za/tenders/
+  live: false
+  url: https://www.mict.org.za/procurement
   type: html
   priority: 3
   free: true
@@ -2563,14 +2563,14 @@ sources:
   free: true
 - id: mintek
   name: Mintek
-  live: true
+  live: false
   url: https://www.mintek.co.za/tenders
   type: html
   priority: 3
   free: true
 - id: mkhambathini_lm
   name: Mkhambathini Lm
-  live: false
+  live: true
   url: https://www.mkhambathini.gov.za/procurement
   type: html
   priority: 3
@@ -2591,21 +2591,21 @@ sources:
   free: true
 - id: mnambithi_tvet
   name: Mnambithi Tvet
-  live: true
+  live: false
   url: https://www.mnambithicollege.co.za/procurement
   type: html
   priority: 3
   free: true
 - id: mnquma_lm
   name: Mnquma Lm
-  live: false
+  live: true
   url: https://www.mnquma.gov.za/procurement
   type: html
   priority: 3
   free: true
 - id: modimolle_lm
   name: Modimolle Lm
-  live: true
+  live: false
   url: https://www.modimolle.gov.za/tenders
   type: html
   priority: 3
@@ -2633,21 +2633,21 @@ sources:
   free: true
 - id: mopani_east_tvet
   name: Mopani East Tvet
-  live: true
+  live: false
   url: https://www.metvet.co.za/procurement
   type: html
   priority: 3
   free: true
 - id: mopani_west_tvet
   name: Mopani West Tvet
-  live: true
+  live: false
   url: https://www.mwtvetcollege.co.za/procurement
   type: html
   priority: 3
   free: true
 - id: moqhaka_lm
   name: Moqhaka Lm
-  live: false
+  live: true
   url: https://www.moqhaka.gov.za/procurement
   type: html
   priority: 3
@@ -2655,20 +2655,20 @@ sources:
 - id: moretele_lm
   name: Moretele Lm
   live: false
-  url: https://www.moretele.gov.za/procurement
+  url: https://www.moretele.gov.za/tenders
   type: html
   priority: 3
   free: true
 - id: mossel_bay_lm
   name: Mossel Bay Lm
-  live: true
+  live: false
   url: https://www.mosselbay.gov.za/tenders
   type: html
   priority: 3
   free: true
 - id: motheo_tvet
   name: Motheo Tvet
-  live: true
+  live: false
   url: https://www.motheotvetcollege.co.za/procurement
   type: html
   priority: 3
@@ -2683,13 +2683,13 @@ sources:
 - id: mp_dev
   name: Mp Dev
   live: false
-  url: https://www.mega.gov.za/procurement
+  url: https://www.mega.gov.za/tenders
   type: html
   priority: 3
   free: true
 - id: mp_health
   name: Mp Health
-  live: true
+  live: false
   url: https://www.mpuhealth.gov.za/procurement
   type: html
   priority: 3
@@ -2752,7 +2752,7 @@ sources:
   free: true
 - id: mpofana_lm
   name: Mpofana Lm
-  live: false
+  live: true
   url: https://www.mpofana.gov.za/procurement
   type: html
   priority: 3
@@ -2766,22 +2766,22 @@ sources:
   free: true
 - id: mpumalanga
   name: Mpumalanga
-  live: true
+  live: false
   url: https://www.mpumalanga.gov.za/finance/tenders.htm
   type: html
   priority: 2
   free: true
 - id: mpumalanga_education
   name: Mpumalanga Education
-  live: true
+  live: false
   url: https://www.mpumalanga.gov.za/education/tenders
   type: html
   priority: 2
   free: true
 - id: mqa
   name: Mqa
-  live: true
-  url: https://www.mqa.org.za/tenders/
+  live: false
+  url: https://www.mqa.org.za/tender/
   type: html
   priority: 3
   free: true
@@ -2794,22 +2794,22 @@ sources:
   free: true
 - id: msunduzi_lm
   name: Msunduzi Lm
-  live: true
+  live: false
   url: https://www.msunduzi.gov.za/tenders
   type: html
   priority: 2
   free: true
 - id: mthashana_tvet
   name: Mthashana Tvet
-  live: true
-  url: https://www.mthashanacollege.co.za/procurement
+  live: false
+  url: https://www.mthashanacollege.co.za/tenders
   type: html
   priority: 3
   free: true
 - id: mtubatuba_lm
   name: Mtubatuba Lm
   live: false
-  url: https://www.mtubatuba.gov.za/procurement
+  url: https://www.mtubatuba.gov.za/tenders
   type: html
   priority: 3
   free: true
@@ -2843,35 +2843,35 @@ sources:
   free: true
 - id: namc
   name: Namc
-  live: true
+  live: false
   url: https://www.namc.co.za/procurement
   type: html
   priority: 3
   free: true
 - id: nasionale
   name: Nasionale
-  live: false
+  live: true
   url: https://www.nasionale.co.za/procurement
   type: html
   priority: 3
   free: true
 - id: national_gambling
   name: National Gambling
-  live: true
+  live: false
   url: https://www.nationalgambling.co.za/procurement
   type: html
   priority: 3
   free: true
 - id: national_gambling_board
   name: National Gambling Board
-  live: true
+  live: false
   url: https://www.ngb.org.za/procurement
   type: html
   priority: 3
   free: true
 - id: national_lotteries
   name: National Lotteries
-  live: true
+  live: false
   url: https://www.nationallotteries.co.za/procurement
   type: html
   priority: 3
@@ -2906,7 +2906,7 @@ sources:
   free: true
 - id: nc_health
   name: Nc Health
-  live: true
+  live: false
   url: https://www.nch.gov.za/procurement
   type: html
   priority: 3
@@ -2948,7 +2948,7 @@ sources:
   free: true
 - id: nc_roads
   name: Nc Roads
-  live: true
+  live: false
   url: https://ncrpw.ncpg.gov.za/tenders
   type: html
   priority: 2
@@ -2969,7 +2969,7 @@ sources:
   free: true
 - id: nca
   name: Nca
-  live: true
+  live: false
   url: https://www.thencc.gov.za/procurement
   type: html
   priority: 3
@@ -2983,7 +2983,7 @@ sources:
   free: true
 - id: ncr
   name: Ncr
-  live: true
+  live: false
   url: https://www.ncr.org.za/procurement
   type: html
   priority: 3
@@ -3004,7 +3004,7 @@ sources:
   free: true
 - id: nehawu
   name: Nehawu
-  live: false
+  live: true
   url: https://www.nehawu.org.za/procurement
   type: html
   priority: 3
@@ -3046,49 +3046,49 @@ sources:
   free: true
 - id: ngb
   name: Ngb
-  live: true
+  live: false
   url: https://www.ngb.org.za/procurement
   type: html
   priority: 3
   free: true
 - id: ngcobo_lm
   name: Ngcobo Lm
-  live: true
+  live: false
   url: https://www.ngcobomun.gov.za/tenders
   type: html
   priority: 3
   free: true
 - id: ngqushwa_lm
   name: Ngqushwa Lm
-  live: true
+  live: false
   url: https://www.ngqushwa.gov.za/tenders
   type: html
   priority: 3
   free: true
 - id: nhbrc
   name: Nhbrc
-  live: true
-  url: https://www.nhbrc.org.za/procurement
+  live: false
+  url: https://www.nhbrc.org.za/current-tenders
   type: html
   priority: 3
   free: true
 - id: nhc
   name: Nhc
-  live: true
-  url: https://www.nhc.org.za/procurement
+  live: false
+  url: https://www.nhc.org.za/tenders
   type: html
   priority: 3
   free: true
 - id: nhls
   name: Nhls
-  live: true
-  url: https://www.nhls.ac.za/tenders
+  live: false
+  url: https://www.nhls.ac.za/procurement
   type: html
   priority: 3
   free: true
 - id: nhrsc
   name: Nhrsc
-  live: false
+  live: true
   url: https://www.nhrec.org.za/procurement
   type: html
   priority: 3
@@ -3102,14 +3102,14 @@ sources:
   free: true
 - id: nkangala_tvet
   name: Nkangala Tvet
-  live: true
+  live: false
   url: https://www.nkangalafet.co.za/procurement
   type: html
   priority: 3
   free: true
 - id: nkonkobe_lm
   name: Nkonkobe Lm
-  live: false
+  live: true
   url: https://www.nkonkobe.gov.za/procurement
   type: html
   priority: 3
@@ -3123,22 +3123,22 @@ sources:
   free: true
 - id: nlc
   name: Nlc
-  live: true
-  url: https://www.nlcsa.org.za/procurement
+  live: false
+  url: https://www.nlcsa.org.za/tenders
   type: html
   priority: 3
   free: true
 - id: nmu
   name: Nmu
-  live: true
+  live: false
   url: https://www.mandela.ac.za/procurement
   type: html
   priority: 3
   free: true
 - id: nnr
   name: Nnr
-  live: true
-  url: https://www.nnr.co.za/procurement
+  live: false
+  url: https://www.nnr.co.za/for-my-business/tenders/
   type: html
   priority: 3
   free: true
@@ -3165,29 +3165,29 @@ sources:
   free: true
 - id: northerncape
   name: Northerncape
-  live: true
+  live: false
   url: https://nctreasury.ncpg.gov.za/index.php/tenders
   type: html
   priority: 2
   free: true
 - id: northlink_tvet
   name: Northlink Tvet
-  live: true
+  live: false
   url: https://www.northlink.co.za/procurement
   type: html
   priority: 3
   free: true
 - id: northwest
   name: Northwest
-  live: true
-  url: http://www.nwpg.gov.za/Treasury/Tenders.asp
+  live: false
+  url: http://www.nwpg.gov.za/tenders
   type: html
   priority: 2
   free: true
 - id: npa
   name: Npa
-  live: true
-  url: https://www.npa.gov.za/procurement
+  live: false
+  url: https://www.npa.gov.za/tenders
   type: html
   priority: 3
   free: true
@@ -3214,14 +3214,14 @@ sources:
   free: true
 - id: nsfas
   name: Nsfas
-  live: true
+  live: false
   url: https://www.nsfas.org.za/procurement
   type: html
   priority: 3
   free: true
 - id: nsg
   name: Nsg
-  live: true
+  live: false
   url: https://www.thensg.gov.za/procurement
   type: html
   priority: 3
@@ -3229,7 +3229,7 @@ sources:
 - id: ntabankulu_lm
   name: Ntabankulu Lm
   live: false
-  url: https://www.ntabankulu.gov.za/procurement
+  url: https://www.ntabankulu.gov.za/tender/
   type: html
   priority: 3
   free: true
@@ -3249,7 +3249,7 @@ sources:
   free: true
 - id: nursing_council
   name: Nursing Council
-  live: true
+  live: false
   url: https://www.sanc.co.za/procurement
   type: html
   priority: 3
@@ -3264,13 +3264,13 @@ sources:
 - id: nw_dev
   name: Nw Dev
   live: false
-  url: https://www.nwdc.co.za/procurement
+  url: https://www.nwdc.co.za/tenders
   type: html
   priority: 3
   free: true
 - id: nw_health
   name: Nw Health
-  live: true
+  live: false
   url: https://www.nwhealth.gov.za/procurement
   type: html
   priority: 3
@@ -3333,7 +3333,7 @@ sources:
   free: true
 - id: nwu
   name: Nwu
-  live: true
+  live: false
   url: https://www.nwu.ac.za/procurement/tenders
   type: html
   priority: 3
@@ -3347,7 +3347,7 @@ sources:
   free: true
 - id: nyda
   name: Nyda
-  live: true
+  live: false
   url: https://www.nyda.gov.za/procurement
   type: html
   priority: 3
@@ -3368,15 +3368,15 @@ sources:
   free: true
 - id: ocj
   name: Ocj
-  live: true
+  live: false
   url: https://www.judiciary.org.za/procurement
   type: html
   priority: 3
   free: true
 - id: okhahlamba_lm
   name: Okhahlamba Lm
-  live: true
-  url: https://www.okhahlamba.gov.za/tenders
+  live: false
+  url: https://www.okhahlamba.gov.za/tender/
   type: html
   priority: 3
   free: true
@@ -3403,14 +3403,14 @@ sources:
   free: true
 - id: or_tambo
   name: Or Tambo
-  live: true
+  live: false
   url: https://www.ortambodm.gov.za/tenders
   type: html
   priority: 2
   free: true
 - id: orbit_tvet
   name: Orbit Tvet
-  live: true
+  live: false
   url: https://www.orbitcollege.co.za/procurement
   type: html
   priority: 3
@@ -3431,7 +3431,7 @@ sources:
   free: true
 - id: overberg_dm
   name: Overberg Dm
-  live: true
+  live: false
   url: https://www.odm.org.za/tenders
   type: html
   priority: 2
@@ -3445,29 +3445,29 @@ sources:
   free: true
 - id: overberg_water
   name: Overberg Water
-  live: true
+  live: false
   url: https://overbergwater.co.za/tenders
   type: html
   priority: 3
   free: true
 - id: overstrand_lm
   name: Overstrand Lm
-  live: true
+  live: false
   url: https://www.overstrand.gov.za/tenders
   type: html
   priority: 3
   free: true
 - id: pacofs
   name: Pacofs
-  live: true
-  url: https://www.pacofs.co.za/procurement
+  live: false
+  url: https://www.pacofs.co.za/supply-chain-management
   type: html
   priority: 3
   free: true
 - id: pan_sa_taal
   name: Pan Sa Taal
-  live: true
-  url: https://www.pansalb.org/procurement
+  live: false
+  url: https://www.pansalb.org/tenders
   type: html
   priority: 3
   free: true
@@ -3480,7 +3480,7 @@ sources:
   free: true
 - id: parliament
   name: Parliament
-  live: true
+  live: false
   url: https://www.parliament.gov.za/storage/app/media/Tenders/index.html
   type: html
   priority: 3
@@ -3501,14 +3501,14 @@ sources:
   free: true
 - id: petrosa
   name: Petrosa
-  live: true
+  live: false
   url: https://www.petrosa.co.za/tenders
   type: html
   priority: 3
   free: true
 - id: pf_adjudicator
   name: Pf Adjudicator
-  live: true
+  live: false
   url: https://www.pfa.org.za/procurement
   type: html
   priority: 3
@@ -3516,13 +3516,13 @@ sources:
 - id: phalaborwa_lm
   name: Phalaborwa Lm
   live: false
-  url: https://www.phalaborwa.gov.za/procurement
+  url: https://www.phalaborwa.gov.za/tenders
   type: html
   priority: 3
   free: true
 - id: pharma_council
   name: Pharma Council
-  live: true
+  live: false
   url: https://www.pharmacouncil.co.za/procurement
   type: html
   priority: 3
@@ -3543,7 +3543,7 @@ sources:
   free: true
 - id: pixley_ka_seme_dm
   name: Pixley Ka Seme Dm
-  live: true
+  live: false
   url: https://www.pksdm.gov.za/tenders
   type: html
   priority: 2
@@ -3551,7 +3551,7 @@ sources:
 - id: pixley_ka_seme_lm
   name: Pixley Ka Seme Lm
   live: false
-  url: https://www.pixleykaseme.gov.za/procurement
+  url: https://www.pixleykaseme.gov.za/tenders
   type: html
   priority: 3
   free: true
@@ -3578,15 +3578,15 @@ sources:
   free: true
 - id: podiatry_council
   name: Podiatry Council
-  live: false
+  live: true
   url: https://www.hpcsa.co.za/procurement
   type: html
   priority: 3
   free: true
 - id: polokwane_lm
   name: Polokwane Lm
-  live: true
-  url: https://www.polokwane.gov.za/tenders
+  live: false
+  url: https://www.polokwane.gov.za/tender/
   type: html
   priority: 2
   free: true
@@ -3606,21 +3606,21 @@ sources:
   free: true
 - id: port_elizabeth_tvet
   name: Port Elizabeth Tvet
-  live: true
+  live: false
   url: https://www.petvet.co.za/procurement
   type: html
   priority: 3
   free: true
 - id: port_st_johns_lm
   name: Port St Johns Lm
-  live: true
-  url: https://www.psjmunicipality.gov.za/tenders
+  live: false
+  url: https://www.psjmunicipality.gov.za/procurement
   type: html
   priority: 3
   free: true
 - id: portsregulator
   name: Portsregulator
-  live: true
+  live: false
   url: https://www.portsregulator.co.za/procurement
   type: html
   priority: 3
@@ -3641,22 +3641,22 @@ sources:
   free: true
 - id: prasa
   name: Prasa
-  live: true
+  live: false
   url: https://www.prasa.com/tenders
   type: html
   priority: 3
   free: true
 - id: prasa_cres
   name: Prasa Cres
-  live: true
+  live: false
   url: https://www.prasacres.co.za/procurement
   type: html
   priority: 3
   free: true
 - id: presidency
   name: Presidency
-  live: true
-  url: https://www.thepresidency.gov.za/tenders
+  live: false
+  url: https://www.thepresidency.gov.za/procurement
   type: html
   priority: 2
   free: true
@@ -3704,14 +3704,14 @@ sources:
   free: true
 - id: pseta
   name: Pseta
-  live: true
-  url: https://www.pseta.org.za/tenders/
+  live: false
+  url: https://www.pseta.org.za/current-tenders
   type: html
   priority: 3
   free: true
 - id: psira
   name: Psira
-  live: true
+  live: false
   url: https://www.psira.co.za/procurement
   type: html
   priority: 3
@@ -3732,7 +3732,7 @@ sources:
   free: true
 - id: public_protector
   name: Public Protector
-  live: true
+  live: false
   url: https://www.publicprotector.org/tenders/
   type: html
   priority: 3
@@ -3746,7 +3746,7 @@ sources:
   free: true
 - id: radio_702
   name: Radio 702
-  live: false
+  live: true
   url: https://www.702.co.za/procurement
   type: html
   priority: 3
@@ -3760,7 +3760,7 @@ sources:
   free: true
 - id: raf
   name: Raf
-  live: true
+  live: false
   url: https://www.raf.co.za/tenders
   type: html
   priority: 3
@@ -3788,7 +3788,7 @@ sources:
   free: true
 - id: rand_water
   name: Rand Water
-  live: true
+  live: false
   url: https://www.randwater.co.za/tenders
   type: html
   priority: 3
@@ -3809,7 +3809,7 @@ sources:
   free: true
 - id: rhodes
   name: Rhodes
-  live: true
+  live: false
   url: https://www.ru.ac.za/procurement/tenders/
   type: html
   priority: 3
@@ -3823,22 +3823,22 @@ sources:
   free: true
 - id: robben_island
   name: Robben Island
-  live: true
-  url: https://www.robben-island.org.za/procurement
+  live: false
+  url: https://www.robben-island.org.za/tender/
   type: html
   priority: 3
   free: true
 - id: rustenburg_lm
   name: Rustenburg Lm
-  live: true
+  live: false
   url: https://www.rustenburg.gov.za/tenders
   type: html
   priority: 2
   free: true
 - id: sa_library_blind
   name: Sa Library Blind
-  live: true
-  url: https://www.salb.org.za/procurement
+  live: false
+  url: https://www.salb.org.za/tenders
   type: html
   priority: 3
   free: true
@@ -3879,15 +3879,15 @@ sources:
   free: true
 - id: sac
   name: Sac
-  live: true
-  url: https://www.caa.co.za/procurement
+  live: false
+  url: https://www.caa.co.za/tenders
   type: html
   priority: 3
   free: true
 - id: sacaa
   name: Sacaa
-  live: true
-  url: https://www.caa.co.za/procurement
+  live: false
+  url: https://www.caa.co.za/tenders
   type: html
   priority: 3
   free: true
@@ -3921,8 +3921,8 @@ sources:
   free: true
 - id: sahrc
   name: Sahrc
-  live: true
-  url: https://www.sahrc.org.za/index.php/procurement
+  live: false
+  url: https://www.sahrc.org.za/tenders
   type: html
   priority: 3
   free: true
@@ -3935,14 +3935,14 @@ sources:
   free: true
 - id: saldanha_bay_lm
   name: Saldanha Bay Lm
-  live: true
+  live: false
   url: https://www.saldanhabay.gov.za/tenders
   type: html
   priority: 3
   free: true
 - id: samrc
   name: Samrc
-  live: true
+  live: false
   url: https://www.samrc.ac.za/procurement
   type: html
   priority: 3
@@ -3956,28 +3956,28 @@ sources:
   free: true
 - id: sanas
   name: Sanas
-  live: true
+  live: false
   url: https://www.sanas.co.za/procurement
   type: html
   priority: 3
   free: true
 - id: sanbi
   name: Sanbi
-  live: true
+  live: false
   url: https://www.sanbi.org/procurement
   type: html
   priority: 3
   free: true
 - id: sanbs
   name: Sanbs
-  live: true
+  live: false
   url: https://www.sanbs.org.za/procurement
   type: html
   priority: 3
   free: true
 - id: sanc
   name: Sanc
-  live: true
+  live: false
   url: https://www.sanc.co.za/procurement
   type: html
   priority: 3
@@ -3991,7 +3991,7 @@ sources:
   free: true
 - id: sanparks
   name: Sanparks
-  live: true
+  live: false
   url: https://www.sanparks.org/about/doing_business/tenders
   type: html
   priority: 3
@@ -4012,15 +4012,15 @@ sources:
   free: true
 - id: sapc
   name: Sapc
-  live: true
-  url: https://www.pharmcouncil.co.za/procurement
+  live: false
+  url: https://www.pharmcouncil.co.za/tenders
   type: html
   priority: 3
   free: true
 - id: sapo
   name: Sapo
-  live: true
-  url: https://www.postoffice.co.za/about-us/procurement
+  live: false
+  url: https://www.postoffice.co.za/tenders
   type: html
   priority: 3
   free: true
@@ -4033,21 +4033,21 @@ sources:
   free: true
 - id: saps
   name: Saps
-  live: true
+  live: false
   url: https://www.saps.gov.za/tenders
   type: html
   priority: 2
   free: true
 - id: sapsa
   name: Sapsa
-  live: true
+  live: false
   url: https://www.saps.gov.za/about/admin/procurement
   type: html
   priority: 3
   free: true
 - id: sapsa_admin
   name: Sapsa Admin
-  live: false
+  live: true
   url: https://www.sapsa.co.za/procurement
   type: html
   priority: 3
@@ -4068,7 +4068,7 @@ sources:
   free: true
 - id: sarah_baartman_dm
   name: Sarah Baartman Dm
-  live: true
+  live: false
   url: https://www.sbdm.co.za/tenders
   type: html
   priority: 2
@@ -4089,7 +4089,7 @@ sources:
   free: true
 - id: sasseta
   name: Sasseta
-  live: true
+  live: false
   url: https://www.sasseta.org.za/tenders/
   type: html
   priority: 3
@@ -4110,21 +4110,21 @@ sources:
   free: true
 - id: seda
   name: Seda
-  live: true
+  live: false
   url: https://www.seda.org.za/tenders
   type: html
   priority: 3
   free: true
 - id: sedibeng_dm
   name: Sedibeng Dm
-  live: true
+  live: false
   url: https://www.sedibeng.gov.za/tenders
   type: html
   priority: 2
   free: true
 - id: sedibeng_tvet
   name: Sedibeng Tvet
-  live: true
+  live: false
   url: https://www.sedibengtvet.co.za/procurement
   type: html
   priority: 3
@@ -4138,28 +4138,28 @@ sources:
   free: true
 - id: sefa
   name: Sefa
-  live: true
+  live: false
   url: https://www.sefa.org.za/tenders
   type: html
   priority: 3
   free: true
 - id: sekhukhune_dm
   name: Sekhukhune Dm
-  live: true
+  live: false
   url: https://www.sekhukhunedm.gov.za/tenders
   type: html
   priority: 2
   free: true
 - id: sekhukhune_lm
   name: Sekhukhune Lm
-  live: false
+  live: true
   url: https://www.sekhukhune.gov.za/procurement
   type: html
   priority: 3
   free: true
 - id: sekhukhune_tvet
   name: Sekhukhune Tvet
-  live: true
+  live: false
   url: https://www.sekhukhune.co.za/procurement
   type: html
   priority: 3
@@ -4167,13 +4167,13 @@ sources:
 - id: senqu_lm
   name: Senqu Lm
   live: false
-  url: https://www.senqu.gov.za/procurement
+  url: https://www.senqu.gov.za/tenders
   type: html
   priority: 3
   free: true
 - id: sentech
   name: Sentech
-  live: true
+  live: false
   url: https://www.sentech.co.za/tenders
   type: html
   priority: 3
@@ -4194,29 +4194,29 @@ sources:
   free: true
 - id: sff
   name: Sff
-  live: true
+  live: false
   url: https://www.strategicfuelfund.co.za/procurement
   type: html
   priority: 3
   free: true
 - id: sita
   name: Sita
-  live: true
+  live: false
   url: https://www.sita.co.za/tenders
   type: html
   priority: 3
   free: true
 - id: siu
   name: Siu
-  live: true
-  url: https://www.siu.org.za/current-tenders/
+  live: false
+  url: https://www.siu.org.za/supply-chain-management
   type: html
   priority: 3
   free: true
 - id: siyancuma_lm
   name: Siyancuma Lm
   live: false
-  url: https://www.siyancuma.gov.za/procurement
+  url: https://www.siyancuma.gov.za/tenders
   type: html
   priority: 3
   free: true
@@ -4257,22 +4257,22 @@ sources:
   free: true
 - id: solplaatje
   name: Solplaatje
-  live: true
+  live: false
   url: https://www.spu.ac.za/procurement/
   type: html
   priority: 3
   free: true
 - id: south_cape_tvet
   name: South Cape Tvet
-  live: true
-  url: https://www.sccollege.co.za/procurement
+  live: false
+  url: https://www.sccollege.co.za/tenders
   type: html
   priority: 3
   free: true
 - id: south_west_gauteng_tvet
   name: South West Gauteng Tvet
-  live: true
-  url: https://www.swgc.co.za/procurement
+  live: false
+  url: https://www.swgc.co.za/tenders
   type: html
   priority: 3
   free: true
@@ -4299,14 +4299,14 @@ sources:
   free: true
 - id: stellenbosch
   name: Stellenbosch
-  live: true
+  live: false
   url: https://www.sun.ac.za/finance/procurement
   type: html
   priority: 3
   free: true
 - id: stellenbosch_lm
   name: Stellenbosch Lm
-  live: true
+  live: false
   url: https://www.stellenbosch.gov.za/tenders
   type: html
   priority: 2
@@ -4327,8 +4327,8 @@ sources:
   free: true
 - id: taletso_tvet
   name: Taletso Tvet
-  live: true
-  url: https://www.taletso.edu.za/procurement
+  live: false
+  url: https://www.taletso.edu.za/tenders
   type: html
   priority: 3
   free: true
@@ -4341,57 +4341,57 @@ sources:
   free: true
 - id: telkom
   name: Telkom
-  live: true
+  live: false
   url: https://www.telkom.co.za/about-us/supplier-information
   type: html
   priority: 3
   free: true
 - id: tep
   name: Tep
-  live: true
+  live: false
   url: https://www.transnetengineering.co.za/procurement
   type: html
   priority: 3
   free: true
 - id: teta
   name: Teta
-  live: true
+  live: false
   url: https://www.teta.org.za/tenders/
   type: html
   priority: 3
   free: true
 - id: tfr
   name: Tfr
-  live: true
+  live: false
   url: https://www.transnetfreightrail.co.za/procurement
   type: html
   priority: 3
   free: true
 - id: thabo_mofutsanyana_dm
   name: Thabo Mofutsanyana Dm
-  live: true
+  live: false
   url: https://www.tmsoa.gov.za/tenders
   type: html
   priority: 2
   free: true
 - id: thekwini_tvet
   name: Thekwini Tvet
-  live: true
-  url: https://www.thekwini.edu.za/procurement
+  live: false
+  url: https://www.thekwini.edu.za/tenders
   type: html
   priority: 3
   free: true
 - id: thulamela_lm
   name: Thulamela Lm
-  live: true
+  live: false
   url: https://www.thulamela.gov.za/tenders
   type: html
   priority: 2
   free: true
 - id: tikzn
   name: Tikzn
-  live: true
-  url: https://www.tikzn.co.za/procurement
+  live: false
+  url: https://www.tikzn.co.za/tenders
   type: html
   priority: 3
   free: true
@@ -4404,14 +4404,14 @@ sources:
   free: true
 - id: tnpa
   name: Tnpa
-  live: true
+  live: false
   url: https://www.transnetnationalportsauthority.net/procurement
   type: html
   priority: 3
   free: true
 - id: tokologo_lm
   name: Tokologo Lm
-  live: true
+  live: false
   url: https://www.tokologo.org.za/tenders
   type: html
   priority: 3
@@ -4425,14 +4425,14 @@ sources:
   free: true
 - id: tpe
   name: Tpe
-  live: true
+  live: false
   url: https://www.transnetpipelines.co.za/procurement
   type: html
   priority: 3
   free: true
 - id: tpt
   name: Tpt
-  live: true
+  live: false
   url: https://www.transnetportterminals.net/procurement
   type: html
   priority: 3
@@ -4453,14 +4453,14 @@ sources:
   free: true
 - id: tshwane
   name: Tshwane
-  live: true
+  live: false
   url: https://www.tshwane.gov.za/?page_id=427
   type: html
   priority: 2
   free: true
 - id: tshwane_energy
   name: Tshwane Energy
-  live: true
+  live: false
   url: https://www.tshwane.gov.za/energy/procurement
   type: html
   priority: 3
@@ -4474,7 +4474,7 @@ sources:
   free: true
 - id: tshwane_water
   name: Tshwane Water
-  live: true
+  live: false
   url: https://www.tshwane.gov.za/water/procurement
   type: html
   priority: 3
@@ -4488,22 +4488,22 @@ sources:
   free: true
 - id: tswaing_lm
   name: Tswaing Lm
-  live: true
+  live: false
   url: https://www.tswaing.gov.za/tenders
   type: html
   priority: 3
   free: true
 - id: tut
   name: Tut
-  live: true
-  url: https://www.tut.ac.za/website/procurement
+  live: false
+  url: https://www.tut.ac.za/tenders
   type: html
   priority: 3
   free: true
 - id: tvet_tshwane_north
   name: Tvet Tshwane North
-  live: true
-  url: https://www.tnc.edu.za/procurement
+  live: false
+  url: https://www.tnc.edu.za/tenders
   type: html
   priority: 3
   free: true
@@ -4523,22 +4523,22 @@ sources:
   free: true
 - id: uct
   name: Uct
-  live: true
+  live: false
   url: https://www.uct.ac.za/procurement/tenders/
   type: html
   priority: 3
   free: true
 - id: ufh
   name: Ufh
-  live: true
-  url: https://www.ufh.ac.za/procurement
+  live: false
+  url: https://www.ufh.ac.za/tenders
   type: html
   priority: 3
   free: true
 - id: ufs
   name: Ufs
-  live: true
-  url: https://www.ufs.ac.za/procurement/tenders
+  live: false
+  url: https://www.ufs.ac.za/tenders
   type: html
   priority: 3
   free: true
@@ -4551,14 +4551,14 @@ sources:
   free: true
 - id: uif
   name: Uif
-  live: true
-  url: https://www.labour.gov.za/uif-tenders
+  live: false
+  url: https://www.labour.gov.za/tenders
   type: html
   priority: 3
   free: true
 - id: uj
   name: Uj
-  live: true
+  live: false
   url: https://www.uj.ac.za/about/procurement/Pages/Tenders.aspx
   type: html
   priority: 3
@@ -4572,21 +4572,21 @@ sources:
   free: true
 - id: ul
   name: Ul
-  live: true
-  url: https://www.ul.ac.za/procurement/
+  live: false
+  url: https://www.ul.ac.za/tenders
   type: html
   priority: 3
   free: true
 - id: ulundi_lm
   name: Ulundi Lm
   live: false
-  url: https://www.ulundi.gov.za/procurement
+  url: https://www.ulundi.gov.za/tenders
   type: html
   priority: 3
   free: true
 - id: umfolozi_tvet
   name: Umfolozi Tvet
-  live: true
+  live: false
   url: https://www.umfolozi.co.za/procurement
   type: html
   priority: 3
@@ -4600,14 +4600,14 @@ sources:
   free: true
 - id: umgungundlovu_dm
   name: Umgungundlovu Dm
-  live: true
+  live: false
   url: https://www.umdm.gov.za/tenders
   type: html
   priority: 2
   free: true
 - id: umgungundlovu_tvet
   name: Umgungundlovu Tvet
-  live: true
+  live: false
   url: https://www.ufet.edu.za/procurement
   type: html
   priority: 3
@@ -4621,14 +4621,14 @@ sources:
   free: true
 - id: umhlathuze_lm
   name: Umhlathuze Lm
-  live: true
+  live: false
   url: https://www.umhlathuze.gov.za/tenders
   type: html
   priority: 3
   free: true
 - id: umkhanyakude_dm
   name: Umkhanyakude Dm
-  live: true
+  live: false
   url: https://www.umdm.co.za/tenders
   type: html
   priority: 2
@@ -4650,7 +4650,7 @@ sources:
 - id: umngeni_uthukela_water
   name: Umngeni Uthukela Water
   live: true
-  url: https://www.umngeni-uthukela.co.za/tenders
+  url: https://www.umngeni-uthukela.co.za/procurement
   type: html
   priority: 3
   free: true
@@ -4664,7 +4664,7 @@ sources:
 - id: umsinga_lm
   name: Umsinga Lm
   live: false
-  url: https://www.umsinga.gov.za/procurement
+  url: https://www.umsinga.gov.za/tender/
   type: html
   priority: 3
   free: true
@@ -4677,7 +4677,7 @@ sources:
   free: true
 - id: umuziwabantu_lm
   name: Umuziwabantu Lm
-  live: false
+  live: true
   url: https://www.umuziwabantu.gov.za/procurement
   type: html
   priority: 3
@@ -4698,35 +4698,35 @@ sources:
   free: true
 - id: umzimvubu_lm
   name: Umzimvubu Lm
-  live: false
+  live: true
   url: https://www.umzimvubu.gov.za/procurement
   type: html
   priority: 3
   free: true
 - id: umzinyathi_dm
   name: Umzinyathi Dm
-  live: true
-  url: https://www.umzinyathi.gov.za/tenders
+  live: false
+  url: https://www.umzinyathi.gov.za/supply-chain-management
   type: html
   priority: 2
   free: true
 - id: umzinyathi_lm
   name: Umzinyathi Lm
   live: false
-  url: https://www.umzinyathi.gov.za/procurement
+  url: https://www.umzinyathi.gov.za/supply-chain-management
   type: html
   priority: 3
   free: true
 - id: unisa
   name: Unisa
-  live: true
-  url: https://www.unisa.ac.za/sites/corporate/default/Procurement
+  live: false
+  url: https://www.unisa.ac.za/tenders
   type: html
   priority: 3
   free: true
 - id: univen
   name: Univen
-  live: true
+  live: false
   url: https://www.univen.ac.za/procurement/
   type: html
   priority: 3
@@ -4754,7 +4754,7 @@ sources:
   free: true
 - id: uthukela_dm
   name: Uthukela Dm
-  live: true
+  live: false
   url: https://www.uthukela.gov.za/tenders
   type: html
   priority: 2
@@ -4776,41 +4776,41 @@ sources:
 - id: vaal_central_water
   name: Vaal Central Water
   live: true
-  url: https://www.vaalcentralwater.co.za/tenders
+  url: https://www.vaalcentralwater.co.za/procurement
   type: html
   priority: 3
   free: true
 - id: vet_council
   name: Vet Council
   live: false
-  url: https://www.savc.org.za/procurement
+  url: https://www.savc.org.za/tenders
   type: html
   priority: 3
   free: true
 - id: vhembe_dm
   name: Vhembe Dm
-  live: true
+  live: false
   url: https://www.vhembe.gov.za/tenders
   type: html
   priority: 2
   free: true
 - id: vhembe_tvet
   name: Vhembe Tvet
-  live: true
+  live: false
   url: https://www.vhembetvet.co.za/procurement
   type: html
   priority: 3
   free: true
 - id: victor_khanye_lm
   name: Victor Khanye Lm
-  live: true
+  live: false
   url: https://www.vkle.gov.za/tenders
   type: html
   priority: 2
   free: true
 - id: vuselela_tvet
   name: Vuselela Tvet
-  live: true
+  live: false
   url: https://www.vuselela.co.za/procurement
   type: html
   priority: 3
@@ -4831,14 +4831,14 @@ sources:
   free: true
 - id: waterberg_tvet
   name: Waterberg Tvet
-  live: true
+  live: false
   url: https://www.waterbergcollege.co.za/procurement
   type: html
   priority: 3
   free: true
 - id: wc_agriculture
   name: Wc Agriculture
-  live: true
+  live: false
   url: https://www.elsenburg.com/procurement
   type: html
   priority: 3
@@ -4852,8 +4852,8 @@ sources:
   free: true
 - id: wc_health
   name: Wc Health
-  live: true
-  url: https://www.westerncape.gov.za/dept/health/tenders
+  live: false
+  url: https://www.westerncape.gov.za/tenders
   type: html
   priority: 2
   free: true
@@ -4887,7 +4887,7 @@ sources:
   free: true
 - id: wc_parks
   name: Wc Parks
-  live: true
+  live: false
   url: https://www.capenature.co.za/procurement
   type: html
   priority: 3
@@ -4895,7 +4895,7 @@ sources:
 - id: wc_social
   name: Wc Social
   live: false
-  url: https://www.westerncape.gov.za/dept/social-development/procurement
+  url: https://www.westerncape.gov.za/tenders
   type: html
   priority: 3
   free: true
@@ -4908,49 +4908,49 @@ sources:
   free: true
 - id: wcbs
   name: Wcbs
-  live: true
+  live: false
   url: https://www.wcbs.org.za/procurement
   type: html
   priority: 3
   free: true
 - id: wcdi
   name: Wcdi
-  live: true
-  url: https://www.westerncape.gov.za/dept/infrastructure/tenders
+  live: false
+  url: https://www.westerncape.gov.za/tenders
   type: html
   priority: 2
   free: true
 - id: wcedu
   name: Wcedu
-  live: true
+  live: false
   url: https://www.wcedonline.gov.za/procurement
   type: html
   priority: 3
   free: true
 - id: west_coast_dm
   name: West Coast Dm
-  live: true
+  live: false
   url: https://www.wcdm.co.za/tenders
   type: html
   priority: 2
   free: true
 - id: west_coast_tvet
   name: West Coast Tvet
-  live: true
-  url: https://www.westcoastcollege.co.za/procurement
+  live: false
+  url: https://www.westcoastcollege.co.za/tenders
   type: html
   priority: 3
   free: true
 - id: west_rand
   name: West Rand
-  live: true
-  url: https://www.wrdm.gov.za/tenders
+  live: false
+  url: https://www.wrdm.gov.za/tender/
   type: html
   priority: 2
   free: true
 - id: western_cape_tvet_jhb
   name: Western Cape Tvet Jhb
-  live: true
+  live: false
   url: https://www.westerncape.co.za/procurement
   type: html
   priority: 3
@@ -4971,7 +4971,7 @@ sources:
   free: true
 - id: wits
   name: Wits
-  live: true
+  live: false
   url: https://www.wits.ac.za/purchase/tenders/
   type: html
   priority: 3
@@ -4979,13 +4979,13 @@ sources:
 - id: witzenberg_lm
   name: Witzenberg Lm
   live: false
-  url: https://www.witzenberg.gov.za/procurement
+  url: https://www.witzenberg.gov.za/tenders
   type: html
   priority: 3
   free: true
 - id: world_bank_sa
   name: World Bank Sa
-  live: false
+  live: true
   url: https://www.worldbank.org/procurement
   type: html
   priority: 3
@@ -5006,8 +5006,8 @@ sources:
   free: true
 - id: wsu
   name: Wsu
-  live: true
-  url: https://www.wsu.ac.za/wsu-tenders/
+  live: false
+  url: https://www.wsu.ac.za/tenders
   type: html
   priority: 3
   free: true
@@ -5020,7 +5020,7 @@ sources:
   free: true
 - id: xhariep_dm
   name: Xhariep Dm
-  live: true
+  live: false
   url: https://www.xhariep.gov.za/tenders
   type: html
   priority: 2
@@ -5034,7 +5034,7 @@ sources:
   free: true
 - id: zadna
   name: Zadna
-  live: true
+  live: false
   url: https://www.zadna.org.za/procurement
   type: html
   priority: 3
@@ -5048,14 +5048,14 @@ sources:
   free: true
 - id: zf_mgcawu_dm
   name: Zf Mgcawu Dm
-  live: true
+  live: false
   url: https://www.zfmcdm.gov.za/tenders
   type: html
   priority: 2
   free: true
 - id: zululand_dm
   name: Zululand Dm
-  live: true
+  live: false
   url: https://www.zululand.org.za/tenders
   type: html
   priority: 2

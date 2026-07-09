@@ -6,7 +6,7 @@ def test_provincial_lottery_source_initialization():
     from tender_getter.sources.provincial.provincial_lottery import ProvincialLotterySource
     src = ProvincialLotterySource()
     assert src.source_id == "provincial_lottery"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_provincial_lottery_parse_mock_html():

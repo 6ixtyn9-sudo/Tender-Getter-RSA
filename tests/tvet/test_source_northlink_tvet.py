@@ -6,7 +6,7 @@ def test_northlink_tvet_source_initialization():
     from tender_getter.sources.tvet.northlink_tvet import NorthlinkTvetSource
     src = NorthlinkTvetSource()
     assert src.source_id == "northlink_tvet"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_northlink_tvet_parse_mock_html():

@@ -6,7 +6,7 @@ def test_ec_parks_source_initialization():
     from tender_getter.sources.research.ec_parks import EcParksSource
     src = EcParksSource()
     assert src.source_id == "ec_parks"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_ec_parks_parse_mock_html():

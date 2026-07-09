@@ -107,6 +107,32 @@ def parse_closing_date(s: Optional[str]) -> datetime:
         except ValueError:
             pass
 
+    # 5. US verbal date formats e.g. "July 1, 2026" or "August 15, 2026"
+    us_verbal_match = re.search(r"([a-zA-Z]{3,10})\s+(\d{1,2}),?\s+(\d{4})", s)
+    if us_verbal_match:
+        try:
+            month_str = us_verbal_match.group(1).lower()
+            d = int(us_verbal_match.group(2))
+            y = int(us_verbal_match.group(3))
+            if month_str in _MONTH_NAMES:
+                m = _MONTH_NAMES[month_str]
+                return datetime(y, m, d, tzinfo=timezone.utc)
+        except ValueError:
+            pass
+
+    # 6. Year-first verbal e.g. "2025 November 28" or "2026 January 13"
+    yf_match = re.search(r"(\d{4})\s+([a-zA-Z]{3,10})\s+(\d{1,2})", s)
+    if yf_match:
+        try:
+            y = int(yf_match.group(1))
+            month_str = yf_match.group(2).lower()
+            d = int(yf_match.group(3))
+            if month_str in _MONTH_NAMES:
+                m = _MONTH_NAMES[month_str]
+                return datetime(y, m, d, tzinfo=timezone.utc)
+        except ValueError:
+            pass
+
     # Safe fallback
     return datetime(2099, 12, 31, tzinfo=timezone.utc)
 

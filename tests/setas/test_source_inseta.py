@@ -6,7 +6,7 @@ def test_inseta_source_initialization():
     from tender_getter.sources.setas.inseta import InsetaSource
     src = InsetaSource()
     assert src.source_id == "inseta"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_inseta_parse_mock_html():

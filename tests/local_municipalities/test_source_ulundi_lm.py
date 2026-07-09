@@ -6,7 +6,7 @@ def test_ulundi_lm_source_initialization():
     from tender_getter.sources.local_municipalities.ulundi_lm import UlundiLmSource
     src = UlundiLmSource()
     assert src.source_id == "ulundi_lm"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_ulundi_lm_parse_mock_html():

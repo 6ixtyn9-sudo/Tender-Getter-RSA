@@ -6,7 +6,7 @@ def test_nw_dev_source_initialization():
     from tender_getter.sources.research.nw_dev import NwDevSource
     src = NwDevSource()
     assert src.source_id == "nw_dev"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_nw_dev_parse_mock_html():

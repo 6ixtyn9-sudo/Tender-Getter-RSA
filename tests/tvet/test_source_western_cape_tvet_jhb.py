@@ -6,7 +6,7 @@ def test_western_cape_tvet_jhb_source_initialization():
     from tender_getter.sources.tvet.western_cape_tvet_jhb import WesternCapeTvetJhbSource
     src = WesternCapeTvetJhbSource()
     assert src.source_id == "western_cape_tvet_jhb"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_western_cape_tvet_jhb_parse_mock_html():

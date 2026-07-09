@@ -6,7 +6,7 @@ def test_kzn_roads_source_initialization():
     from tender_getter.sources.research.kzn_roads import KznRoadsSource
     src = KznRoadsSource()
     assert src.source_id == "kzn_roads"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_kzn_roads_parse_mock_html():

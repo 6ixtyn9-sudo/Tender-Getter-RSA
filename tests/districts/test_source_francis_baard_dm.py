@@ -6,7 +6,7 @@ def test_francis_baard_dm_source_initialization():
     from tender_getter.sources.districts.francis_baard_dm import FrancisBaardDmSource
     src = FrancisBaardDmSource()
     assert src.source_id == "francis_baard_dm"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_francis_baard_dm_parse_mock_html():

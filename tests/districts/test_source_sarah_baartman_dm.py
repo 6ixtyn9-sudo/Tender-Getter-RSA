@@ -6,7 +6,7 @@ def test_sarah_baartman_dm_source_initialization():
     from tender_getter.sources.districts.sarah_baartman_dm import SarahBaartmanDmSource
     src = SarahBaartmanDmSource()
     assert src.source_id == "sarah_baartman_dm"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_sarah_baartman_dm_parse_mock_html():

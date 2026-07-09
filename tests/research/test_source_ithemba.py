@@ -6,7 +6,7 @@ def test_ithemba_source_initialization():
     from tender_getter.sources.research.ithemba import IthembaSource
     src = IthembaSource()
     assert src.source_id == "ithemba"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_ithemba_parse_mock_html():

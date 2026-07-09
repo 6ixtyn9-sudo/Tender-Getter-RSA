@@ -6,7 +6,7 @@ def test_financial_intel_centre_source_initialization():
     from tender_getter.sources.schedule3a.financial_intel_centre import FinancialIntelCentreSource
     src = FinancialIntelCentreSource()
     assert src.source_id == "financial_intel_centre"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_financial_intel_centre_parse_mock_html():

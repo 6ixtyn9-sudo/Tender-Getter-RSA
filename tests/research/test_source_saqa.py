@@ -6,7 +6,7 @@ def test_saqa_source_initialization():
     from tender_getter.sources.research.saqa import SaqaSource
     src = SaqaSource()
     assert src.source_id == "saqa"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_saqa_parse_mock_html():

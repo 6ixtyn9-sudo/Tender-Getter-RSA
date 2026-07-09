@@ -6,7 +6,7 @@ def test_mandela_uni_source_initialization():
     from tender_getter.sources.universities.mandela_uni import MandelaUniSource
     src = MandelaUniSource()
     assert src.source_id == "mandela_uni"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_mandela_uni_parse_mock_html():

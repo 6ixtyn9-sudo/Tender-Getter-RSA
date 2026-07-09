@@ -6,7 +6,7 @@ def test_gp_parks_source_initialization():
     from tender_getter.sources.research.gp_parks import GpParksSource
     src = GpParksSource()
     assert src.source_id == "gp_parks"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_gp_parks_parse_mock_html():

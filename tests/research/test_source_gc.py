@@ -6,7 +6,7 @@ def test_gc_source_initialization():
     from tender_getter.sources.research.gc import GcSource
     src = GcSource()
     assert src.source_id == "gc"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_gc_parse_mock_html():

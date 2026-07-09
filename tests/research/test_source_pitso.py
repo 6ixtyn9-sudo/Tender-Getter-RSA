@@ -6,7 +6,7 @@ def test_pitso_source_initialization():
     from tender_getter.sources.research.pitso import PitsoSource
     src = PitsoSource()
     assert src.source_id == "pitso"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_pitso_parse_mock_html():

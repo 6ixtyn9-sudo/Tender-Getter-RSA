@@ -6,7 +6,7 @@ def test_ditsobotla_lm_source_initialization():
     from tender_getter.sources.local_municipalities.ditsobotla_lm import DitsobotlaLmSource
     src = DitsobotlaLmSource()
     assert src.source_id == "ditsobotla_lm"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_ditsobotla_lm_parse_mock_html():

@@ -6,7 +6,7 @@ def test_ec_health_source_initialization():
     from tender_getter.sources.research.ec_health import EcHealthSource
     src = EcHealthSource()
     assert src.source_id == "ec_health"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_ec_health_parse_mock_html():

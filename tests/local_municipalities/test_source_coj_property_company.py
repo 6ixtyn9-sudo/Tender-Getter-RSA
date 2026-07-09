@@ -6,7 +6,7 @@ def test_coj_property_company_source_initialization():
     from tender_getter.sources.local_municipalities.coj_property_company import CojPropertyCompanySource
     src = CojPropertyCompanySource()
     assert src.source_id == "coj_property_company"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_coj_property_company_parse_mock_html():

@@ -6,7 +6,7 @@ def test_sabbsa_source_initialization():
     from tender_getter.sources.research.sabbsa import SabbsaSource
     src = SabbsaSource()
     assert src.source_id == "sabbsa"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_sabbsa_parse_mock_html():

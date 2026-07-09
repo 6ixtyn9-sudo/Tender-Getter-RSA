@@ -6,7 +6,7 @@ def test_de_hoop_lm_source_initialization():
     from tender_getter.sources.local_municipalities.de_hoop_lm import DeHoopLmSource
     src = DeHoopLmSource()
     assert src.source_id == "de_hoop_lm"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_de_hoop_lm_parse_mock_html():

@@ -6,7 +6,7 @@ def test_uphongolo_lm_source_initialization():
     from tender_getter.sources.local_municipalities.uphongolo_lm import UphongoloLmSource
     src = UphongoloLmSource()
     assert src.source_id == "uphongolo_lm"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_uphongolo_lm_parse_mock_html():

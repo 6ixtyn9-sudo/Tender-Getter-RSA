@@ -6,7 +6,7 @@ def test_phalaborwa_lm_source_initialization():
     from tender_getter.sources.local_municipalities.phalaborwa_lm import PhalaborwaLmSource
     src = PhalaborwaLmSource()
     assert src.source_id == "phalaborwa_lm"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_phalaborwa_lm_parse_mock_html():

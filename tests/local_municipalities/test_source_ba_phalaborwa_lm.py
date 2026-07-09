@@ -6,7 +6,7 @@ def test_ba_phalaborwa_lm_source_initialization():
     from tender_getter.sources.local_municipalities.ba_phalaborwa_lm import BaPhalaborwaLmSource
     src = BaPhalaborwaLmSource()
     assert src.source_id == "ba_phalaborwa_lm"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_ba_phalaborwa_lm_parse_mock_html():

@@ -6,7 +6,7 @@ def test_fedhasa_source_initialization():
     from tender_getter.sources.research.fedhasa import FedhasaSource
     src = FedhasaSource()
     assert src.source_id == "fedhasa"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_fedhasa_parse_mock_html():

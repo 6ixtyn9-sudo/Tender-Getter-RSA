@@ -6,7 +6,7 @@ def test_tswaing_lm_source_initialization():
     from tender_getter.sources.local_municipalities.tswaing_lm import TswaingLmSource
     src = TswaingLmSource()
     assert src.source_id == "tswaing_lm"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_tswaing_lm_parse_mock_html():

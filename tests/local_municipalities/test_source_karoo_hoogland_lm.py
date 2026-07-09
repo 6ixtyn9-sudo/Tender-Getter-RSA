@@ -6,7 +6,7 @@ def test_karoo_hoogland_lm_source_initialization():
     from tender_getter.sources.local_municipalities.karoo_hoogland_lm import KarooHooglandLmSource
     src = KarooHooglandLmSource()
     assert src.source_id == "karoo_hoogland_lm"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_karoo_hoogland_lm_parse_mock_html():

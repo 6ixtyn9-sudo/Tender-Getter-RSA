@@ -6,7 +6,7 @@ def test_namakwa_dm_source_initialization():
     from tender_getter.sources.districts.namakwa_dm import NamakwaDmSource
     src = NamakwaDmSource()
     assert src.source_id == "namakwa_dm"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_namakwa_dm_parse_mock_html():

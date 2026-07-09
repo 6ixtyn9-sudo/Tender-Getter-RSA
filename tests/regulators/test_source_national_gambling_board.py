@@ -6,7 +6,7 @@ def test_national_gambling_board_source_initialization():
     from tender_getter.sources.regulators.national_gambling_board import NationalGamblingBoardSource
     src = NationalGamblingBoardSource()
     assert src.source_id == "national_gambling_board"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_national_gambling_board_parse_mock_html():

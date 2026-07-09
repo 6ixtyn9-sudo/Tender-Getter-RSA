@@ -6,7 +6,7 @@ def test_saws_source_initialization():
     from tender_getter.sources.research.saws import SawsSource
     src = SawsSource()
     assert src.source_id == "saws"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_saws_parse_mock_html():

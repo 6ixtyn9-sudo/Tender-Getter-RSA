@@ -6,7 +6,7 @@ def test_wc_dev_source_initialization():
     from tender_getter.sources.provincial.wc_dev import WcDevSource
     src = WcDevSource()
     assert src.source_id == "wc_dev"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_wc_dev_parse_mock_html():

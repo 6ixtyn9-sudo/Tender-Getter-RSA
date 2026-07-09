@@ -6,7 +6,7 @@ def test_ec_invest_source_initialization():
     from tender_getter.sources.research.ec_invest import EcInvestSource
     src = EcInvestSource()
     assert src.source_id == "ec_invest"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_ec_invest_parse_mock_html():

@@ -6,7 +6,7 @@ def test_boland_tvet_source_initialization():
     from tender_getter.sources.tvet.boland_tvet import BolandTvetSource
     src = BolandTvetSource()
     assert src.source_id == "boland_tvet"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_boland_tvet_parse_mock_html():

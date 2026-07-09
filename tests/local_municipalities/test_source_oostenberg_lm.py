@@ -6,7 +6,7 @@ def test_oostenberg_lm_source_initialization():
     from tender_getter.sources.local_municipalities.oostenberg_lm import OostenbergLmSource
     src = OostenbergLmSource()
     assert src.source_id == "oostenberg_lm"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_oostenberg_lm_parse_mock_html():

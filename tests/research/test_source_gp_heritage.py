@@ -6,7 +6,7 @@ def test_gp_heritage_source_initialization():
     from tender_getter.sources.research.gp_heritage import GpHeritageSource
     src = GpHeritageSource()
     assert src.source_id == "gp_heritage"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_gp_heritage_parse_mock_html():

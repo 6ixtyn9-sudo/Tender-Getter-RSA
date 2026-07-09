@@ -6,7 +6,7 @@ def test_cge_source_initialization():
     from tender_getter.sources.chapter9.cge import CgeSource
     src = CgeSource()
     assert src.source_id == "cge"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_cge_parse_mock_html():

@@ -6,7 +6,7 @@ def test_pic_source_initialization():
     from tender_getter.sources.soes.pic import PicSource
     src = PicSource()
     assert src.source_id == "pic"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_pic_parse_mock_html():

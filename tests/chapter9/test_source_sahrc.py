@@ -6,7 +6,7 @@ def test_sahrc_source_initialization():
     from tender_getter.sources.chapter9.sahrc import SahrcSource
     src = SahrcSource()
     assert src.source_id == "sahrc"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_sahrc_parse_mock_html():

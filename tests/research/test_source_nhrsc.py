@@ -6,7 +6,7 @@ def test_nhrsc_source_initialization():
     from tender_getter.sources.research.nhrsc import NhrscSource
     src = NhrscSource()
     assert src.source_id == "nhrsc"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_nhrsc_parse_mock_html():

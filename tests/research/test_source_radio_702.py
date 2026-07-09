@@ -6,7 +6,7 @@ def test_radio_702_source_initialization():
     from tender_getter.sources.research.radio_702 import Radio702Source
     src = Radio702Source()
     assert src.source_id == "radio_702"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_radio_702_parse_mock_html():

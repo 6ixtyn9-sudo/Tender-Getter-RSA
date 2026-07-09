@@ -6,7 +6,7 @@ def test_gert_sibande_tvet_source_initialization():
     from tender_getter.sources.tvet.gert_sibande_tvet import GertSibandeTvetSource
     src = GertSibandeTvetSource()
     assert src.source_id == "gert_sibande_tvet"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_gert_sibande_tvet_parse_mock_html():

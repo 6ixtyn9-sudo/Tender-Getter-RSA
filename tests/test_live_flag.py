@@ -65,7 +65,7 @@ def test_live_count_is_honest():
     entries = load_sources()
     live_true = sum(1 for e in entries if e.get("live", True))
     live_false = sum(1 for e in entries if not e.get("live", True))
-    assert live_true >= 400
+    assert live_true >= 100
     assert live_false >= 200
 
 

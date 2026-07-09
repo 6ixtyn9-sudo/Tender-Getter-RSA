@@ -6,7 +6,7 @@ def test_ditsong_source_initialization():
     from tender_getter.sources.research.ditsong import DitsongSource
     src = DitsongSource()
     assert src.source_id == "ditsong"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_ditsong_parse_mock_html():

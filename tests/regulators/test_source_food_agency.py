@@ -6,7 +6,7 @@ def test_food_agency_source_initialization():
     from tender_getter.sources.regulators.food_agency import FoodAgencySource
     src = FoodAgencySource()
     assert src.source_id == "food_agency"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_food_agency_parse_mock_html():

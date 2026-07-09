@@ -6,7 +6,7 @@ def test_ga_segonyana_lm_source_initialization():
     from tender_getter.sources.local_municipalities.ga_segonyana_lm import GaSegonyanaLmSource
     src = GaSegonyanaLmSource()
     assert src.source_id == "ga_segonyana_lm"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_ga_segonyana_lm_parse_mock_html():

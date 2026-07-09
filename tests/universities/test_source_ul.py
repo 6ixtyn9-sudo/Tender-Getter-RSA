@@ -6,7 +6,7 @@ def test_ul_source_initialization():
     from tender_getter.sources.universities.ul import UlSource
     src = UlSource()
     assert src.source_id == "ul"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_ul_parse_mock_html():

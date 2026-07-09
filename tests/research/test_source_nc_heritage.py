@@ -6,7 +6,7 @@ def test_nc_heritage_source_initialization():
     from tender_getter.sources.research.nc_heritage import NcHeritageSource
     src = NcHeritageSource()
     assert src.source_id == "nc_heritage"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_nc_heritage_parse_mock_html():

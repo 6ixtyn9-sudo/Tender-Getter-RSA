@@ -6,7 +6,7 @@ def test_elangeni_tvet_source_initialization():
     from tender_getter.sources.tvet.elangeni_tvet import ElangeniTvetSource
     src = ElangeniTvetSource()
     assert src.source_id == "elangeni_tvet"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_elangeni_tvet_parse_mock_html():

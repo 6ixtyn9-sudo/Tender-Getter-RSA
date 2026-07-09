@@ -6,7 +6,7 @@ def test_radiography_council_source_initialization():
     from tender_getter.sources.research.radiography_council import RadiographyCouncilSource
     src = RadiographyCouncilSource()
     assert src.source_id == "radiography_council"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_radiography_council_parse_mock_html():

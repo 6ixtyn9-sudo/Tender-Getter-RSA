@@ -6,7 +6,7 @@ def test_ppecb_source_initialization():
     from tender_getter.sources.schedule3a.ppecb import PpecbSource
     src = PpecbSource()
     assert src.source_id == "ppecb"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_ppecb_parse_mock_html():

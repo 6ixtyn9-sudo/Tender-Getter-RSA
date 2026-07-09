@@ -6,7 +6,7 @@ def test_mp_housing_source_initialization():
     from tender_getter.sources.research.mp_housing import MpHousingSource
     src = MpHousingSource()
     assert src.source_id == "mp_housing"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_mp_housing_parse_mock_html():

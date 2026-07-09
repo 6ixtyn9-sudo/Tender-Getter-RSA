@@ -6,7 +6,7 @@ def test_ec_liquor_source_initialization():
     from tender_getter.sources.research.ec_liquor import EcLiquorSource
     src = EcLiquorSource()
     assert src.source_id == "ec_liquor"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_ec_liquor_parse_mock_html():

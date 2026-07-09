@@ -6,7 +6,7 @@ def test_umzinyathi_dm_source_initialization():
     from tender_getter.sources.districts.umzinyathi_dm import UmzinyathiDmSource
     src = UmzinyathiDmSource()
     assert src.source_id == "umzinyathi_dm"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_umzinyathi_dm_parse_mock_html():

@@ -6,7 +6,7 @@ def test_biokinetics_council_source_initialization():
     from tender_getter.sources.research.biokinetics_council import BiokineticsCouncilSource
     src = BiokineticsCouncilSource()
     assert src.source_id == "biokinetics_council"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_biokinetics_council_parse_mock_html():

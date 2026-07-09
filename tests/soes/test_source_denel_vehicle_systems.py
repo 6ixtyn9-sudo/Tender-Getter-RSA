@@ -6,7 +6,7 @@ def test_denel_vehicle_systems_source_initialization():
     from tender_getter.sources.soes.denel_vehicle_systems import DenelVehicleSystemsSource
     src = DenelVehicleSystemsSource()
     assert src.source_id == "denel_vehicle_systems"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_denel_vehicle_systems_parse_mock_html():

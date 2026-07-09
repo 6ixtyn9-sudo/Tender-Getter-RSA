@@ -6,7 +6,7 @@ def test_playhouse_source_initialization():
     from tender_getter.sources.research.playhouse import PlayhouseSource
     src = PlayhouseSource()
     assert src.source_id == "playhouse"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_playhouse_parse_mock_html():

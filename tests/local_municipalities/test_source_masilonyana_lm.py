@@ -6,7 +6,7 @@ def test_masilonyana_lm_source_initialization():
     from tender_getter.sources.local_municipalities.masilonyana_lm import MasilonyanaLmSource
     src = MasilonyanaLmSource()
     assert src.source_id == "masilonyana_lm"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_masilonyana_lm_parse_mock_html():

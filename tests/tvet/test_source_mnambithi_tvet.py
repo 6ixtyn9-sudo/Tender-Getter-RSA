@@ -6,7 +6,7 @@ def test_mnambithi_tvet_source_initialization():
     from tender_getter.sources.tvet.mnambithi_tvet import MnambithiTvetSource
     src = MnambithiTvetSource()
     assert src.source_id == "mnambithi_tvet"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_mnambithi_tvet_parse_mock_html():

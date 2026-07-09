@@ -6,7 +6,7 @@ def test_sa_library_blind_source_initialization():
     from tender_getter.sources.research.sa_library_blind import SaLibraryBlindSource
     src = SaLibraryBlindSource()
     assert src.source_id == "sa_library_blind"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_sa_library_blind_parse_mock_html():

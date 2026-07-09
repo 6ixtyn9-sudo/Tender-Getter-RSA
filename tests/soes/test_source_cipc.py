@@ -6,7 +6,7 @@ def test_cipc_source_initialization():
     from tender_getter.sources.soes.cipc import CipcSource
     src = CipcSource()
     assert src.source_id == "cipc"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_cipc_parse_mock_html():

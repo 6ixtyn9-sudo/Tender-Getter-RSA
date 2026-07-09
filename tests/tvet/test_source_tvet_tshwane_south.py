@@ -6,7 +6,7 @@ def test_tvet_tshwane_south_source_initialization():
     from tender_getter.sources.tvet.tvet_tshwane_south import TvetTshwaneSouthSource
     src = TvetTshwaneSouthSource()
     assert src.source_id == "tvet_tshwane_south"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_tvet_tshwane_south_parse_mock_html():

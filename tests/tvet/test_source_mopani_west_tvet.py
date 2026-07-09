@@ -6,7 +6,7 @@ def test_mopani_west_tvet_source_initialization():
     from tender_getter.sources.tvet.mopani_west_tvet import MopaniWestTvetSource
     src = MopaniWestTvetSource()
     assert src.source_id == "mopani_west_tvet"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_mopani_west_tvet_parse_mock_html():

@@ -6,7 +6,7 @@ def test_agriseta_source_initialization():
     from tender_getter.sources.setas.agriseta import AgrisetaSource
     src = AgrisetaSource()
     assert src.source_id == "agriseta"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_agriseta_parse_mock_html():

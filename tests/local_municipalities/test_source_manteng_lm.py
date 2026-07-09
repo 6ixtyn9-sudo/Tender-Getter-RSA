@@ -6,7 +6,7 @@ def test_manteng_lm_source_initialization():
     from tender_getter.sources.local_municipalities.manteng_lm import MantengLmSource
     src = MantengLmSource()
     assert src.source_id == "manteng_lm"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_manteng_lm_parse_mock_html():

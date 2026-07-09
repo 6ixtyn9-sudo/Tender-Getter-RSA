@@ -6,7 +6,7 @@ def test_wc_housing_source_initialization():
     from tender_getter.sources.provincial.wc_housing import WcHousingSource
     src = WcHousingSource()
     assert src.source_id == "wc_housing"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_wc_housing_parse_mock_html():

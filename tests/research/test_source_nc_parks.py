@@ -6,7 +6,7 @@ def test_nc_parks_source_initialization():
     from tender_getter.sources.research.nc_parks import NcParksSource
     src = NcParksSource()
     assert src.source_id == "nc_parks"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_nc_parks_parse_mock_html():

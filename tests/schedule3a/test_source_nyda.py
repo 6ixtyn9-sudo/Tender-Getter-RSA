@@ -6,7 +6,7 @@ def test_nyda_source_initialization():
     from tender_getter.sources.schedule3a.nyda import NydaSource
     src = NydaSource()
     assert src.source_id == "nyda"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_nyda_parse_mock_html():

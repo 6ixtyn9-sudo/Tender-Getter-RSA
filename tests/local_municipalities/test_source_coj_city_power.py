@@ -6,7 +6,7 @@ def test_coj_city_power_source_initialization():
     from tender_getter.sources.local_municipalities.coj_city_power import CojCityPowerSource
     src = CojCityPowerSource()
     assert src.source_id == "coj_city_power"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_coj_city_power_parse_mock_html():

@@ -1,70 +1,29 @@
-"""Ugu District Municipality tender source plug-in."""
+"""Ugu District Municipality – WordPress API source."""
 import logging
-import re
-from datetime import datetime, timezone
 from typing import List, Optional
-from urllib.request import urlopen, Request
-from urllib.error import URLError, HTTPError
-
 from ...schemas import TenderOpportunity
-from ..common import re_search_cidb, province_from_text, parse_closing_date
-from ..generic import standard_fetch, parse_html_table
+from ..wp_api import wp_fetch_tenders
 
 logger = logging.getLogger(__name__)
 
 
-# High-fidelity mock HTML fallback to ensure robust parsing and ingestion
-# even when the live portal has network timeouts or structural updates.
-MOCK_HTML = """
-<!DOCTYPE html>
-<html>
-<head><title>Ugu District Municipality Tenders</title></head>
-<body>
-    <div class="tenders-wrapper">
-        <h1>Active Ugu District Municipality tenders</h1>
-        <table>
-            <thead>
-                <tr><th>Reference</th><th>Description</th><th>Closing Date</th></tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>UGU_DM/2026/001</td>
-                    <td>Provision of professional services and supply of equipment (Gauteng)</td>
-                    <td>2026-09-15 11:00:00</td>
-                </tr>
-                <tr>
-                    <td>UGU_DM/2026/002</td>
-                    <td>Maintenance and operational support services (Gauteng)</td>
-                    <td>2026-10-30 11:00:00</td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-</body>
-</html>
-"""
-
-
 class UguDmSource:
-    """Tender source plug-in for Ugu District Municipality."""
-
     source_id: str = "ugu_dm"
     live: bool = True
 
-    def __init__(self, url: str = "https://www.ugu.gov.za/tenders"):
-        self.url = url
+    def __init__(self):
+        self.url = "https://www.ugu.gov.za"
         self.issuing_entity = "Ugu District Municipality"
 
     def fetch(self, limit: Optional[int] = None, html_content: Optional[str] = None) -> List[TenderOpportunity]:
-        """Fetch live; fall back to MOCK_HTML on any error."""
-        tenders = standard_fetch(self.url, MOCK_HTML, html_content, limit)
-        if self.issuing_entity and tenders:
-            for t in tenders:
-                if not t.issuing_entity:
-                    t.issuing_entity = self.issuing_entity
-        return tenders
+        return wp_fetch_tenders(
+            source_id=self.source_id,
+            url=self.url,
+            post_type="tender",
+            issuing_entity=self.issuing_entity,
+            default_location="KwaZulu-Natal",
+            limit=limit,
+        )
 
     def parse_html(self, html: str, limit: Optional[int] = None) -> List[TenderOpportunity]:
-        """Parse <tr><td> rows."""
-        tenders = parse_html_table(html, limit, issuing_entity=self.issuing_entity)
-        return tenders
+        return []

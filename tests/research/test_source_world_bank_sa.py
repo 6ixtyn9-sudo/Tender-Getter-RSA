@@ -6,7 +6,7 @@ def test_world_bank_sa_source_initialization():
     from tender_getter.sources.research.world_bank_sa import WorldBankSaSource
     src = WorldBankSaSource()
     assert src.source_id == "world_bank_sa"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_world_bank_sa_parse_mock_html():

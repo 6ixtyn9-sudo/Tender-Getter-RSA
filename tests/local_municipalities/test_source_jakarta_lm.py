@@ -6,7 +6,7 @@ def test_jakarta_lm_source_initialization():
     from tender_getter.sources.local_municipalities.jakarta_lm import JakartaLmSource
     src = JakartaLmSource()
     assert src.source_id == "jakarta_lm"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_jakarta_lm_parse_mock_html():

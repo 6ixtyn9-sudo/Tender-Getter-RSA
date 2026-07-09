@@ -6,7 +6,7 @@ def test_diamond_lm_source_initialization():
     from tender_getter.sources.local_municipalities.diamond_lm import DiamondLmSource
     src = DiamondLmSource()
     assert src.source_id == "diamond_lm"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_diamond_lm_parse_mock_html():

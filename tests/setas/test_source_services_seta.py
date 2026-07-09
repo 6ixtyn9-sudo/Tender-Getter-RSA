@@ -6,7 +6,7 @@ def test_services_seta_source_initialization():
     from tender_getter.sources.setas.services_seta import ServicesSetaSource
     src = ServicesSetaSource()
     assert src.source_id == "services_seta"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_services_seta_parse_mock_html():

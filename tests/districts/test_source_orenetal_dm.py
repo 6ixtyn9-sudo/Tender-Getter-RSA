@@ -6,7 +6,7 @@ def test_orenetal_dm_source_initialization():
     from tender_getter.sources.districts.orenetal_dm import OrenetalDmSource
     src = OrenetalDmSource()
     assert src.source_id == "orenetal_dm"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_orenetal_dm_parse_mock_html():

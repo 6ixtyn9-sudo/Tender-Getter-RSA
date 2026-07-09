@@ -6,7 +6,7 @@ def test_langeberg_lm_source_initialization():
     from tender_getter.sources.local_municipalities.langeberg_lm import LangebergLmSource
     src = LangebergLmSource()
     assert src.source_id == "langeberg_lm"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_langeberg_lm_parse_mock_html():

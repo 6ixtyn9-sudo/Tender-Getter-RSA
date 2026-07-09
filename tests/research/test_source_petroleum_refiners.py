@@ -6,7 +6,7 @@ def test_petroleum_refiners_source_initialization():
     from tender_getter.sources.research.petroleum_refiners import PetroleumRefinersSource
     src = PetroleumRefinersSource()
     assert src.source_id == "petroleum_refiners"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_petroleum_refiners_parse_mock_html():

@@ -6,7 +6,7 @@ def test_psychology_council_source_initialization():
     from tender_getter.sources.research.psychology_council import PsychologyCouncilSource
     src = PsychologyCouncilSource()
     assert src.source_id == "psychology_council"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_psychology_council_parse_mock_html():

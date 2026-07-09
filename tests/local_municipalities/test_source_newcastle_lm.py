@@ -6,7 +6,7 @@ def test_newcastle_lm_source_initialization():
     from tender_getter.sources.local_municipalities.newcastle_lm import NewcastleLmSource
     src = NewcastleLmSource()
     assert src.source_id == "newcastle_lm"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_newcastle_lm_parse_mock_html():

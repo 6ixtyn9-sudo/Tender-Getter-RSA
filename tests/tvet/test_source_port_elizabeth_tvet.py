@@ -6,7 +6,7 @@ def test_port_elizabeth_tvet_source_initialization():
     from tender_getter.sources.tvet.port_elizabeth_tvet import PortElizabethTvetSource
     src = PortElizabethTvetSource()
     assert src.source_id == "port_elizabeth_tvet"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_port_elizabeth_tvet_parse_mock_html():

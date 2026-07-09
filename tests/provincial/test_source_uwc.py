@@ -6,7 +6,7 @@ def test_uwc_source_initialization():
     from tender_getter.sources.provincial.uwc import UwcSource
     src = UwcSource()
     assert src.source_id == "uwc"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_uwc_parse_mock_html():

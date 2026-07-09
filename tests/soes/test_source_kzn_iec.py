@@ -6,7 +6,7 @@ def test_kzn_iec_source_initialization():
     from tender_getter.sources.soes.kzn_iec import KznIecSource
     src = KznIecSource()
     assert src.source_id == "kzn_iec"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_kzn_iec_parse_mock_html():

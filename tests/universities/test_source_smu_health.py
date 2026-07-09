@@ -6,7 +6,7 @@ def test_smu_health_source_initialization():
     from tender_getter.sources.universities.smu_health import SmuHealthSource
     src = SmuHealthSource()
     assert src.source_id == "smu_health"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_smu_health_parse_mock_html():

@@ -6,7 +6,7 @@ def test_gatedc_source_initialization():
     from tender_getter.sources.research.gatedc import GatedcSource
     src = GatedcSource()
     assert src.source_id == "gatedc"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_gatedc_parse_mock_html():

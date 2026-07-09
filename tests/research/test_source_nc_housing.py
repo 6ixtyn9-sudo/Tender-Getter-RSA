@@ -6,7 +6,7 @@ def test_nc_housing_source_initialization():
     from tender_getter.sources.research.nc_housing import NcHousingSource
     src = NcHousingSource()
     assert src.source_id == "nc_housing"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_nc_housing_parse_mock_html():

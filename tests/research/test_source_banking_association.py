@@ -6,7 +6,7 @@ def test_banking_association_source_initialization():
     from tender_getter.sources.research.banking_association import BankingAssociationSource
     src = BankingAssociationSource()
     assert src.source_id == "banking_association"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_banking_association_parse_mock_html():

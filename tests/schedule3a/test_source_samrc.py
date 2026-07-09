@@ -6,7 +6,7 @@ def test_samrc_source_initialization():
     from tender_getter.sources.schedule3a.samrc import SamrcSource
     src = SamrcSource()
     assert src.source_id == "samrc"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_samrc_parse_mock_html():

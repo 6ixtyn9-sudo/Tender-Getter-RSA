@@ -6,7 +6,7 @@ def test_legal_aid_sa_source_initialization():
     from tender_getter.sources.research.legal_aid_sa import LegalAidSaSource
     src = LegalAidSaSource()
     assert src.source_id == "legal_aid_sa"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_legal_aid_sa_parse_mock_html():

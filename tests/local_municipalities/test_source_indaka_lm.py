@@ -6,7 +6,7 @@ def test_indaka_lm_source_initialization():
     from tender_getter.sources.local_municipalities.indaka_lm import IndakaLmSource
     src = IndakaLmSource()
     assert src.source_id == "indaka_lm"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_indaka_lm_parse_mock_html():

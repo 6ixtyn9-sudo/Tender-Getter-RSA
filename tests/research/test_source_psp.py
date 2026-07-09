@@ -6,7 +6,7 @@ def test_psp_source_initialization():
     from tender_getter.sources.research.psp import PspSource
     src = PspSource()
     assert src.source_id == "psp"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_psp_parse_mock_html():

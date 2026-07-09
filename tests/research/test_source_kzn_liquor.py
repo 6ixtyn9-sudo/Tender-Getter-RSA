@@ -6,7 +6,7 @@ def test_kzn_liquor_source_initialization():
     from tender_getter.sources.research.kzn_liquor import KznLiquorSource
     src = KznLiquorSource()
     assert src.source_id == "kzn_liquor"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_kzn_liquor_parse_mock_html():

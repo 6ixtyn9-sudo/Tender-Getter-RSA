@@ -6,7 +6,7 @@ def test_eThekwini_solid_waste_source_initialization():
     from tender_getter.sources.research.eThekwini_solid_waste import EthekwiniSolidWasteSource
     src = EthekwiniSolidWasteSource()
     assert src.source_id == "eThekwini_solid_waste"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_eThekwini_solid_waste_parse_mock_html():

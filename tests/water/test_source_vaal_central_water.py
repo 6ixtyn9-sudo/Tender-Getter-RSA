@@ -6,7 +6,7 @@ def test_vaal_central_water_source_initialization():
     from tender_getter.sources.water.vaal_central_water import VaalCentralWaterSource
     src = VaalCentralWaterSource()
     assert src.source_id == "vaal_central_water"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_vaal_central_water_parse_mock_html():

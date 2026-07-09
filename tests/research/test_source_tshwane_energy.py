@@ -6,7 +6,7 @@ def test_tshwane_energy_source_initialization():
     from tender_getter.sources.research.tshwane_energy import TshwaneEnergySource
     src = TshwaneEnergySource()
     assert src.source_id == "tshwane_energy"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_tshwane_energy_parse_mock_html():

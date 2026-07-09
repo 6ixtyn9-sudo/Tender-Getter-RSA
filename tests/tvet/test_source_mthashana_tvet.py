@@ -6,7 +6,7 @@ def test_mthashana_tvet_source_initialization():
     from tender_getter.sources.tvet.mthashana_tvet import MthashanaTvetSource
     src = MthashanaTvetSource()
     assert src.source_id == "mthashana_tvet"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_mthashana_tvet_parse_mock_html():

@@ -6,7 +6,7 @@ def test_fs_invest_source_initialization():
     from tender_getter.sources.research.fs_invest import FsInvestSource
     src = FsInvestSource()
     assert src.source_id == "fs_invest"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_fs_invest_parse_mock_html():

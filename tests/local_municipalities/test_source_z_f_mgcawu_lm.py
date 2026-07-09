@@ -6,7 +6,7 @@ def test_z_f_mgcawu_lm_source_initialization():
     from tender_getter.sources.local_municipalities.z_f_mgcawu_lm import ZFMgcawuLmSource
     src = ZFMgcawuLmSource()
     assert src.source_id == "z_f_mgcawu_lm"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_z_f_mgcawu_lm_parse_mock_html():

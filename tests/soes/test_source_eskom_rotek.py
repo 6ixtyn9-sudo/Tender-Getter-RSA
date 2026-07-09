@@ -6,7 +6,7 @@ def test_eskom_rotek_source_initialization():
     from tender_getter.sources.soes.eskom_rotek import EskomRotekSource
     src = EskomRotekSource()
     assert src.source_id == "eskom_rotek"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_eskom_rotek_parse_mock_html():

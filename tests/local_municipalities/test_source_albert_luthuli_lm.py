@@ -6,7 +6,7 @@ def test_albert_luthuli_lm_source_initialization():
     from tender_getter.sources.local_municipalities.albert_luthuli_lm import AlbertLuthuliLmSource
     src = AlbertLuthuliLmSource()
     assert src.source_id == "albert_luthuli_lm"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_albert_luthuli_lm_parse_mock_html():

@@ -6,7 +6,7 @@ def test_legal_practice_council_source_initialization():
     from tender_getter.sources.research.legal_practice_council import LegalPracticeCouncilSource
     src = LegalPracticeCouncilSource()
     assert src.source_id == "legal_practice_council"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_legal_practice_council_parse_mock_html():

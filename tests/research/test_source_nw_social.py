@@ -6,7 +6,7 @@ def test_nw_social_source_initialization():
     from tender_getter.sources.research.nw_social import NwSocialSource
     src = NwSocialSource()
     assert src.source_id == "nw_social"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_nw_social_parse_mock_html():

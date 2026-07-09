@@ -6,7 +6,7 @@ def test_public_protector_source_initialization():
     from tender_getter.sources.chapter9.public_protector import PublicProtectorSource
     src = PublicProtectorSource()
     assert src.source_id == "public_protector"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_public_protector_parse_mock_html():

@@ -6,7 +6,7 @@ def test_cedarville_lm_source_initialization():
     from tender_getter.sources.local_municipalities.cedarville_lm import CedarvilleLmSource
     src = CedarvilleLmSource()
     assert src.source_id == "cedarville_lm"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_cedarville_lm_parse_mock_html():

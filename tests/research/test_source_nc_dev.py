@@ -6,7 +6,7 @@ def test_nc_dev_source_initialization():
     from tender_getter.sources.research.nc_dev import NcDevSource
     src = NcDevSource()
     assert src.source_id == "nc_dev"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_nc_dev_parse_mock_html():

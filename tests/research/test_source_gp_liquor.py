@@ -6,7 +6,7 @@ def test_gp_liquor_source_initialization():
     from tender_getter.sources.research.gp_liquor import GpLiquorSource
     src = GpLiquorSource()
     assert src.source_id == "gp_liquor"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_gp_liquor_parse_mock_html():

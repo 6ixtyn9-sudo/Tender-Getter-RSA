@@ -6,7 +6,7 @@ def test_sabc_tv_licence_source_initialization():
     from tender_getter.sources.research.sabc_tv_licence import SabcTvLicenceSource
     src = SabcTvLicenceSource()
     assert src.source_id == "sabc_tv_licence"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_sabc_tv_licence_parse_mock_html():

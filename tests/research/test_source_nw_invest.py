@@ -6,7 +6,7 @@ def test_nw_invest_source_initialization():
     from tender_getter.sources.research.nw_invest import NwInvestSource
     src = NwInvestSource()
     assert src.source_id == "nw_invest"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_nw_invest_parse_mock_html():

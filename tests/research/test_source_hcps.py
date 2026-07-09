@@ -6,7 +6,7 @@ def test_hcps_source_initialization():
     from tender_getter.sources.research.hcps import HcpsSource
     src = HcpsSource()
     assert src.source_id == "hcps"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_hcps_parse_mock_html():

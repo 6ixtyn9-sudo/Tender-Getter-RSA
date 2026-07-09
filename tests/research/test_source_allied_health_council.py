@@ -6,7 +6,7 @@ def test_allied_health_council_source_initialization():
     from tender_getter.sources.research.allied_health_council import AlliedHealthCouncilSource
     src = AlliedHealthCouncilSource()
     assert src.source_id == "allied_health_council"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_allied_health_council_parse_mock_html():

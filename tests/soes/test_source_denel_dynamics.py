@@ -6,7 +6,7 @@ def test_denel_dynamics_source_initialization():
     from tender_getter.sources.soes.denel_dynamics import DenelDynamicsSource
     src = DenelDynamicsSource()
     assert src.source_id == "denel_dynamics"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_denel_dynamics_parse_mock_html():

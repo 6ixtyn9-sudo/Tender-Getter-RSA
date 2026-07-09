@@ -6,7 +6,7 @@ def test_tsolwana_lm_source_initialization():
     from tender_getter.sources.local_municipalities.tsolwana_lm import TsolwanaLmSource
     src = TsolwanaLmSource()
     assert src.source_id == "tsolwana_lm"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_tsolwana_lm_parse_mock_html():

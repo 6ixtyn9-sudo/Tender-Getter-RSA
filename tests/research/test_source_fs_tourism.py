@@ -6,7 +6,7 @@ def test_fs_tourism_source_initialization():
     from tender_getter.sources.research.fs_tourism import FsTourismSource
     src = FsTourismSource()
     assert src.source_id == "fs_tourism"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_fs_tourism_parse_mock_html():

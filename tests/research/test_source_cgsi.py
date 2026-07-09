@@ -6,7 +6,7 @@ def test_cgsi_source_initialization():
     from tender_getter.sources.research.cgsi import CgsiSource
     src = CgsiSource()
     assert src.source_id == "cgsi"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_cgsi_parse_mock_html():

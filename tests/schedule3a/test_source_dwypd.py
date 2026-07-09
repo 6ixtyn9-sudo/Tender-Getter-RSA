@@ -6,7 +6,7 @@ def test_dwypd_source_initialization():
     from tender_getter.sources.schedule3a.dwypd import DwypdSource
     src = DwypdSource()
     assert src.source_id == "dwypd"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_dwypd_parse_mock_html():

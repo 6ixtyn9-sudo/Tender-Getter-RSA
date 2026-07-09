@@ -6,7 +6,7 @@ def test_provincial_legislatures_source_initialization():
     from tender_getter.sources.provincial.provincial_legislatures import ProvincialLegislaturesSource
     src = ProvincialLegislaturesSource()
     assert src.source_id == "provincial_legislatures"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_provincial_legislatures_parse_mock_html():

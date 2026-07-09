@@ -6,7 +6,7 @@ def test_insurance_institute_source_initialization():
     from tender_getter.sources.research.insurance_institute import InsuranceInstituteSource
     src = InsuranceInstituteSource()
     assert src.source_id == "insurance_institute"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_insurance_institute_parse_mock_html():

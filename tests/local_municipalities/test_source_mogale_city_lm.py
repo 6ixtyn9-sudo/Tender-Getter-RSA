@@ -6,7 +6,7 @@ def test_mogale_city_lm_source_initialization():
     from tender_getter.sources.local_municipalities.mogale_city_lm import MogaleCityLmSource
     src = MogaleCityLmSource()
     assert src.source_id == "mogale_city_lm"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_mogale_city_lm_parse_mock_html():

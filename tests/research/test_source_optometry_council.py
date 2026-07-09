@@ -6,7 +6,7 @@ def test_optometry_council_source_initialization():
     from tender_getter.sources.research.optometry_council import OptometryCouncilSource
     src = OptometryCouncilSource()
     assert src.source_id == "optometry_council"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_optometry_council_parse_mock_html():

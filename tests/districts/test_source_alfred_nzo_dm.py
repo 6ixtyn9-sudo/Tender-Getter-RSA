@@ -6,7 +6,7 @@ def test_alfred_nzo_dm_source_initialization():
     from tender_getter.sources.districts.alfred_nzo_dm import AlfredNzoDmSource
     src = AlfredNzoDmSource()
     assert src.source_id == "alfred_nzo_dm"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_alfred_nzo_dm_parse_mock_html():

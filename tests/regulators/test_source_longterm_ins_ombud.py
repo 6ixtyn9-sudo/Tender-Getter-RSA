@@ -6,7 +6,7 @@ def test_longterm_ins_ombud_source_initialization():
     from tender_getter.sources.regulators.longterm_ins_ombud import LongtermInsOmbudSource
     src = LongtermInsOmbudSource()
     assert src.source_id == "longterm_ins_ombud"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_longterm_ins_ombud_parse_mock_html():

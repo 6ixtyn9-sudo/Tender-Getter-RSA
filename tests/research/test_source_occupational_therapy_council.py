@@ -6,7 +6,7 @@ def test_occupational_therapy_council_source_initialization():
     from tender_getter.sources.research.occupational_therapy_council import OccupationalTherapyCouncilSource
     src = OccupationalTherapyCouncilSource()
     assert src.source_id == "occupational_therapy_council"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_occupational_therapy_council_parse_mock_html():

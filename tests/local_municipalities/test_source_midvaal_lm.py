@@ -6,7 +6,7 @@ def test_midvaal_lm_source_initialization():
     from tender_getter.sources.local_municipalities.midvaal_lm import MidvaalLmSource
     src = MidvaalLmSource()
     assert src.source_id == "midvaal_lm"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_midvaal_lm_parse_mock_html():

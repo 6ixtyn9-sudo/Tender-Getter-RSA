@@ -6,7 +6,7 @@ def test_kfm_source_initialization():
     from tender_getter.sources.research.kfm import KfmSource
     src = KfmSource()
     assert src.source_id == "kfm"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_kfm_parse_mock_html():

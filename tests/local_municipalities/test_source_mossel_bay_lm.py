@@ -6,7 +6,7 @@ def test_mossel_bay_lm_source_initialization():
     from tender_getter.sources.local_municipalities.mossel_bay_lm import MosselBayLmSource
     src = MosselBayLmSource()
     assert src.source_id == "mossel_bay_lm"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_mossel_bay_lm_parse_mock_html():

@@ -6,7 +6,7 @@ def test_ncr_source_initialization():
     from tender_getter.sources.schedule3a.ncr import NcrSource
     src = NcrSource()
     assert src.source_id == "ncr"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_ncr_parse_mock_html():

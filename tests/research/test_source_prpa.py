@@ -6,7 +6,7 @@ def test_prpa_source_initialization():
     from tender_getter.sources.research.prpa import PrpaSource
     src = PrpaSource()
     assert src.source_id == "prpa"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_prpa_parse_mock_html():

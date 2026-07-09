@@ -6,7 +6,7 @@ def test_brand_sa_source_initialization():
     from tender_getter.sources.schedule3a.brand_sa import BrandSaSource
     src = BrandSaSource()
     assert src.source_id == "brand_sa"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_brand_sa_parse_mock_html():

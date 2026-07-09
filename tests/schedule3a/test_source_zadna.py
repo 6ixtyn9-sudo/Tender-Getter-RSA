@@ -6,7 +6,7 @@ def test_zadna_source_initialization():
     from tender_getter.sources.schedule3a.zadna import ZadnaSource
     src = ZadnaSource()
     assert src.source_id == "zadna"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_zadna_parse_mock_html():

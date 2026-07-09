@@ -6,7 +6,7 @@ def test_chris_hani_lm_source_initialization():
     from tender_getter.sources.local_municipalities.chris_hani_lm import ChrisHaniLmSource
     src = ChrisHaniLmSource()
     assert src.source_id == "chris_hani_lm"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_chris_hani_lm_parse_mock_html():

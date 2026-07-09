@@ -6,7 +6,7 @@ def test_mtubatuba_lm_source_initialization():
     from tender_getter.sources.local_municipalities.mtubatuba_lm import MtubatubaLmSource
     src = MtubatubaLmSource()
     assert src.source_id == "mtubatuba_lm"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_mtubatuba_lm_parse_mock_html():

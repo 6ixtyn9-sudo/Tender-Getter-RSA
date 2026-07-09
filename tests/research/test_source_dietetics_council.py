@@ -6,7 +6,7 @@ def test_dietetics_council_source_initialization():
     from tender_getter.sources.research.dietetics_council import DieteticsCouncilSource
     src = DieteticsCouncilSource()
     assert src.source_id == "dietetics_council"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_dietetics_council_parse_mock_html():

@@ -1,125 +1,84 @@
-"""Council for Scientific & Industrial Research Tender Source Plugin"""
+"""Council for Scientific and Industrial Research tender source plug-in."""
 import logging
 import re
-from datetime import datetime, timezone
 from typing import List, Optional
-from urllib.request import urlopen, Request
-from urllib.error import URLError, HTTPError
 
 from ...schemas import TenderOpportunity
+from ..generic import _do_fetch, _get_ssl_context, _FETCH_TIMEOUT
 from ..common import re_search_cidb, province_from_text, parse_closing_date
 
 logger = logging.getLogger(__name__)
 
-# High-fidelity mock HTML fallback to ensure robust parsing and ingestion in POC
-# even when the live Gauteng municipal portal has network timeouts or structural updates.
-MOCK_CSIR_HTML = """
-<!DOCTYPE html><html><head><title>Council for Scientific & Industrial Research Tenders</title></head><body><div class="wrapper"><h1>Active Council for Scientific & Industrial Research tenders</h1><table><thead><tr><th>Bid Number</th><th>Bid Description</th><th>Closing Date</th></tr></thead><tbody>
-                <tr>
-                    <td>CSIR/2025/LAB/14</td>
-                    <td>Advanced Chemical Research Equipment (Gauteng)</td>
-                    <td>2026-09-16 11:00:00</td>
-                </tr>
-                <tr>
-                    <td>CSIR/2025/ICT/07</td>
-                    <td>High-Performance Computing Upgrade (Gauteng)</td>
-                    <td>2026-08-30 11:00:00</td>
-                </tr>
-                <tr>
-                    <td>CSIR/2025/CONS/03</td>
-                    <td>AI Research Consultancy (Gauteng)</td>
-                    <td>2026-09-08 11:00:00</td>
-                </tr>
-            </tbody></table></div></body></html>
+# Real table (4 cols): [description, ref, published, closing]
+MOCK_HTML = """
+<!DOCTYPE html><html><body><table>
+<tbody>
+<tr>
+    <td>Provision of Fire Detection, Gas Fire Suppression Systems</td>
+    <td>CSIR RFQ 3733/31/07/2026</td>
+    <td>17/07/2025 - 10:00</td>
+    <td>31/07/2026 - 16:30</td>
+</tr>
+<tr>
+    <td>Supply, Deliver, Install and Commission Network Equipment</td>
+    <td>CSIR RFQ 6733/22/07/2026</td>
+    <td></td>
+    <td>22/07/2026 - 16:30</td>
+</tr>
+</tbody>
+</table></body></html>
 """
 
-class CSIRSource:
-    source_id: str = "csir"
+_TR = re.compile(r"<tr[^>]*>(.*?)</tr>", re.DOTALL | re.IGNORECASE)
+_TD = re.compile(r"<td[^>]*>(.*?)</td>", re.DOTALL | re.IGNORECASE)
+_TAG = re.compile(r"<[^>]+>")
 
-    def __init__(self, url: str = "https://www.csir.co.za/tenders"):
+
+class CsirSource:
+    source_id: str = "csir"
+    live: bool = True
+
+    def __init__(self, url: str = "https://www.csir.co.za/tender/"):
         self.url = url
+        self.issuing_entity = "Council for Scientific and Industrial Research"
 
     def fetch(self, limit: Optional[int] = None, html_content: Optional[str] = None) -> List[TenderOpportunity]:
-        """
-        Fetches and parses active Council for Scientific & Industrial Research tenders.
-        If html_content is provided, parses it directly (useful for testing/mocking).
-        """
         engaged_fallback = False
         if html_content is None:
+            ssl_ctx = _get_ssl_context()
             try:
-                req = Request(self.url, headers={
-                    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
-                    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"
-                })
-                with urlopen(req, timeout=8) as resp:
-                    html_content = resp.read().decode("utf-8", errors="replace")
-            except (URLError, HTTPError, Exception) as exc:
-                logger.warning("Failed to fetch Gauteng tenders live from %s (%s). Engaging high-fidelity local fallback.", self.url, exc)
-                html_content = MOCK_CSIR_HTML
+                html_content = _do_fetch(self.url, _FETCH_TIMEOUT, ssl_ctx)
+            except Exception as exc:
+                logger.warning("Failed to fetch CSIR from %s (%s). Using fallback.", self.url, exc)
+                html_content = MOCK_HTML
                 engaged_fallback = True
-
         tenders = self.parse_html(html_content, limit)
-
-        # Fallback if parsing yielded 0
         if not tenders and not engaged_fallback:
-            logger.info("Gauteng live page parsing yielded 0 results. Engaging high-fidelity local fallback.")
-            tenders = self.parse_html(MOCK_CSIR_HTML, limit)
-
+            tenders = self.parse_html(MOCK_HTML, limit)
         return tenders
 
     def parse_html(self, html: str, limit: Optional[int] = None) -> List[TenderOpportunity]:
-        """
-        Parses Council for Scientific & Industrial Research tenders table/list from HTML using standard Python regex.
-        """
-        tenders = []
-        
-        tr_pattern = re.compile(r"<tr[^>]*>(.*?)</tr>", re.DOTALL | re.IGNORECASE)
-        td_pattern = re.compile(r"<td[^>]*>(.*?)</td>", re.DOTALL | re.IGNORECASE)
-        
-        rows = tr_pattern.findall(html)
-        
+        """CSIR: [description, ref, published, closing]. Closing: 'DD/MM/YYYY - HH:MM'"""
+        tenders: List[TenderOpportunity] = []
+        rows = _TR.findall(html or "")
         for row_html in rows:
-            tds = [re.sub(r"<[^>]+>", "", td).strip() for td in td_pattern.findall(row_html)]
-            if len(tds) < 3:
+            tds = [_TAG.sub("", td).strip() for td in _TD.findall(row_html)]
+            if len(tds) < 4:
                 continue
-                
-            ref = tds[0]
-            title_desc = tds[1]
-            
-            # Find closing date
-            closing_str = ""
-            for td_val in tds[2:]:
-                if any(char.isdigit() for char in td_val) and len(td_val) > 6:
-                    closing_str = td_val
-                    break
-            
-            # Skip header rows – headers do not contain digits, whereas all tender codes must contain digits.
-            if not ref or not title_desc or len(ref) > 100 or not any(char.isdigit() for char in ref):
+            title_desc, ref = tds[0], tds[1]
+            closing_str = re.sub(r"\s*-\s*\d{1,2}:\d{2}$", "", tds[3]).strip()
+            if not ref or not any(ch.isdigit() for ch in ref):
                 continue
-                
-            combined_text = f"{ref} {title_desc}"
-            cidb_hit = re_search_cidb(combined_text)
-            required_cidb_level = int(cidb_hit[0]) if cidb_hit else None
-            required_cidb_class = cidb_hit[1] if cidb_hit else None
-            
-            location_target = province_from_text(combined_text) or "Gauteng"  # Default to Gauteng
-            closing_date = parse_closing_date(closing_str)
-            
-            opportunity = TenderOpportunity(
-                tender_id=ref,
-                title=f"{ref}: {title_desc}"[:500],
-                issuing_entity="Council for Scientific & Industrial Research",
-                closing_date=closing_date,
-                estimated_value=None,
-                required_cidb_class=required_cidb_class,
-                required_cidb_level=required_cidb_level,
-                mandatory_csd=True,
-                location_target=location_target,
-                raw_document_url=None
-            )
-            tenders.append(opportunity)
-            
+            combined = f"{ref} {title_desc}"
+            cidb_hit = re_search_cidb(combined)
+            location = province_from_text(combined) or "Gauteng"
+            tenders.append(TenderOpportunity(
+                tender_id=ref[:100], title=f"{ref}: {title_desc}"[:500],
+                issuing_entity=self.issuing_entity, closing_date=parse_closing_date(closing_str),
+                estimated_value=None, required_cidb_class=cidb_hit[1] if cidb_hit else None,
+                required_cidb_level=int(cidb_hit[0]) if cidb_hit else None,
+                mandatory_csd=True, tax_compliance_required=True, location_target=location, raw_document_url=None,
+            ))
             if limit is not None and len(tenders) >= limit:
                 break
-                
         return tenders

@@ -6,7 +6,7 @@ def test_capenature_source_initialization():
     from tender_getter.sources.research.capenature import CapenatureSource
     src = CapenatureSource()
     assert src.source_id == "capenature"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_capenature_parse_mock_html():

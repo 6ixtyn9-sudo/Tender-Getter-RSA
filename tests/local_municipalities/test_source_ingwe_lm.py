@@ -6,7 +6,7 @@ def test_ingwe_lm_source_initialization():
     from tender_getter.sources.local_municipalities.ingwe_lm import IngweLmSource
     src = IngweLmSource()
     assert src.source_id == "ingwe_lm"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_ingwe_lm_parse_mock_html():

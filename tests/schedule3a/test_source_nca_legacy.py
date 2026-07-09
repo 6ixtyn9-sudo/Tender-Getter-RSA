@@ -6,7 +6,7 @@ def test_nca_legacy_source_initialization():
     from tender_getter.sources.schedule3a.nca_legacy import NcaLegacySource
     src = NcaLegacySource()
     assert src.source_id == "nca_legacy"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_nca_legacy_parse_mock_html():

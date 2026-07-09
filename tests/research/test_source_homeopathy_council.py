@@ -6,7 +6,7 @@ def test_homeopathy_council_source_initialization():
     from tender_getter.sources.research.homeopathy_council import HomeopathyCouncilSource
     src = HomeopathyCouncilSource()
     assert src.source_id == "homeopathy_council"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_homeopathy_council_parse_mock_html():

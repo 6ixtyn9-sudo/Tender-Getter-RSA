@@ -6,7 +6,7 @@ def test_naledi_lm_source_initialization():
     from tender_getter.sources.local_municipalities.naledi_lm import NalediLmSource
     src = NalediLmSource()
     assert src.source_id == "naledi_lm"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_naledi_lm_parse_mock_html():

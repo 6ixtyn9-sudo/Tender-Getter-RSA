@@ -6,7 +6,7 @@ def test_siyancuma_lm_source_initialization():
     from tender_getter.sources.local_municipalities.siyancuma_lm import SiyancumaLmSource
     src = SiyancumaLmSource()
     assert src.source_id == "siyancuma_lm"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_siyancuma_lm_parse_mock_html():

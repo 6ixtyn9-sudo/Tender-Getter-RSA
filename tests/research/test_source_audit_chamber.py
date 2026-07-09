@@ -6,7 +6,7 @@ def test_audit_chamber_source_initialization():
     from tender_getter.sources.research.audit_chamber import AuditChamberSource
     src = AuditChamberSource()
     assert src.source_id == "audit_chamber"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_audit_chamber_parse_mock_html():

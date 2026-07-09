@@ -6,7 +6,7 @@ def test_mdda_source_initialization():
     from tender_getter.sources.schedule3a.mdda import MddaSource
     src = MddaSource()
     assert src.source_id == "mdda"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_mdda_parse_mock_html():

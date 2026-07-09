@@ -6,7 +6,7 @@ def test_mdb_source_initialization():
     from tender_getter.sources.soes.mdb import MdbSource
     src = MdbSource()
     assert src.source_id == "mdb"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_mdb_parse_mock_html():

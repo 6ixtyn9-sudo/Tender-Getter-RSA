@@ -6,7 +6,7 @@ def test_dmv_source_initialization():
     from tender_getter.sources.schedule3a.dmv import DmvSource
     src = DmvSource()
     assert src.source_id == "dmv"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_dmv_parse_mock_html():

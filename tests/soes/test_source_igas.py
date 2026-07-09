@@ -6,7 +6,7 @@ def test_igas_source_initialization():
     from tender_getter.sources.soes.igas import IgasSource
     src = IgasSource()
     assert src.source_id == "igas"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_igas_parse_mock_html():

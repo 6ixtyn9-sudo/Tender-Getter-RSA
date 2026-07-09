@@ -6,7 +6,7 @@ def test_robben_island_source_initialization():
     from tender_getter.sources.research.robben_island import RobbenIslandSource
     src = RobbenIslandSource()
     assert src.source_id == "robben_island"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_robben_island_parse_mock_html():

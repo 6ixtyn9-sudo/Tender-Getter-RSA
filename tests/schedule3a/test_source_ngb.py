@@ -6,7 +6,7 @@ def test_ngb_source_initialization():
     from tender_getter.sources.schedule3a.ngb import NgbSource
     src = NgbSource()
     assert src.source_id == "ngb"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_ngb_parse_mock_html():

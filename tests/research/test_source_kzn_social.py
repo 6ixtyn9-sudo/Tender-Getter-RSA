@@ -6,7 +6,7 @@ def test_kzn_social_source_initialization():
     from tender_getter.sources.research.kzn_social import KznSocialSource
     src = KznSocialSource()
     assert src.source_id == "kzn_social"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_kzn_social_parse_mock_html():

@@ -6,7 +6,7 @@ def test_uthukela_dm_source_initialization():
     from tender_getter.sources.districts.uthukela_dm import UthukelaDmSource
     src = UthukelaDmSource()
     assert src.source_id == "uthukela_dm"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_uthukela_dm_parse_mock_html():

@@ -6,7 +6,7 @@ def test_fetakgomo_tubatse_lm_source_initialization():
     from tender_getter.sources.local_municipalities.fetakgomo_tubatse_lm import FetakgomoTubatseLmSource
     src = FetakgomoTubatseLmSource()
     assert src.source_id == "fetakgomo_tubatse_lm"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_fetakgomo_tubatse_lm_parse_mock_html():

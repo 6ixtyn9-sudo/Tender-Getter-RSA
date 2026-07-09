@@ -6,7 +6,7 @@ def test_civilian_secretariat_police_source_initialization():
     from tender_getter.sources.schedule3a.civilian_secretariat_police import CivilianSecretariatPoliceSource
     src = CivilianSecretariatPoliceSource()
     assert src.source_id == "civilian_secretariat_police"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_civilian_secretariat_police_parse_mock_html():

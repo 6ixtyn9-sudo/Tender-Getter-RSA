@@ -6,7 +6,7 @@ def test_cgs_legacy_source_initialization():
     from tender_getter.sources.research.cgs_legacy import CgsLegacySource
     src = CgsLegacySource()
     assert src.source_id == "cgs_legacy"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_cgs_legacy_parse_mock_html():

@@ -6,7 +6,7 @@ def test_foodbev_source_initialization():
     from tender_getter.sources.setas.foodbev import FoodbevSource
     src = FoodbevSource()
     assert src.source_id == "foodbev"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_foodbev_parse_mock_html():

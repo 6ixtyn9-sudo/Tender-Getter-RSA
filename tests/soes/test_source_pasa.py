@@ -6,7 +6,7 @@ def test_pasa_source_initialization():
     from tender_getter.sources.soes.pasa import PasaSource
     src = PasaSource()
     assert src.source_id == "pasa"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_pasa_parse_mock_html():

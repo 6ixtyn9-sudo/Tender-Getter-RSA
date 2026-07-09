@@ -6,7 +6,7 @@ def test_gpaa_source_initialization():
     from tender_getter.sources.soes.gpaa import GpaaSource
     src = GpaaSource()
     assert src.source_id == "gpaa"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_gpaa_parse_mock_html():

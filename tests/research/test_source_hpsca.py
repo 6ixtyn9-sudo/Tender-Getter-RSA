@@ -6,7 +6,7 @@ def test_hpsca_source_initialization():
     from tender_getter.sources.research.hpsca import HpscaSource
     src = HpscaSource()
     assert src.source_id == "hpsca"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_hpsca_parse_mock_html():

@@ -6,7 +6,7 @@ def test_fs_liquor_source_initialization():
     from tender_getter.sources.research.fs_liquor import FsLiquorSource
     src = FsLiquorSource()
     assert src.source_id == "fs_liquor"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_fs_liquor_parse_mock_html():

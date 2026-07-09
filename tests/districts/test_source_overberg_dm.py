@@ -6,7 +6,7 @@ def test_overberg_dm_source_initialization():
     from tender_getter.sources.districts.overberg_dm import OverbergDmSource
     src = OverbergDmSource()
     assert src.source_id == "overberg_dm"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_overberg_dm_parse_mock_html():

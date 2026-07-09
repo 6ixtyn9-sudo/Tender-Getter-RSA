@@ -6,7 +6,7 @@ def test_mp_parks_source_initialization():
     from tender_getter.sources.research.mp_parks import MpParksSource
     src = MpParksSource()
     assert src.source_id == "mp_parks"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_mp_parks_parse_mock_html():

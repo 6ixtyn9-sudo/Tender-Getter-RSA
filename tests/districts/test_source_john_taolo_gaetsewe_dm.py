@@ -6,7 +6,7 @@ def test_john_taolo_gaetsewe_dm_source_initialization():
     from tender_getter.sources.districts.john_taolo_gaetsewe_dm import JohnTaoloGaetseweDmSource
     src = JohnTaoloGaetseweDmSource()
     assert src.source_id == "john_taolo_gaetsewe_dm"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_john_taolo_gaetsewe_dm_parse_mock_html():

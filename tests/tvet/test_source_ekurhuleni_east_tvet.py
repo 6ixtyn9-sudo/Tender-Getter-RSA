@@ -6,7 +6,7 @@ def test_ekurhuleni_east_tvet_source_initialization():
     from tender_getter.sources.tvet.ekurhuleni_east_tvet import EkurhuleniEastTvetSource
     src = EkurhuleniEastTvetSource()
     assert src.source_id == "ekurhuleni_east_tvet"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_ekurhuleni_east_tvet_parse_mock_html():

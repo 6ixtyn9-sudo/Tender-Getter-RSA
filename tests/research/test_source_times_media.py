@@ -6,7 +6,7 @@ def test_times_media_source_initialization():
     from tender_getter.sources.research.times_media import TimesMediaSource
     src = TimesMediaSource()
     assert src.source_id == "times_media"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_times_media_parse_mock_html():

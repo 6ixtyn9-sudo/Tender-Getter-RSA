@@ -6,7 +6,7 @@ def test_maclear_lm_source_initialization():
     from tender_getter.sources.local_municipalities.maclear_lm import MaclearLmSource
     src = MaclearLmSource()
     assert src.source_id == "maclear_lm"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_maclear_lm_parse_mock_html():

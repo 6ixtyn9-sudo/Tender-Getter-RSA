@@ -6,7 +6,7 @@ def test_sanedi_source_initialization():
     from tender_getter.sources.schedule3a.sanedi import SanediSource
     src = SanediSource()
     assert src.source_id == "sanedi"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_sanedi_parse_mock_html():

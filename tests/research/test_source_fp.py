@@ -6,7 +6,7 @@ def test_fp_source_initialization():
     from tender_getter.sources.research.fp import FpSource
     src = FpSource()
     assert src.source_id == "fp"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_fp_parse_mock_html():

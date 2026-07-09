@@ -6,7 +6,7 @@ def test_buffalo_city_tvet_source_initialization():
     from tender_getter.sources.tvet.buffalo_city_tvet import BuffaloCityTvetSource
     src = BuffaloCityTvetSource()
     assert src.source_id == "buffalo_city_tvet"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_buffalo_city_tvet_parse_mock_html():

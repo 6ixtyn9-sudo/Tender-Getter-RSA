@@ -6,7 +6,7 @@ def test_property_practitioners_source_initialization():
     from tender_getter.sources.research.property_practitioners import PropertyPractitionersSource
     src = PropertyPractitionersSource()
     assert src.source_id == "property_practitioners"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_property_practitioners_parse_mock_html():

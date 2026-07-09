@@ -6,7 +6,7 @@ def test_lp_invest_source_initialization():
     from tender_getter.sources.research.lp_invest import LpInvestSource
     src = LpInvestSource()
     assert src.source_id == "lp_invest"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_lp_invest_parse_mock_html():

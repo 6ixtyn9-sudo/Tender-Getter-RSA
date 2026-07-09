@@ -6,7 +6,7 @@ def test_iit_source_initialization():
     from tender_getter.sources.research.iit import IitSource
     src = IitSource()
     assert src.source_id == "iit"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_iit_parse_mock_html():

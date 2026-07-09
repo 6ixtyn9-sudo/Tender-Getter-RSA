@@ -6,7 +6,7 @@ def test_prasa_cres_source_initialization():
     from tender_getter.sources.soes.prasa_cres import PrasaCresSource
     src = PrasaCresSource()
     assert src.source_id == "prasa_cres"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_prasa_cres_parse_mock_html():

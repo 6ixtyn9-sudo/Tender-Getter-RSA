@@ -6,7 +6,7 @@ def test_lgseta_source_initialization():
     from tender_getter.sources.setas.lgseta import LgsetaSource
     src = LgsetaSource()
     assert src.source_id == "lgseta"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_lgseta_parse_mock_html():

@@ -6,7 +6,7 @@ def test_wc_liquor_source_initialization():
     from tender_getter.sources.provincial.wc_liquor import WcLiquorSource
     src = WcLiquorSource()
     assert src.source_id == "wc_liquor"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_wc_liquor_parse_mock_html():

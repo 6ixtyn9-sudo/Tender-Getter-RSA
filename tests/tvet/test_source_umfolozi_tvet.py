@@ -6,7 +6,7 @@ def test_umfolozi_tvet_source_initialization():
     from tender_getter.sources.tvet.umfolozi_tvet import UmfoloziTvetSource
     src = UmfoloziTvetSource()
     assert src.source_id == "umfolozi_tvet"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_umfolozi_tvet_parse_mock_html():

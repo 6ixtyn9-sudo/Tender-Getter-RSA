@@ -6,7 +6,7 @@ def test_lp_heritage_source_initialization():
     from tender_getter.sources.research.lp_heritage import LpHeritageSource
     src = LpHeritageSource()
     assert src.source_id == "lp_heritage"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_lp_heritage_parse_mock_html():

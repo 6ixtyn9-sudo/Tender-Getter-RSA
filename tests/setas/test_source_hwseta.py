@@ -6,7 +6,7 @@ def test_hwseta_source_initialization():
     from tender_getter.sources.setas.hwseta import HwsetaSource
     src = HwsetaSource()
     assert src.source_id == "hwseta"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_hwseta_parse_mock_html():

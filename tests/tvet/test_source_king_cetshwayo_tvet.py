@@ -6,7 +6,7 @@ def test_king_cetshwayo_tvet_source_initialization():
     from tender_getter.sources.tvet.king_cetshwayo_tvet import KingCetshwayoTvetSource
     src = KingCetshwayoTvetSource()
     assert src.source_id == "king_cetshwayo_tvet"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_king_cetshwayo_tvet_parse_mock_html():

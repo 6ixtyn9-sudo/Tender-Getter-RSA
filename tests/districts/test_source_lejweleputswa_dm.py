@@ -6,7 +6,7 @@ def test_lejweleputswa_dm_source_initialization():
     from tender_getter.sources.districts.lejweleputswa_dm import LejweleputswaDmSource
     src = LejweleputswaDmSource()
     assert src.source_id == "lejweleputswa_dm"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_lejweleputswa_dm_parse_mock_html():

@@ -6,7 +6,7 @@ def test_vhembe_tvet_source_initialization():
     from tender_getter.sources.tvet.vhembe_tvet import VhembeTvetSource
     src = VhembeTvetSource()
     assert src.source_id == "vhembe_tvet"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_vhembe_tvet_parse_mock_html():

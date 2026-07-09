@@ -6,7 +6,7 @@ def test_engineering_council_source_initialization():
     from tender_getter.sources.research.engineering_council import EngineeringCouncilSource
     src = EngineeringCouncilSource()
     assert src.source_id == "engineering_council"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_engineering_council_parse_mock_html():

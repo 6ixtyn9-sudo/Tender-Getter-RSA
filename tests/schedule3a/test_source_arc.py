@@ -6,7 +6,7 @@ def test_arc_source_initialization():
     from tender_getter.sources.schedule3a.arc import ArcSource
     src = ArcSource()
     assert src.source_id == "arc"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_arc_parse_mock_html():

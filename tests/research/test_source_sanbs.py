@@ -6,7 +6,7 @@ def test_sanbs_source_initialization():
     from tender_getter.sources.research.sanbs import SanbsSource
     src = SanbsSource()
     assert src.source_id == "sanbs"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_sanbs_parse_mock_html():

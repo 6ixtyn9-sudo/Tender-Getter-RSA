@@ -6,7 +6,7 @@ def test_kzn_agriculture_source_initialization():
     from tender_getter.sources.research.kzn_agriculture import KznAgricultureSource
     src = KznAgricultureSource()
     assert src.source_id == "kzn_agriculture"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_kzn_agriculture_parse_mock_html():

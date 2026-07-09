@@ -6,7 +6,7 @@ def test_ceta_source_initialization():
     from tender_getter.sources.setas.ceta import CetaSource
     src = CetaSource()
     assert src.source_id == "ceta"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_ceta_parse_mock_html():

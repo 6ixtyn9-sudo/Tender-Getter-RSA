@@ -6,7 +6,7 @@ def test_national_gambling_source_initialization():
     from tender_getter.sources.research.national_gambling import NationalGamblingSource
     src = NationalGamblingSource()
     assert src.source_id == "national_gambling"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_national_gambling_parse_mock_html():

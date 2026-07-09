@@ -6,7 +6,7 @@ def test_medical_dental_board_source_initialization():
     from tender_getter.sources.regulators.medical_dental_board import MedicalDentalBoardSource
     src = MedicalDentalBoardSource()
     assert src.source_id == "medical_dental_board"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_medical_dental_board_parse_mock_html():

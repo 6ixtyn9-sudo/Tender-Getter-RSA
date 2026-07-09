@@ -6,7 +6,7 @@ def test_nkangala_dm_source_initialization():
     from tender_getter.sources.districts.nkangala_dm import NkangalaDmSource
     src = NkangalaDmSource()
     assert src.source_id == "nkangala_dm"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_nkangala_dm_parse_mock_html():

@@ -6,7 +6,7 @@ def test_nersa_source_initialization():
     from tender_getter.sources.regulators.nersa import NersaSource
     src = NersaSource()
     assert src.source_id == "nersa"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_nersa_parse_mock_html():

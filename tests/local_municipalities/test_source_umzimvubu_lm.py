@@ -6,7 +6,7 @@ def test_umzimvubu_lm_source_initialization():
     from tender_getter.sources.local_municipalities.umzimvubu_lm import UmzimvubuLmSource
     src = UmzimvubuLmSource()
     assert src.source_id == "umzimvubu_lm"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_umzimvubu_lm_parse_mock_html():

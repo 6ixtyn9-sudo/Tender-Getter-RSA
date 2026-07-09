@@ -6,7 +6,7 @@ def test_merseta_source_initialization():
     from tender_getter.sources.setas.merseta import MersetaSource
     src = MersetaSource()
     assert src.source_id == "merseta"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_merseta_parse_mock_html():

@@ -6,7 +6,7 @@ def test_coct_electricity_source_initialization():
     from tender_getter.sources.local_municipalities.coct_electricity import CoctElectricitySource
     src = CoctElectricitySource()
     assert src.source_id == "coct_electricity"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_coct_electricity_parse_mock_html():

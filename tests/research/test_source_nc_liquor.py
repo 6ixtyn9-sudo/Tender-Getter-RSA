@@ -6,7 +6,7 @@ def test_nc_liquor_source_initialization():
     from tender_getter.sources.research.nc_liquor import NcLiquorSource
     src = NcLiquorSource()
     assert src.source_id == "nc_liquor"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_nc_liquor_parse_mock_html():

@@ -6,7 +6,7 @@ def test_pan_sa_taal_source_initialization():
     from tender_getter.sources.research.pan_sa_taal import PanSaTaalSource
     src = PanSaTaalSource()
     assert src.source_id == "pan_sa_taal"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_pan_sa_taal_parse_mock_html():

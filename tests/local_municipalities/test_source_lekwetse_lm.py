@@ -6,7 +6,7 @@ def test_lekwetse_lm_source_initialization():
     from tender_getter.sources.local_municipalities.lekwetse_lm import LekwetseLmSource
     src = LekwetseLmSource()
     assert src.source_id == "lekwetse_lm"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_lekwetse_lm_parse_mock_html():

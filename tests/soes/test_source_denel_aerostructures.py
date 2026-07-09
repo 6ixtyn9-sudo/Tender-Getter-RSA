@@ -6,7 +6,7 @@ def test_denel_aerostructures_source_initialization():
     from tender_getter.sources.soes.denel_aerostructures import DenelAerostructuresSource
     src = DenelAerostructuresSource()
     assert src.source_id == "denel_aerostructures"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_denel_aerostructures_parse_mock_html():

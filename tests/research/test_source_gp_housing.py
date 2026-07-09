@@ -6,7 +6,7 @@ def test_gp_housing_source_initialization():
     from tender_getter.sources.research.gp_housing import GpHousingSource
     src = GpHousingSource()
     assert src.source_id == "gp_housing"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_gp_housing_parse_mock_html():

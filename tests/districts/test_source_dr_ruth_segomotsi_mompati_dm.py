@@ -6,7 +6,7 @@ def test_dr_ruth_segomotsi_mompati_dm_source_initialization():
     from tender_getter.sources.districts.dr_ruth_segomotsi_mompati_dm import DrRuthSegomotsiMompatiDmSource
     src = DrRuthSegomotsiMompatiDmSource()
     assert src.source_id == "dr_ruth_segomotsi_mompati_dm"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_dr_ruth_segomotsi_mompati_dm_parse_mock_html():

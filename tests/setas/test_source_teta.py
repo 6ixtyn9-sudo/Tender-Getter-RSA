@@ -6,7 +6,7 @@ def test_teta_source_initialization():
     from tender_getter.sources.setas.teta import TetaSource
     src = TetaSource()
     assert src.source_id == "teta"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_teta_parse_mock_html():

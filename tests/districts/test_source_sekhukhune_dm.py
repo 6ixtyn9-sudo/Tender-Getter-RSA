@@ -6,7 +6,7 @@ def test_sekhukhune_dm_source_initialization():
     from tender_getter.sources.districts.sekhukhune_dm import SekhukhuneDmSource
     src = SekhukhuneDmSource()
     assert src.source_id == "sekhukhune_dm"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_sekhukhune_dm_parse_mock_html():

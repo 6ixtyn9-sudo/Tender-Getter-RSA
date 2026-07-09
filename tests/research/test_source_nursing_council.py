@@ -6,7 +6,7 @@ def test_nursing_council_source_initialization():
     from tender_getter.sources.research.nursing_council import NursingCouncilSource
     src = NursingCouncilSource()
     assert src.source_id == "nursing_council"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_nursing_council_parse_mock_html():

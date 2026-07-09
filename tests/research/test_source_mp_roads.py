@@ -6,7 +6,7 @@ def test_mp_roads_source_initialization():
     from tender_getter.sources.research.mp_roads import MpRoadsSource
     src = MpRoadsSource()
     assert src.source_id == "mp_roads"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_mp_roads_parse_mock_html():

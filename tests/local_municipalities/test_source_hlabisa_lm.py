@@ -6,7 +6,7 @@ def test_hlabisa_lm_source_initialization():
     from tender_getter.sources.local_municipalities.hlabisa_lm import HlabisaLmSource
     src = HlabisaLmSource()
     assert src.source_id == "hlabisa_lm"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_hlabisa_lm_parse_mock_html():

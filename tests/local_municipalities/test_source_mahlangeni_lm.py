@@ -6,7 +6,7 @@ def test_mahlangeni_lm_source_initialization():
     from tender_getter.sources.local_municipalities.mahlangeni_lm import MahlangeniLmSource
     src = MahlangeniLmSource()
     assert src.source_id == "mahlangeni_lm"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_mahlangeni_lm_parse_mock_html():

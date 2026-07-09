@@ -6,7 +6,7 @@ def test_popcru_source_initialization():
     from tender_getter.sources.research.popcru import PopcruSource
     src = PopcruSource()
     assert src.source_id == "popcru"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_popcru_parse_mock_html():

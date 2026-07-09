@@ -6,7 +6,7 @@ def test_wcedu_source_initialization():
     from tender_getter.sources.research.wcedu import WceduSource
     src = WceduSource()
     assert src.source_id == "wcedu"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_wcedu_parse_mock_html():

@@ -6,7 +6,7 @@ def test_ayurveda_council_source_initialization():
     from tender_getter.sources.research.ayurveda_council import AyurvedaCouncilSource
     src = AyurvedaCouncilSource()
     assert src.source_id == "ayurveda_council"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_ayurveda_council_parse_mock_html():

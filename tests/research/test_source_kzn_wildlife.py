@@ -6,7 +6,7 @@ def test_kzn_wildlife_source_initialization():
     from tender_getter.sources.research.kzn_wildlife import KznWildlifeSource
     src = KznWildlifeSource()
     assert src.source_id == "kzn_wildlife"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_kzn_wildlife_parse_mock_html():

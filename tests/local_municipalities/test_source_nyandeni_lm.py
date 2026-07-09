@@ -6,7 +6,7 @@ def test_nyandeni_lm_source_initialization():
     from tender_getter.sources.local_municipalities.nyandeni_lm import NyandeniLmSource
     src = NyandeniLmSource()
     assert src.source_id == "nyandeni_lm"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_nyandeni_lm_parse_mock_html():

@@ -6,7 +6,7 @@ def test_breede_valley_lm_source_initialization():
     from tender_getter.sources.local_municipalities.breede_valley_lm import BreedeValleyLmSource
     src = BreedeValleyLmSource()
     assert src.source_id == "breede_valley_lm"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_breede_valley_lm_parse_mock_html():

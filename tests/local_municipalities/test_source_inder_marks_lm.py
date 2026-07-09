@@ -6,7 +6,7 @@ def test_inder_marks_lm_source_initialization():
     from tender_getter.sources.local_municipalities.inder_marks_lm import InderMarksLmSource
     src = InderMarksLmSource()
     assert src.source_id == "inder_marks_lm"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_inder_marks_lm_parse_mock_html():

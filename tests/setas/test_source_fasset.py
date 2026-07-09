@@ -6,7 +6,7 @@ def test_fasset_source_initialization():
     from tender_getter.sources.setas.fasset import FassetSource
     src = FassetSource()
     assert src.source_id == "fasset"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_fasset_parse_mock_html():

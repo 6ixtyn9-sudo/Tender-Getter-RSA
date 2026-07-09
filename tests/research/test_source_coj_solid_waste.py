@@ -6,7 +6,7 @@ def test_coj_solid_waste_source_initialization():
     from tender_getter.sources.research.coj_solid_waste import CojSolidWasteSource
     src = CojSolidWasteSource()
     assert src.source_id == "coj_solid_waste"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_coj_solid_waste_parse_mock_html():

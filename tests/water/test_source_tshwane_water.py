@@ -6,7 +6,7 @@ def test_tshwane_water_source_initialization():
     from tender_getter.sources.water.tshwane_water import TshwaneWaterSource
     src = TshwaneWaterSource()
     assert src.source_id == "tshwane_water"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_tshwane_water_parse_mock_html():

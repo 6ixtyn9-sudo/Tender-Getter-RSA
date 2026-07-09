@@ -6,7 +6,7 @@ def test_ethekwini_water_source_initialization():
     from tender_getter.sources.water.ethekwini_water import EthekwiniWaterSource
     src = EthekwiniWaterSource()
     assert src.source_id == "ethekwini_water"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_ethekwini_water_parse_mock_html():

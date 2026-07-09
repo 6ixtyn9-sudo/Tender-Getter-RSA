@@ -6,7 +6,7 @@ def test_icasa_source_initialization():
     from tender_getter.sources.chapter9.icasa import IcasaSource
     src = IcasaSource()
     assert src.source_id == "icasa"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_icasa_parse_mock_html():

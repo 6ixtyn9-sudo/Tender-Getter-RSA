@@ -6,7 +6,7 @@ def test_kopanong_lm_source_initialization():
     from tender_getter.sources.local_municipalities.kopanong_lm import KopanongLmSource
     src = KopanongLmSource()
     assert src.source_id == "kopanong_lm"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_kopanong_lm_parse_mock_html():

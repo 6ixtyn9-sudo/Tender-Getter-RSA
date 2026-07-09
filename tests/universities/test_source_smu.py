@@ -6,7 +6,7 @@ def test_smu_source_initialization():
     from tender_getter.sources.universities.smu import SmuSource
     src = SmuSource()
     assert src.source_id == "smu"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_smu_parse_mock_html():

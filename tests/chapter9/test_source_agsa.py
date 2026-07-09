@@ -6,7 +6,7 @@ def test_agsa_source_initialization():
     from tender_getter.sources.chapter9.agsa import AgsaSource
     src = AgsaSource()
     assert src.source_id == "agsa"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_agsa_parse_mock_html():

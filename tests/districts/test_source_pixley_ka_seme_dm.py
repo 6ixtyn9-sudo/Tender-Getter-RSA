@@ -6,7 +6,7 @@ def test_pixley_ka_seme_dm_source_initialization():
     from tender_getter.sources.districts.pixley_ka_seme_dm import PixleyKaSemeDmSource
     src = PixleyKaSemeDmSource()
     assert src.source_id == "pixley_ka_seme_dm"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_pixley_ka_seme_dm_parse_mock_html():

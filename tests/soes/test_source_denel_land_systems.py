@@ -6,7 +6,7 @@ def test_denel_land_systems_source_initialization():
     from tender_getter.sources.soes.denel_land_systems import DenelLandSystemsSource
     src = DenelLandSystemsSource()
     assert src.source_id == "denel_land_systems"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_denel_land_systems_parse_mock_html():

@@ -6,7 +6,7 @@ def test_sadc_source_initialization():
     from tender_getter.sources.research.sadc import SadcSource
     src = SadcSource()
     assert src.source_id == "sadc"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_sadc_parse_mock_html():

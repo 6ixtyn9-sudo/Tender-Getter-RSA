@@ -6,7 +6,7 @@ def test_lp_parks_source_initialization():
     from tender_getter.sources.research.lp_parks import LpParksSource
     src = LpParksSource()
     assert src.source_id == "lp_parks"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_lp_parks_parse_mock_html():

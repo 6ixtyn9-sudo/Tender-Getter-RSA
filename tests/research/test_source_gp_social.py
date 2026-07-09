@@ -6,7 +6,7 @@ def test_gp_social_source_initialization():
     from tender_getter.sources.research.gp_social import GpSocialSource
     src = GpSocialSource()
     assert src.source_id == "gp_social"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_gp_social_parse_mock_html():

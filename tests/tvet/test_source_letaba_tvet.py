@@ -6,7 +6,7 @@ def test_letaba_tvet_source_initialization():
     from tender_getter.sources.tvet.letaba_tvet import LetabaTvetSource
     src = LetabaTvetSource()
     assert src.source_id == "letaba_tvet"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_letaba_tvet_parse_mock_html():

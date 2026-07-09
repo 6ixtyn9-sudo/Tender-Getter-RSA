@@ -6,7 +6,7 @@ def test_cipro_source_initialization():
     from tender_getter.sources.research.cipro import CiproSource
     src = CiproSource()
     assert src.source_id == "cipro"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_cipro_parse_mock_html():

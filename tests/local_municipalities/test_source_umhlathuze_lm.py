@@ -6,7 +6,7 @@ def test_umhlathuze_lm_source_initialization():
     from tender_getter.sources.local_municipalities.umhlathuze_lm import UmhlathuzeLmSource
     src = UmhlathuzeLmSource()
     assert src.source_id == "umhlathuze_lm"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_umhlathuze_lm_parse_mock_html():

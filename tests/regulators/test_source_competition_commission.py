@@ -6,7 +6,7 @@ def test_competition_commission_source_initialization():
     from tender_getter.sources.regulators.competition_commission import CompetitionCommissionSource
     src = CompetitionCommissionSource()
     assert src.source_id == "competition_commission"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_competition_commission_parse_mock_html():

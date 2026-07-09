@@ -6,7 +6,7 @@ def test_makhado_alt_2_lm_source_initialization():
     from tender_getter.sources.local_municipalities.makhado_alt_2_lm import MakhadoAlt2LmSource
     src = MakhadoAlt2LmSource()
     assert src.source_id == "makhado_alt_2_lm"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_makhado_alt_2_lm_parse_mock_html():

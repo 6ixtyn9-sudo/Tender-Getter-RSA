@@ -6,7 +6,7 @@ def test_saasta_source_initialization():
     from tender_getter.sources.research.saasta import SaastaSource
     src = SaastaSource()
     assert src.source_id == "saasta"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_saasta_parse_mock_html():

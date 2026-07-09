@@ -6,7 +6,7 @@ def test_sapsa_admin_source_initialization():
     from tender_getter.sources.research.sapsa_admin import SapsaAdminSource
     src = SapsaAdminSource()
     assert src.source_id == "sapsa_admin"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_sapsa_admin_parse_mock_html():

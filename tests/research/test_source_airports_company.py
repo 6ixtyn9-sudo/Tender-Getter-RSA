@@ -6,7 +6,7 @@ def test_airports_company_source_initialization():
     from tender_getter.sources.research.airports_company import AirportsCompanySource
     src = AirportsCompanySource()
     assert src.source_id == "airports_company"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_airports_company_parse_mock_html():

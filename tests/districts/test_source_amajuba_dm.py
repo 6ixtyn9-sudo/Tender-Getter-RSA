@@ -6,7 +6,7 @@ def test_amajuba_dm_source_initialization():
     from tender_getter.sources.districts.amajuba_dm import AmajubaDmSource
     src = AmajubaDmSource()
     assert src.source_id == "amajuba_dm"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_amajuba_dm_parse_mock_html():

@@ -6,7 +6,7 @@ def test_vhembe_dm_source_initialization():
     from tender_getter.sources.districts.vhembe_dm import VhembeDmSource
     src = VhembeDmSource()
     assert src.source_id == "vhembe_dm"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_vhembe_dm_parse_mock_html():

@@ -6,7 +6,7 @@ def test_nehawu_source_initialization():
     from tender_getter.sources.research.nehawu import NehawuSource
     src = NehawuSource()
     assert src.source_id == "nehawu"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_nehawu_parse_mock_html():

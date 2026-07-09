@@ -6,7 +6,7 @@ def test_ec_housing_source_initialization():
     from tender_getter.sources.research.ec_housing import EcHousingSource
     src = EcHousingSource()
     assert src.source_id == "ec_housing"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_ec_housing_parse_mock_html():

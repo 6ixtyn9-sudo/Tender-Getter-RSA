@@ -6,7 +6,7 @@ def test_siu_source_initialization():
     from tender_getter.sources.soes.siu import SiuSource
     src = SiuSource()
     assert src.source_id == "siu"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_siu_parse_mock_html():

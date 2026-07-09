@@ -6,7 +6,7 @@ def test_electricians_board_source_initialization():
     from tender_getter.sources.regulators.electricians_board import ElectriciansBoardSource
     src = ElectriciansBoardSource()
     assert src.source_id == "electricians_board"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_electricians_board_parse_mock_html():

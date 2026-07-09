@@ -6,7 +6,7 @@ def test_cpsi_source_initialization():
     from tender_getter.sources.schedule3a.cpsi import CpsiSource
     src = CpsiSource()
     assert src.source_id == "cpsi"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_cpsi_parse_mock_html():

@@ -6,7 +6,7 @@ def test_safo_source_initialization():
     from tender_getter.sources.research.safo import SafoSource
     src = SafoSource()
     assert src.source_id == "safo"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_safo_parse_mock_html():

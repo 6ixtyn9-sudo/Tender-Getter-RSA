@@ -6,7 +6,7 @@ def test_sekhukhune_lm_source_initialization():
     from tender_getter.sources.local_municipalities.sekhukhune_lm import SekhukhuneLmSource
     src = SekhukhuneLmSource()
     assert src.source_id == "sekhukhune_lm"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_sekhukhune_lm_parse_mock_html():

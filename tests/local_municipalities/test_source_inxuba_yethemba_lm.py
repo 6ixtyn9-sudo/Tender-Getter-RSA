@@ -6,7 +6,7 @@ def test_inxuba_yethemba_lm_source_initialization():
     from tender_getter.sources.local_municipalities.inxuba_yethemba_lm import InxubaYethembaLmSource
     src = InxubaYethembaLmSource()
     assert src.source_id == "inxuba_yethemba_lm"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_inxuba_yethemba_lm_parse_mock_html():

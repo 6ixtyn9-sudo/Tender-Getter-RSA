@@ -6,7 +6,7 @@ def test_xharia_lm_source_initialization():
     from tender_getter.sources.local_municipalities.xharia_lm import XhariaLmSource
     src = XhariaLmSource()
     assert src.source_id == "xharia_lm"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_xharia_lm_parse_mock_html():

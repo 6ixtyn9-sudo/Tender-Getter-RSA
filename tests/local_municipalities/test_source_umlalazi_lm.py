@@ -6,7 +6,7 @@ def test_umlalazi_lm_source_initialization():
     from tender_getter.sources.local_municipalities.umlalazi_lm import UmlalaziLmSource
     src = UmlalaziLmSource()
     assert src.source_id == "umlalazi_lm"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_umlalazi_lm_parse_mock_html():

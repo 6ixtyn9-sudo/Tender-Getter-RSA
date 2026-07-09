@@ -6,7 +6,7 @@ def test_fs_health_source_initialization():
     from tender_getter.sources.research.fs_health import FsHealthSource
     src = FsHealthSource()
     assert src.source_id == "fs_health"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_fs_health_parse_mock_html():

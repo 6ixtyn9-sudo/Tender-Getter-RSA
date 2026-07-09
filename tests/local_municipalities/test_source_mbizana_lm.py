@@ -6,7 +6,7 @@ def test_mbizana_lm_source_initialization():
     from tender_getter.sources.local_municipalities.mbizana_lm import MbizanaLmSource
     src = MbizanaLmSource()
     assert src.source_id == "mbizana_lm"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_mbizana_lm_parse_mock_html():

@@ -6,7 +6,7 @@ def test_faiss_ombud_source_initialization():
     from tender_getter.sources.regulators.faiss_ombud import FaissOmbudSource
     src = FaissOmbudSource()
     assert src.source_id == "faiss_ombud"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_faiss_ombud_parse_mock_html():

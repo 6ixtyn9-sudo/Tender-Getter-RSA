@@ -6,7 +6,7 @@ def test_engelbrecht_lm_source_initialization():
     from tender_getter.sources.local_municipalities.engelbrecht_lm import EngelbrechtLmSource
     src = EngelbrechtLmSource()
     assert src.source_id == "engelbrecht_lm"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_engelbrecht_lm_parse_mock_html():

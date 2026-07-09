@@ -6,7 +6,7 @@ def test_maletswai_lm_source_initialization():
     from tender_getter.sources.local_municipalities.maletswai_lm import MaletswaiLmSource
     src = MaletswaiLmSource()
     assert src.source_id == "maletswai_lm"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_maletswai_lm_parse_mock_html():

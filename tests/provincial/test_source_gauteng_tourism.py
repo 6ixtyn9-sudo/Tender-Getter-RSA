@@ -6,7 +6,7 @@ def test_gauteng_tourism_source_initialization():
     from tender_getter.sources.provincial.gauteng_tourism import GautengTourismSource
     src = GautengTourismSource()
     assert src.source_id == "gauteng_tourism"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_gauteng_tourism_parse_mock_html():

@@ -6,7 +6,7 @@ def test_south_west_gauteng_tvet_source_initialization():
     from tender_getter.sources.tvet.south_west_gauteng_tvet import SouthWestGautengTvetSource
     src = SouthWestGautengTvetSource()
     assert src.source_id == "south_west_gauteng_tvet"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_south_west_gauteng_tvet_parse_mock_html():

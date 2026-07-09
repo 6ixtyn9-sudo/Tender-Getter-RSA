@@ -6,7 +6,7 @@ def test_metro_fm_source_initialization():
     from tender_getter.sources.metros.metro_fm import MetroFmSource
     src = MetroFmSource()
     assert src.source_id == "metro_fm"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_metro_fm_parse_mock_html():

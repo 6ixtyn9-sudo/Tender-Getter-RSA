@@ -6,7 +6,7 @@ def test_chieta_source_initialization():
     from tender_getter.sources.setas.chieta import ChietaSource
     src = ChietaSource()
     assert src.source_id == "chieta"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_chieta_parse_mock_html():

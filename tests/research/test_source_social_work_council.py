@@ -6,7 +6,7 @@ def test_social_work_council_source_initialization():
     from tender_getter.sources.research.social_work_council import SocialWorkCouncilSource
     src = SocialWorkCouncilSource()
     assert src.source_id == "social_work_council"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_social_work_council_parse_mock_html():

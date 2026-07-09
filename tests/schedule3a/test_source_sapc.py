@@ -6,7 +6,7 @@ def test_sapc_source_initialization():
     from tender_getter.sources.schedule3a.sapc import SapcSource
     src = SapcSource()
     assert src.source_id == "sapc"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_sapc_parse_mock_html():

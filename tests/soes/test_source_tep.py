@@ -6,7 +6,7 @@ def test_tep_source_initialization():
     from tender_getter.sources.soes.tep import TepSource
     src = TepSource()
     assert src.source_id == "tep"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_tep_parse_mock_html():

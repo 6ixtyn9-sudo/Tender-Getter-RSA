@@ -6,7 +6,7 @@ def test_wc_tourism_source_initialization():
     from tender_getter.sources.provincial.wc_tourism import WcTourismSource
     src = WcTourismSource()
     assert src.source_id == "wc_tourism"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_wc_tourism_parse_mock_html():

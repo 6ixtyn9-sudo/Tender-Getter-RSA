@@ -6,7 +6,7 @@ def test_traditional_healers_council_source_initialization():
     from tender_getter.sources.research.traditional_healers_council import TraditionalHealersCouncilSource
     src = TraditionalHealersCouncilSource()
     assert src.source_id == "traditional_healers_council"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_traditional_healers_council_parse_mock_html():

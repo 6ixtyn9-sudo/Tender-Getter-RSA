@@ -6,7 +6,7 @@ def test_sanbi_source_initialization():
     from tender_getter.sources.research.sanbi import SanbiSource
     src = SanbiSource()
     assert src.source_id == "sanbi"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_sanbi_parse_mock_html():

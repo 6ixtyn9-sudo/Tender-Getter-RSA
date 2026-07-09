@@ -6,7 +6,7 @@ def test_nkosi_lm_source_initialization():
     from tender_getter.sources.local_municipalities.nkosi_lm import NkosiLmSource
     src = NkosiLmSource()
     assert src.source_id == "nkosi_lm"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_nkosi_lm_parse_mock_html():

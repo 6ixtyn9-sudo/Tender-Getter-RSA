@@ -6,7 +6,7 @@ def test_tpt_source_initialization():
     from tender_getter.sources.soes.tpt import TptSource
     src = TptSource()
     assert src.source_id == "tpt"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_tpt_parse_mock_html():

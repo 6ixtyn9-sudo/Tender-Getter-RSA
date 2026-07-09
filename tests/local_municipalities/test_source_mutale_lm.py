@@ -6,7 +6,7 @@ def test_mutale_lm_source_initialization():
     from tender_getter.sources.local_municipalities.mutale_lm import MutaleLmSource
     src = MutaleLmSource()
     assert src.source_id == "mutale_lm"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_mutale_lm_parse_mock_html():

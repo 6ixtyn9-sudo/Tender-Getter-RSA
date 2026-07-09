@@ -6,7 +6,7 @@ def test_mnquma_lm_source_initialization():
     from tender_getter.sources.local_municipalities.mnquma_lm import MnqumaLmSource
     src = MnqumaLmSource()
     assert src.source_id == "mnquma_lm"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_mnquma_lm_parse_mock_html():

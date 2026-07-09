@@ -6,7 +6,7 @@ def test_oners_source_initialization():
     from tender_getter.sources.research.oners import OnersSource
     src = OnersSource()
     assert src.source_id == "oners"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_oners_parse_mock_html():

@@ -113,8 +113,9 @@ def sync_live_tenders(db, max_pages: int = 3, days_back: int = 30) -> int:
     page = 1
     end_dt = datetime.now(timezone.utc)
     start_dt = end_dt - timedelta(days=days_back)
-    date_from = start_dt.strftime("%Y-%m-%dT%H:%M:%SZ")
-    date_to = end_dt.strftime("%Y-%m-%dT%H:%M:%SZ")
+    # OCDS API requires date-only format (YYYY-MM-DD), not ISO datetime
+    date_from = start_dt.strftime("%Y-%m-%d")
+    date_to = end_dt.strftime("%Y-%m-%d")
 
     while page <= max_pages:
         params = {

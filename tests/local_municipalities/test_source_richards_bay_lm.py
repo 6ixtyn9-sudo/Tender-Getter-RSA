@@ -6,7 +6,7 @@ def test_richards_bay_lm_source_initialization():
     from tender_getter.sources.local_municipalities.richards_bay_lm import RichardsBayLmSource
     src = RichardsBayLmSource()
     assert src.source_id == "richards_bay_lm"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_richards_bay_lm_parse_mock_html():

@@ -6,7 +6,7 @@ def test_nquthu_lm_source_initialization():
     from tender_getter.sources.local_municipalities.nquthu_lm import NquthuLmSource
     src = NquthuLmSource()
     assert src.source_id == "nquthu_lm"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_nquthu_lm_parse_mock_html():

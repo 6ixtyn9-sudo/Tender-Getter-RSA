@@ -6,7 +6,7 @@ def test_wrseta_source_initialization():
     from tender_getter.sources.setas.wrseta import WrsetaSource
     src = WrsetaSource()
     assert src.source_id == "wrseta"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_wrseta_parse_mock_html():

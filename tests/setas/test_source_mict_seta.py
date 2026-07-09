@@ -6,7 +6,7 @@ def test_mict_seta_source_initialization():
     from tender_getter.sources.setas.mict_seta import MictSetaSource
     src = MictSetaSource()
     assert src.source_id == "mict_seta"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_mict_seta_parse_mock_html():

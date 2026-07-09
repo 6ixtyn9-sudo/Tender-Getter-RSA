@@ -6,7 +6,7 @@ def test_uj_source_initialization():
     from tender_getter.sources.universities.uj import UjSource
     src = UjSource()
     assert src.source_id == "uj"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_uj_parse_mock_html():

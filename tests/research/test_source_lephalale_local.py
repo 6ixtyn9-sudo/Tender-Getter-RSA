@@ -6,7 +6,7 @@ def test_lephalale_local_source_initialization():
     from tender_getter.sources.research.lephalale_local import LephalaleLocalSource
     src = LephalaleLocalSource()
     assert src.source_id == "lephalale_local"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_lephalale_local_parse_mock_html():

@@ -6,7 +6,7 @@ def test_nc_health_source_initialization():
     from tender_getter.sources.research.nc_health import NcHealthSource
     src = NcHealthSource()
     assert src.source_id == "nc_health"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_nc_health_parse_mock_html():

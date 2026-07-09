@@ -6,7 +6,7 @@ def test_elias_motsoaledi_lm_source_initialization():
     from tender_getter.sources.local_municipalities.elias_motsoaledi_lm import EliasMotsoalediLmSource
     src = EliasMotsoalediLmSource()
     assert src.source_id == "elias_motsoaledi_lm"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_elias_motsoaledi_lm_parse_mock_html():

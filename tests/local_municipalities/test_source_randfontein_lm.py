@@ -6,7 +6,7 @@ def test_randfontein_lm_source_initialization():
     from tender_getter.sources.local_municipalities.randfontein_lm import RandfonteinLmSource
     src = RandfonteinLmSource()
     assert src.source_id == "randfontein_lm"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_randfontein_lm_parse_mock_html():

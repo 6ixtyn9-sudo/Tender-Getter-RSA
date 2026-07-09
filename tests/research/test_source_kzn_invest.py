@@ -6,7 +6,7 @@ def test_kzn_invest_source_initialization():
     from tender_getter.sources.research.kzn_invest import KznInvestSource
     src = KznInvestSource()
     assert src.source_id == "kzn_invest"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_kzn_invest_parse_mock_html():

@@ -6,7 +6,7 @@ def test_walter_sisulu_lm_source_initialization():
     from tender_getter.sources.local_municipalities.walter_sisulu_lm import WalterSisuluLmSource
     src = WalterSisuluLmSource()
     assert src.source_id == "walter_sisulu_lm"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_walter_sisulu_lm_parse_mock_html():

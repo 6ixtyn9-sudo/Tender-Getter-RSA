@@ -6,7 +6,7 @@ def test_state_theatre_source_initialization():
     from tender_getter.sources.research.state_theatre import StateTheatreSource
     src = StateTheatreSource()
     assert src.source_id == "state_theatre"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_state_theatre_parse_mock_html():

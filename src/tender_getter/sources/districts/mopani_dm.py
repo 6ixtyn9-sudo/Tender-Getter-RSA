@@ -65,6 +65,33 @@ class MopaniDmSource:
         return tenders
 
     def parse_html(self, html: str, limit: Optional[int] = None) -> List[TenderOpportunity]:
-        """Parse <tr><td> rows."""
-        tenders = parse_html_table(html, limit, issuing_entity=self.issuing_entity)
+        """Parse <tr><td> rows with custom logic for empty ref cells."""
+        tenders = []
+        rows = re.findall(r'<tr[^>]*>(.*?)</tr>', html, re.IGNORECASE | re.DOTALL)
+        for row in rows:
+            tds = [re.sub(r'<[^>]+>', '', td).strip() for td in re.findall(r'<td[^>]*>(.*?)</td>', row, re.IGNORECASE | re.DOTALL)]
+            if len(tds) < 3:
+                continue
+            
+            title = tds[1]
+            date_str = tds[2]
+            
+            if not title or len(title) < 5:
+                continue
+                
+            # Mopani often leaves reference numbers blank. Use a generated one based on the title.
+            ref = "MOPANI_" + re.sub(r'\W+', '_', title[:20]).strip('_').upper()
+            
+            tenders.append(TenderOpportunity(
+                tender_id=ref,
+                title=title[:500],
+                issuing_entity=self.issuing_entity,
+                closing_date=parse_closing_date(date_str),
+                mandatory_csd=True,
+                tax_compliance_required=True,
+                location_target=province_from_text(title)
+            ))
+            
+            if limit is not None and len(tenders) >= limit:
+                break
         return tenders

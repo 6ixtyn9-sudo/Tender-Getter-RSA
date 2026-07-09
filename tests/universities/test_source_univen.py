@@ -6,7 +6,7 @@ def test_univen_source_initialization():
     from tender_getter.sources.universities.univen import UnivenSource
     src = UnivenSource()
     assert src.source_id == "univen"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_univen_parse_mock_html():

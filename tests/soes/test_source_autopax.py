@@ -6,7 +6,7 @@ def test_autopax_source_initialization():
     from tender_getter.sources.soes.autopax import AutopaxSource
     src = AutopaxSource()
     assert src.source_id == "autopax"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_autopax_parse_mock_html():

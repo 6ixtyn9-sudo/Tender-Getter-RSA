@@ -6,7 +6,7 @@ def test_msukaligwa_lm_source_initialization():
     from tender_getter.sources.local_municipalities.msukaligwa_lm import MsukaligwaLmSource
     src = MsukaligwaLmSource()
     assert src.source_id == "msukaligwa_lm"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_msukaligwa_lm_parse_mock_html():

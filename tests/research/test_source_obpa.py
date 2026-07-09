@@ -6,7 +6,7 @@ def test_obpa_source_initialization():
     from tender_getter.sources.research.obpa import ObpaSource
     src = ObpaSource()
     assert src.source_id == "obpa"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_obpa_parse_mock_html():

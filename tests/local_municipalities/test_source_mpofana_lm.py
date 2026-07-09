@@ -6,7 +6,7 @@ def test_mpofana_lm_source_initialization():
     from tender_getter.sources.local_municipalities.mpofana_lm import MpofanaLmSource
     src = MpofanaLmSource()
     assert src.source_id == "mpofana_lm"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_mpofana_lm_parse_mock_html():

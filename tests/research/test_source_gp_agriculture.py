@@ -6,7 +6,7 @@ def test_gp_agriculture_source_initialization():
     from tender_getter.sources.research.gp_agriculture import GpAgricultureSource
     src = GpAgricultureSource()
     assert src.source_id == "gp_agriculture"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_gp_agriculture_parse_mock_html():

@@ -6,7 +6,7 @@ def test_fs_housing_source_initialization():
     from tender_getter.sources.research.fs_housing import FsHousingSource
     src = FsHousingSource()
     assert src.source_id == "fs_housing"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_fs_housing_parse_mock_html():

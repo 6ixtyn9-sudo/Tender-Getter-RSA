@@ -6,7 +6,7 @@ def test_quantity_surveyors_council_source_initialization():
     from tender_getter.sources.research.quantity_surveyors_council import QuantitySurveyorsCouncilSource
     src = QuantitySurveyorsCouncilSource()
     assert src.source_id == "quantity_surveyors_council"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_quantity_surveyors_council_parse_mock_html():

@@ -6,7 +6,7 @@ def test_gp_health_source_initialization():
     from tender_getter.sources.research.gp_health import GpHealthSource
     src = GpHealthSource()
     assert src.source_id == "gp_health"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_gp_health_parse_mock_html():

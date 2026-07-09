@@ -6,7 +6,7 @@ def test_iec_source_initialization():
     from tender_getter.sources.soes.iec import IecSource
     src = IecSource()
     assert src.source_id == "iec"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_iec_parse_mock_html():

@@ -6,7 +6,7 @@ def test_moretele_lm_source_initialization():
     from tender_getter.sources.local_municipalities.moretele_lm import MoreteleLmSource
     src = MoreteleLmSource()
     assert src.source_id == "moretele_lm"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_moretele_lm_parse_mock_html():

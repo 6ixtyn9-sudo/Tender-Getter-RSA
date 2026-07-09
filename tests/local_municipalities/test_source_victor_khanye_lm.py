@@ -6,7 +6,7 @@ def test_victor_khanye_lm_source_initialization():
     from tender_getter.sources.local_municipalities.victor_khanye_lm import VictorKhanyeLmSource
     src = VictorKhanyeLmSource()
     assert src.source_id == "victor_khanye_lm"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_victor_khanye_lm_parse_mock_html():

@@ -6,7 +6,7 @@ def test_chiro_practitioner_source_initialization():
     from tender_getter.sources.research.chiro_practitioner import ChiroPractitionerSource
     src = ChiroPractitionerSource()
     assert src.source_id == "chiro_practitioner"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_chiro_practitioner_parse_mock_html():

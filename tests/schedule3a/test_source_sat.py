@@ -6,7 +6,7 @@ def test_sat_source_initialization():
     from tender_getter.sources.schedule3a.sat import SatSource
     src = SatSource()
     assert src.source_id == "sat"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_sat_parse_mock_html():

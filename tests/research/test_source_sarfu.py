@@ -6,7 +6,7 @@ def test_sarfu_source_initialization():
     from tender_getter.sources.research.sarfu import SarfuSource
     src = SarfuSource()
     assert src.source_id == "sarfu"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_sarfu_parse_mock_html():

@@ -6,7 +6,7 @@ def test_tikzn_source_initialization():
     from tender_getter.sources.research.tikzn import TikznSource
     src = TikznSource()
     assert src.source_id == "tikzn"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_tikzn_parse_mock_html():

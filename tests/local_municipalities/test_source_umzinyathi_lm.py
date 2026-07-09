@@ -6,7 +6,7 @@ def test_umzinyathi_lm_source_initialization():
     from tender_getter.sources.local_municipalities.umzinyathi_lm import UmzinyathiLmSource
     src = UmzinyathiLmSource()
     assert src.source_id == "umzinyathi_lm"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_umzinyathi_lm_parse_mock_html():

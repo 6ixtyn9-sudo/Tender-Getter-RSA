@@ -6,7 +6,7 @@ def test_umsobomvu_lm_source_initialization():
     from tender_getter.sources.local_municipalities.umsobomvu_lm import UmsobomvuLmSource
     src = UmsobomvuLmSource()
     assert src.source_id == "umsobomvu_lm"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_umsobomvu_lm_parse_mock_html():

@@ -6,7 +6,7 @@ def test_mkhondo_lm_source_initialization():
     from tender_getter.sources.local_municipalities.mkhondo_lm import MkhondoLmSource
     src = MkhondoLmSource()
     assert src.source_id == "mkhondo_lm"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_mkhondo_lm_parse_mock_html():

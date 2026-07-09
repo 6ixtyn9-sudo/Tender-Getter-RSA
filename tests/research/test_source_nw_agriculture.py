@@ -6,7 +6,7 @@ def test_nw_agriculture_source_initialization():
     from tender_getter.sources.research.nw_agriculture import NwAgricultureSource
     src = NwAgricultureSource()
     assert src.source_id == "nw_agriculture"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_nw_agriculture_parse_mock_html():

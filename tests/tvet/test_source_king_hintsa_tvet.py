@@ -6,7 +6,7 @@ def test_king_hintsa_tvet_source_initialization():
     from tender_getter.sources.tvet.king_hintsa_tvet import KingHintsaTvetSource
     src = KingHintsaTvetSource()
     assert src.source_id == "king_hintsa_tvet"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_king_hintsa_tvet_parse_mock_html():

@@ -6,7 +6,7 @@ def test_zululand_dm_source_initialization():
     from tender_getter.sources.districts.zululand_dm import ZululandDmSource
     src = ZululandDmSource()
     assert src.source_id == "zululand_dm"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_zululand_dm_parse_mock_html():

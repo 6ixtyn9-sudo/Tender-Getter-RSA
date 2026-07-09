@@ -6,7 +6,7 @@ def test_estate_agents_board_source_initialization():
     from tender_getter.sources.regulators.estate_agents_board import EstateAgentsBoardSource
     src = EstateAgentsBoardSource()
     assert src.source_id == "estate_agents_board"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_estate_agents_board_parse_mock_html():

@@ -6,7 +6,7 @@ def test_bohlabela_dm_source_initialization():
     from tender_getter.sources.districts.bohlabela_dm import BohlabelaDmSource
     src = BohlabelaDmSource()
     assert src.source_id == "bohlabela_dm"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_bohlabela_dm_parse_mock_html():

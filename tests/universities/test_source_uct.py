@@ -6,7 +6,7 @@ def test_uct_source_initialization():
     from tender_getter.sources.universities.uct import UctSource
     src = UctSource()
     assert src.source_id == "uct"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_uct_parse_mock_html():

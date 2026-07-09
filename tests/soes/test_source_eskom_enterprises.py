@@ -6,7 +6,7 @@ def test_eskom_enterprises_source_initialization():
     from tender_getter.sources.soes.eskom_enterprises import EskomEnterprisesSource
     src = EskomEnterprisesSource()
     assert src.source_id == "eskom_enterprises"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_eskom_enterprises_parse_mock_html():

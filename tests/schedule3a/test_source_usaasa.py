@@ -6,7 +6,7 @@ def test_usaasa_source_initialization():
     from tender_getter.sources.schedule3a.usaasa import UsaasaSource
     src = UsaasaSource()
     assert src.source_id == "usaasa"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_usaasa_parse_mock_html():

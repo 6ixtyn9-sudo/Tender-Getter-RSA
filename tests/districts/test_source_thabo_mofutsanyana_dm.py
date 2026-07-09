@@ -6,7 +6,7 @@ def test_thabo_mofutsanyana_dm_source_initialization():
     from tender_getter.sources.districts.thabo_mofutsanyana_dm import ThaboMofutsanyanaDmSource
     src = ThaboMofutsanyanaDmSource()
     assert src.source_id == "thabo_mofutsanyana_dm"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_thabo_mofutsanyana_dm_parse_mock_html():

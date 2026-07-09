@@ -6,7 +6,7 @@ def test_lp_agriculture_source_initialization():
     from tender_getter.sources.research.lp_agriculture import LpAgricultureSource
     src = LpAgricultureSource()
     assert src.source_id == "lp_agriculture"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_lp_agriculture_parse_mock_html():

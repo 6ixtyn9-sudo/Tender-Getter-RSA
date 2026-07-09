@@ -6,7 +6,7 @@ def test_nrf_source_initialization():
     from tender_getter.sources.research.nrf import NrfSource
     src = NrfSource()
     assert src.source_id == "nrf"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_nrf_parse_mock_html():

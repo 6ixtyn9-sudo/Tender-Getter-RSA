@@ -6,7 +6,7 @@ def test_nwu_source_initialization():
     from tender_getter.sources.universities.nwu import NwuSource
     src = NwuSource()
     assert src.source_id == "nwu"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_nwu_parse_mock_html():

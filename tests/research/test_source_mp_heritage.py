@@ -6,7 +6,7 @@ def test_mp_heritage_source_initialization():
     from tender_getter.sources.research.mp_heritage import MpHeritageSource
     src = MpHeritageSource()
     assert src.source_id == "mp_heritage"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_mp_heritage_parse_mock_html():

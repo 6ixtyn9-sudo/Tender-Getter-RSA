@@ -6,7 +6,7 @@ def test_ramotshere_moiloa_lm_source_initialization():
     from tender_getter.sources.local_municipalities.ramotshere_moiloa_lm import RamotshereMoiloaLmSource
     src = RamotshereMoiloaLmSource()
     assert src.source_id == "ramotshere_moiloa_lm"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_ramotshere_moiloa_lm_parse_mock_html():

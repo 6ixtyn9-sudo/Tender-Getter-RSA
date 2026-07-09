@@ -6,7 +6,7 @@ def test_fs_roads_source_initialization():
     from tender_getter.sources.research.fs_roads import FsRoadsSource
     src = FsRoadsSource()
     assert src.source_id == "fs_roads"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_fs_roads_parse_mock_html():

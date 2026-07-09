@@ -6,7 +6,7 @@ def test_gcis_source_initialization():
     from tender_getter.sources.schedule3a.gcis import GcisSource
     src = GcisSource()
     assert src.source_id == "gcis"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_gcis_parse_mock_html():

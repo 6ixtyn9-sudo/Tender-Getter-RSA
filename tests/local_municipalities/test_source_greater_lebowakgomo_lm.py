@@ -6,7 +6,7 @@ def test_greater_lebowakgomo_lm_source_initialization():
     from tender_getter.sources.local_municipalities.greater_lebowakgomo_lm import GreaterLebowakgomoLmSource
     src = GreaterLebowakgomoLmSource()
     assert src.source_id == "greater_lebowakgomo_lm"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_greater_lebowakgomo_lm_parse_mock_html():

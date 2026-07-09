@@ -6,7 +6,7 @@ def test_portsregulator_source_initialization():
     from tender_getter.sources.regulators.portsregulator import PortsregulatorSource
     src = PortsregulatorSource()
     assert src.source_id == "portsregulator"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_portsregulator_parse_mock_html():

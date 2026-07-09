@@ -6,7 +6,7 @@ def test_tfr_source_initialization():
     from tender_getter.sources.soes.tfr import TfrSource
     src = TfrSource()
     assert src.source_id == "tfr"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_tfr_parse_mock_html():

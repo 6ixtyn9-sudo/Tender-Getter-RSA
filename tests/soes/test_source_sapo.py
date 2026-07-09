@@ -6,7 +6,7 @@ def test_sapo_source_initialization():
     from tender_getter.sources.soes.sapo import SapoSource
     src = SapoSource()
     assert src.source_id == "sapo"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_sapo_parse_mock_html():

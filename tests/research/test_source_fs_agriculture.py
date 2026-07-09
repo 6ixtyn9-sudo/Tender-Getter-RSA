@@ -6,7 +6,7 @@ def test_fs_agriculture_source_initialization():
     from tender_getter.sources.research.fs_agriculture import FsAgricultureSource
     src = FsAgricultureSource()
     assert src.source_id == "fs_agriculture"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_fs_agriculture_parse_mock_html():

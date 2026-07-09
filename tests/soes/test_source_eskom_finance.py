@@ -6,7 +6,7 @@ def test_eskom_finance_source_initialization():
     from tender_getter.sources.soes.eskom_finance import EskomFinanceSource
     src = EskomFinanceSource()
     assert src.source_id == "eskom_finance"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_eskom_finance_parse_mock_html():

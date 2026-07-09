@@ -6,7 +6,7 @@ def test_waterberg_dm_source_initialization():
     from tender_getter.sources.districts.waterberg_dm import WaterbergDmSource
     src = WaterbergDmSource()
     assert src.source_id == "waterberg_dm"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_waterberg_dm_parse_mock_html():

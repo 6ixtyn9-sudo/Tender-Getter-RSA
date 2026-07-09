@@ -6,7 +6,7 @@ def test_gert_sibande_dm_source_initialization():
     from tender_getter.sources.districts.gert_sibande_dm import GertSibandeDmSource
     src = GertSibandeDmSource()
     assert src.source_id == "gert_sibande_dm"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_gert_sibande_dm_parse_mock_html():

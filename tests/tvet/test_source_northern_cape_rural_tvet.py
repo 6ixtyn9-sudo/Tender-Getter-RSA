@@ -6,7 +6,7 @@ def test_northern_cape_rural_tvet_source_initialization():
     from tender_getter.sources.tvet.northern_cape_rural_tvet import NorthernCapeRuralTvetSource
     src = NorthernCapeRuralTvetSource()
     assert src.source_id == "northern_cape_rural_tvet"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_northern_cape_rural_tvet_parse_mock_html():

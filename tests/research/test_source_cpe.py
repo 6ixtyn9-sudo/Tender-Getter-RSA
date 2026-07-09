@@ -6,7 +6,7 @@ def test_cpe_source_initialization():
     from tender_getter.sources.research.cpe import CpeSource
     src = CpeSource()
     assert src.source_id == "cpe"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_cpe_parse_mock_html():

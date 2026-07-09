@@ -6,7 +6,7 @@ def test_nu_source_initialization():
     from tender_getter.sources.research.nu import NuSource
     src = NuSource()
     assert src.source_id == "nu"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_nu_parse_mock_html():

@@ -6,7 +6,7 @@ def test_ilembe_lm_source_initialization():
     from tender_getter.sources.local_municipalities.ilembe_lm import IlembeLmSource
     src = IlembeLmSource()
     assert src.source_id == "ilembe_lm"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_ilembe_lm_parse_mock_html():

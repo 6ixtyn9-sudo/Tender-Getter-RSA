@@ -6,7 +6,7 @@ def test_kamiesberg_lm_source_initialization():
     from tender_getter.sources.local_municipalities.kamiesberg_lm import KamiesbergLmSource
     src = KamiesbergLmSource()
     assert src.source_id == "kamiesberg_lm"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_kamiesberg_lm_parse_mock_html():

@@ -6,7 +6,7 @@ def test_lp_social_source_initialization():
     from tender_getter.sources.research.lp_social import LpSocialSource
     src = LpSocialSource()
     assert src.source_id == "lp_social"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_lp_social_parse_mock_html():

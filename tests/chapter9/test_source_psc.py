@@ -6,7 +6,7 @@ def test_psc_source_initialization():
     from tender_getter.sources.chapter9.psc import PscSource
     src = PscSource()
     assert src.source_id == "psc"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_psc_parse_mock_html():

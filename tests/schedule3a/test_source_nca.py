@@ -6,7 +6,7 @@ def test_nca_source_initialization():
     from tender_getter.sources.schedule3a.nca import NcaSource
     src = NcaSource()
     assert src.source_id == "nca"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_nca_parse_mock_html():

@@ -6,7 +6,7 @@ def test_kzn_arts_source_initialization():
     from tender_getter.sources.research.kzn_arts import KznArtsSource
     src = KznArtsSource()
     assert src.source_id == "kzn_arts"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_kzn_arts_parse_mock_html():

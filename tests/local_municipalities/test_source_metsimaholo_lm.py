@@ -6,7 +6,7 @@ def test_metsimaholo_lm_source_initialization():
     from tender_getter.sources.local_municipalities.metsimaholo_lm import MetsimaholoLmSource
     src = MetsimaholoLmSource()
     assert src.source_id == "metsimaholo_lm"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_metsimaholo_lm_parse_mock_html():

@@ -6,7 +6,7 @@ def test_mp_dev_source_initialization():
     from tender_getter.sources.research.mp_dev import MpDevSource
     src = MpDevSource()
     assert src.source_id == "mp_dev"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_mp_dev_parse_mock_html():

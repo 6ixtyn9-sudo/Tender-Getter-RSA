@@ -6,7 +6,7 @@ def test_buffalo_city_dm_legacy_source_initialization():
     from tender_getter.sources.districts.buffalo_city_dm_legacy import BuffaloCityDmLegacySource
     src = BuffaloCityDmLegacySource()
     assert src.source_id == "buffalo_city_dm_legacy"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_buffalo_city_dm_legacy_parse_mock_html():

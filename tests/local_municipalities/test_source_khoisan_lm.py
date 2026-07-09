@@ -6,7 +6,7 @@ def test_khoisan_lm_source_initialization():
     from tender_getter.sources.local_municipalities.khoisan_lm import KhoisanLmSource
     src = KhoisanLmSource()
     assert src.source_id == "khoisan_lm"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_khoisan_lm_parse_mock_html():

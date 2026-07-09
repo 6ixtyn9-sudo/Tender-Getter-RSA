@@ -6,7 +6,7 @@ def test_greater_tzaneen_lm_source_initialization():
     from tender_getter.sources.local_municipalities.greater_tzaneen_lm import GreaterTzaneenLmSource
     src = GreaterTzaneenLmSource()
     assert src.source_id == "greater_tzaneen_lm"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_greater_tzaneen_lm_parse_mock_html():

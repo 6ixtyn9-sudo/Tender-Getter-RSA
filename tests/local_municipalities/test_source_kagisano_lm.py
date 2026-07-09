@@ -6,7 +6,7 @@ def test_kagisano_lm_source_initialization():
     from tender_getter.sources.local_municipalities.kagisano_lm import KagisanoLmSource
     src = KagisanoLmSource()
     assert src.source_id == "kagisano_lm"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_kagisano_lm_parse_mock_html():

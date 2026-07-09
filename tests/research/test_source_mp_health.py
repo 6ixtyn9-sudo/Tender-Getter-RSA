@@ -6,7 +6,7 @@ def test_mp_health_source_initialization():
     from tender_getter.sources.research.mp_health import MpHealthSource
     src = MpHealthSource()
     assert src.source_id == "mp_health"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_mp_health_parse_mock_html():

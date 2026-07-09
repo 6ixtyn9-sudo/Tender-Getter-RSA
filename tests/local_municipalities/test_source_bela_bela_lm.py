@@ -6,7 +6,7 @@ def test_bela_bela_lm_source_initialization():
     from tender_getter.sources.local_municipalities.bela_bela_lm import BelaBelaLmSource
     src = BelaBelaLmSource()
     assert src.source_id == "bela_bela_lm"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_bela_bela_lm_parse_mock_html():

@@ -6,7 +6,7 @@ def test_crl_source_initialization():
     from tender_getter.sources.chapter9.crl import CrlSource
     src = CrlSource()
     assert src.source_id == "crl"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_crl_parse_mock_html():

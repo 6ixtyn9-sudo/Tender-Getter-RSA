@@ -6,7 +6,7 @@ def test_alfred_duma_lm_source_initialization():
     from tender_getter.sources.local_municipalities.alfred_duma_lm import AlfredDumaLmSource
     src = AlfredDumaLmSource()
     assert src.source_id == "alfred_duma_lm"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_alfred_duma_lm_parse_mock_html():

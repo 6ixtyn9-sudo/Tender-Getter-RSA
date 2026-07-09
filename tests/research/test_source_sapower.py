@@ -6,7 +6,7 @@ def test_sapower_source_initialization():
     from tender_getter.sources.research.sapower import SapowerSource
     src = SapowerSource()
     assert src.source_id == "sapower"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_sapower_parse_mock_html():

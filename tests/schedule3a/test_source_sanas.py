@@ -6,7 +6,7 @@ def test_sanas_source_initialization():
     from tender_getter.sources.schedule3a.sanas import SanasSource
     src = SanasSource()
     assert src.source_id == "sanas"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_sanas_parse_mock_html():

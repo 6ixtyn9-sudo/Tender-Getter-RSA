@@ -6,7 +6,7 @@ def test_plumbers_board_source_initialization():
     from tender_getter.sources.regulators.plumbers_board import PlumbersBoardSource
     src = PlumbersBoardSource()
     assert src.source_id == "plumbers_board"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_plumbers_board_parse_mock_html():

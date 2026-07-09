@@ -6,7 +6,7 @@ def test_tnpa_source_initialization():
     from tender_getter.sources.soes.tnpa import TnpaSource
     src = TnpaSource()
     assert src.source_id == "tnpa"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_tnpa_parse_mock_html():

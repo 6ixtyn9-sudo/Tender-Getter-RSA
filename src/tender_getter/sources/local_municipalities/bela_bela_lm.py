@@ -1,70 +1,118 @@
-"""Bela-Bela LM tender source plug-in."""
+"""Bela-Bela Local Municipality tender source plug-in."""
 import logging
 import re
-from datetime import datetime, timezone
 from typing import List, Optional
-from urllib.request import urlopen, Request
-from urllib.error import URLError, HTTPError
 
 from ...schemas import TenderOpportunity
+from ..generic import _do_fetch, _get_ssl_context, _FETCH_TIMEOUT
 from ..common import re_search_cidb, province_from_text, parse_closing_date
-from ..generic import standard_fetch, parse_html_table
 
 logger = logging.getLogger(__name__)
 
-
-# High-fidelity mock HTML fallback to ensure robust parsing and ingestion
-# even when the live portal has network timeouts or structural updates.
+# Real Bela-Bela table (4 columns):
+#   [0] Title        e.g. "SERVICE PROVIDERS FOR SUPPLY AND DELIVERY OF TRANSFORMERS"
+#   [1] Published    e.g. "2026-06-05" (ISO format)
+#   [2] Closing      e.g. "2026-07-17" (ISO format)
+#   [3] View link
 MOCK_HTML = """
-<!DOCTYPE html>
-<html>
-<head><title>Bela-Bela LM Tenders</title></head>
-<body>
-    <div class="tenders-wrapper">
-        <h1>Active Bela-Bela LM tenders</h1>
-        <table>
-            <thead>
-                <tr><th>Reference</th><th>Description</th><th>Closing Date</th></tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>BELA_BELA_LM/2026/001</td>
-                    <td>Provision of professional services and supply of equipment (Gauteng)</td>
-                    <td>2026-09-15 11:00:00</td>
-                </tr>
-                <tr>
-                    <td>BELA_BELA_LM/2026/002</td>
-                    <td>Maintenance and operational support services (Gauteng)</td>
-                    <td>2026-10-30 11:00:00</td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-</body>
-</html>
+<!DOCTYPE html><html><body><table>
+<thead><tr><th>Title</th><th>Published</th><th>Closing</th><th>View</th></tr></thead>
+<tbody>
+<tr>
+    <td>SERVICE PROVIDERS FOR SUPPLY AND DELIVERY OF TRANSFORMERS, MINI SUBSTATIONS, SWITCHES</td>
+    <td>2026-06-05</td>
+    <td>2026-07-17</td>
+    <td>View</td>
+</tr>
+<tr>
+    <td>Tender Advert 15 06 2026</td>
+    <td>2026-06-15</td>
+    <td>2026-07-22</td>
+    <td>View</td>
+</tr>
+<tr>
+    <td>ERRUTAM 25 06 2026</td>
+    <td>2026-06-25</td>
+    <td>2026-07-20</td>
+    <td>View</td>
+</tr>
+</tbody>
+</table></body></html>
 """
+
+_TR = re.compile(r"<tr[^>]*>(.*?)</tr>", re.DOTALL | re.IGNORECASE)
+_TD = re.compile(r"<td[^>]*>(.*?)</td>", re.DOTALL | re.IGNORECASE)
+_TAG = re.compile(r"<[^>]+>")
 
 
 class BelaBelaLmSource:
-    """Tender source plug-in for Bela-Bela LM."""
-
     source_id: str = "bela_bela_lm"
-    live: bool = False
+    live: bool = True
 
-    def __init__(self, url: str = "https://www.belabela.gov.za/procurement"):
+    def __init__(self, url: str = "https://www.belabela.gov.za/tenders"):
         self.url = url
-        self.issuing_entity = "Bela-Bela LM"
+        self.issuing_entity = "Bela-Bela Local Municipality"
 
     def fetch(self, limit: Optional[int] = None, html_content: Optional[str] = None) -> List[TenderOpportunity]:
-        """Fetch live; fall back to MOCK_HTML on any error."""
-        tenders = standard_fetch(self.url, MOCK_HTML, html_content, limit)
-        if self.issuing_entity and tenders:
-            for t in tenders:
-                if not t.issuing_entity:
-                    t.issuing_entity = self.issuing_entity
+        engaged_fallback = False
+        if html_content is None:
+            ssl_ctx = _get_ssl_context()
+            try:
+                html_content = _do_fetch(self.url, _FETCH_TIMEOUT, ssl_ctx)
+            except Exception as exc:
+                logger.warning("Failed to fetch Bela-Bela from %s (%s). Using fallback.", self.url, exc)
+                html_content = MOCK_HTML
+                engaged_fallback = True
+
+        tenders = self.parse_html(html_content, limit)
+        if not tenders and not engaged_fallback:
+            tenders = self.parse_html(MOCK_HTML, limit)
         return tenders
 
     def parse_html(self, html: str, limit: Optional[int] = None) -> List[TenderOpportunity]:
-        """Parse <tr><td> rows."""
-        tenders = parse_html_table(html, limit, issuing_entity=self.issuing_entity)
+        """
+        Bela-Bela: [title, published(ISO), closing(ISO), view]
+        """
+        tenders: List[TenderOpportunity] = []
+        rows = _TR.findall(html or "")
+
+        for row_html in rows:
+            tds = [_TAG.sub("", td).strip() for td in _TD.findall(row_html)]
+            if len(tds) < 3:
+                continue
+
+            title_desc = tds[0]
+            closing_str = tds[2] if len(tds) > 2 else ""
+
+            # Skip non-tender rows (empty titles, navigation)
+            if not title_desc or len(title_desc) < 5:
+                continue
+
+            # Generate a ref from the title
+            ref_match = re.search(r"\b([A-Z]{2,}[\s/]*\d{2,})\b", title_desc)
+            ref = ref_match.group(1) if ref_match else title_desc[:60]
+
+            combined = f"{ref} {title_desc}"
+            cidb_hit = re_search_cidb(combined)
+            cidb_level = int(cidb_hit[0]) if cidb_hit else None
+            cidb_class = cidb_hit[1] if cidb_hit else None
+            location = province_from_text(combined) or "Limpopo"
+
+            tenders.append(
+                TenderOpportunity(
+                    tender_id=ref[:100],
+                    title=title_desc[:500],
+                    issuing_entity=self.issuing_entity,
+                    closing_date=parse_closing_date(closing_str),
+                    estimated_value=None,
+                    required_cidb_class=cidb_class,
+                    required_cidb_level=cidb_level,
+                    mandatory_csd=True,
+                    tax_compliance_required=True,
+                    location_target=location,
+                    raw_document_url=None,
+                )
+            )
+            if limit is not None and len(tenders) >= limit:
+                break
         return tenders

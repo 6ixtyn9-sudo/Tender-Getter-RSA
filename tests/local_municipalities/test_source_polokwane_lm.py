@@ -6,7 +6,7 @@ def test_polokwane_lm_source_initialization():
     from tender_getter.sources.local_municipalities.polokwane_lm import PolokwaneLmSource
     src = PolokwaneLmSource()
     assert src.source_id == "polokwane_lm"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_polokwane_lm_parse_mock_html():

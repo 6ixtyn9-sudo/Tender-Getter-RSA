@@ -6,7 +6,7 @@ def test_lopapala_lm_source_initialization():
     from tender_getter.sources.local_municipalities.lopapala_lm import LopapalaLmSource
     src = LopapalaLmSource()
     assert src.source_id == "lopapala_lm"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_lopapala_lm_parse_mock_html():

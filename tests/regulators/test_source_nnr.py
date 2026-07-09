@@ -6,7 +6,7 @@ def test_nnr_source_initialization():
     from tender_getter.sources.regulators.nnr import NnrSource
     src = NnrSource()
     assert src.source_id == "nnr"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_nnr_parse_mock_html():

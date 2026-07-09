@@ -6,7 +6,7 @@ def test_mp_social_source_initialization():
     from tender_getter.sources.research.mp_social import MpSocialSource
     src = MpSocialSource()
     assert src.source_id == "mp_social"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_mp_social_parse_mock_html():

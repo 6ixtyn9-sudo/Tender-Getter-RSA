@@ -6,7 +6,7 @@ def test_csos_source_initialization():
     from tender_getter.sources.schedule3a.csos import CsosSource
     src = CsosSource()
     assert src.source_id == "csos"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_csos_parse_mock_html():

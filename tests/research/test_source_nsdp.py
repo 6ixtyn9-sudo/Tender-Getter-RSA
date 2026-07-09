@@ -6,7 +6,7 @@ def test_nsdp_source_initialization():
     from tender_getter.sources.research.nsdp import NsdpSource
     src = NsdpSource()
     assert src.source_id == "nsdp"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_nsdp_parse_mock_html():

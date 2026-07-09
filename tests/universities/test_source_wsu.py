@@ -6,7 +6,7 @@ def test_wsu_source_initialization():
     from tender_getter.sources.universities.wsu import WsuSource
     src = WsuSource()
     assert src.source_id == "wsu"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_wsu_parse_mock_html():

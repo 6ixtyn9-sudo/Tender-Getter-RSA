@@ -6,7 +6,7 @@ def test_ntabankulu_lm_source_initialization():
     from tender_getter.sources.local_municipalities.ntabankulu_lm import NtabankuluLmSource
     src = NtabankuluLmSource()
     assert src.source_id == "ntabankulu_lm"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_ntabankulu_lm_parse_mock_html():

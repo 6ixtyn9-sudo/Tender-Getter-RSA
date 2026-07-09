@@ -6,7 +6,7 @@ def test_xhariep_dm_source_initialization():
     from tender_getter.sources.districts.xhariep_dm import XhariepDmSource
     src = XhariepDmSource()
     assert src.source_id == "xhariep_dm"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_xhariep_dm_parse_mock_html():

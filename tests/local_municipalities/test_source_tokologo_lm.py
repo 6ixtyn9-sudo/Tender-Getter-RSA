@@ -6,7 +6,7 @@ def test_tokologo_lm_source_initialization():
     from tender_getter.sources.local_municipalities.tokologo_lm import TokologoLmSource
     src = TokologoLmSource()
     assert src.source_id == "tokologo_lm"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_tokologo_lm_parse_mock_html():

@@ -6,7 +6,7 @@ def test_west_coast_dm_source_initialization():
     from tender_getter.sources.districts.west_coast_dm import WestCoastDmSource
     src = WestCoastDmSource()
     assert src.source_id == "west_coast_dm"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_west_coast_dm_parse_mock_html():

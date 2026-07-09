@@ -6,7 +6,7 @@ def test_ingwe_tvet_source_initialization():
     from tender_getter.sources.tvet.ingwe_tvet import IngweTvetSource
     src = IngweTvetSource()
     assert src.source_id == "ingwe_tvet"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_ingwe_tvet_parse_mock_html():

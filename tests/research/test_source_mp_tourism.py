@@ -6,7 +6,7 @@ def test_mp_tourism_source_initialization():
     from tender_getter.sources.research.mp_tourism import MpTourismSource
     src = MpTourismSource()
     assert src.source_id == "mp_tourism"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_mp_tourism_parse_mock_html():

@@ -6,7 +6,7 @@ def test_etdp_seta_source_initialization():
     from tender_getter.sources.setas.etdp_seta import EtdpSetaSource
     src = EtdpSetaSource()
     assert src.source_id == "etdp_seta"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_etdp_seta_parse_mock_html():

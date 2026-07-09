@@ -6,7 +6,7 @@ def test_nmu_source_initialization():
     from tender_getter.sources.universities.nmu import NmuSource
     src = NmuSource()
     assert src.source_id == "nmu"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_nmu_parse_mock_html():

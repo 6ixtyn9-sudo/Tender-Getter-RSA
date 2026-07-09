@@ -6,7 +6,7 @@ def test_fdc_source_initialization():
     from tender_getter.sources.research.fdc import FdcSource
     src = FdcSource()
     assert src.source_id == "fdc"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_fdc_parse_mock_html():

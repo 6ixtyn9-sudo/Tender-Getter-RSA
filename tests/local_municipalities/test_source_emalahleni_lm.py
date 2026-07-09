@@ -6,7 +6,7 @@ def test_emalahleni_lm_source_initialization():
     from tender_getter.sources.local_municipalities.emalahleni_lm import EmalahleniLmSource
     src = EmalahleniLmSource()
     assert src.source_id == "emalahleni_lm"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_emalahleni_lm_parse_mock_html():

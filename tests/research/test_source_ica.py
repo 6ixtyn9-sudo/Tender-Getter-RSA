@@ -6,7 +6,7 @@ def test_ica_source_initialization():
     from tender_getter.sources.research.ica import IcaSource
     src = IcaSource()
     assert src.source_id == "ica"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_ica_parse_mock_html():

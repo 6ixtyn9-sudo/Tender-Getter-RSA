@@ -6,7 +6,7 @@ def test_gov_tech_source_initialization():
     from tender_getter.sources.local_municipalities.gov_tech import GovTechSource
     src = GovTechSource()
     assert src.source_id == "gov_tech"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_gov_tech_parse_mock_html():

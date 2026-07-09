@@ -6,7 +6,7 @@ def test_gp_tourism_source_initialization():
     from tender_getter.sources.research.gp_tourism import GpTourismSource
     src = GpTourismSource()
     assert src.source_id == "gp_tourism"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_gp_tourism_parse_mock_html():

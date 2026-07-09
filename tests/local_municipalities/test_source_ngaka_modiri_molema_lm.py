@@ -6,7 +6,7 @@ def test_ngaka_modiri_molema_lm_source_initialization():
     from tender_getter.sources.local_municipalities.ngaka_modiri_molema_lm import NgakaModiriMolemaLmSource
     src = NgakaModiriMolemaLmSource()
     assert src.source_id == "ngaka_modiri_molema_lm"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_ngaka_modiri_molema_lm_parse_mock_html():

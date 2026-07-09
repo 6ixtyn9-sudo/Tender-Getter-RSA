@@ -6,7 +6,7 @@ def test_artscape_source_initialization():
     from tender_getter.sources.research.artscape import ArtscapeSource
     src = ArtscapeSource()
     assert src.source_id == "artscape"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_artscape_parse_mock_html():

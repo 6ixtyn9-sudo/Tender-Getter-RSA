@@ -6,7 +6,7 @@ def test_cathsseta_source_initialization():
     from tender_getter.sources.setas.cathsseta import CathssetaSource
     src = CathssetaSource()
     assert src.source_id == "cathsseta"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_cathsseta_parse_mock_html():

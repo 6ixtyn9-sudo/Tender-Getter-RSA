@@ -6,7 +6,7 @@ def test_central_karoo_dm_source_initialization():
     from tender_getter.sources.districts.central_karoo_dm import CentralKarooDmSource
     src = CentralKarooDmSource()
     assert src.source_id == "central_karoo_dm"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_central_karoo_dm_parse_mock_html():

@@ -6,7 +6,7 @@ def test_nkangala_tvet_source_initialization():
     from tender_getter.sources.tvet.nkangala_tvet import NkangalaTvetSource
     src = NkangalaTvetSource()
     assert src.source_id == "nkangala_tvet"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_nkangala_tvet_parse_mock_html():

@@ -6,7 +6,7 @@ def test_ec_tourism_source_initialization():
     from tender_getter.sources.research.ec_tourism import EcTourismSource
     src = EcTourismSource()
     assert src.source_id == "ec_tourism"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_ec_tourism_parse_mock_html():

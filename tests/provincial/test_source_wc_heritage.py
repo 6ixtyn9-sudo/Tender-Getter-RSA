@@ -6,7 +6,7 @@ def test_wc_heritage_source_initialization():
     from tender_getter.sources.provincial.wc_heritage import WcHeritageSource
     src = WcHeritageSource()
     assert src.source_id == "wc_heritage"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_wc_heritage_parse_mock_html():

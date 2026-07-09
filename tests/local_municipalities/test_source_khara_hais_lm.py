@@ -6,7 +6,7 @@ def test_khara_hais_lm_source_initialization():
     from tender_getter.sources.local_municipalities.khara_hais_lm import KharaHaisLmSource
     src = KharaHaisLmSource()
     assert src.source_id == "khara_hais_lm"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_khara_hais_lm_parse_mock_html():

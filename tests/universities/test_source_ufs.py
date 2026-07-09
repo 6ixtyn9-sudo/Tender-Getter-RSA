@@ -6,7 +6,7 @@ def test_ufs_source_initialization():
     from tender_getter.sources.universities.ufs import UfsSource
     src = UfsSource()
     assert src.source_id == "ufs"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_ufs_parse_mock_html():

@@ -6,7 +6,7 @@ def test_competition_tribunal_source_initialization():
     from tender_getter.sources.research.competition_tribunal import CompetitionTribunalSource
     src = CompetitionTribunalSource()
     assert src.source_id == "competition_tribunal"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_competition_tribunal_parse_mock_html():

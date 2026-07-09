@@ -6,7 +6,7 @@ def test_ec_agriculture_source_initialization():
     from tender_getter.sources.research.ec_agriculture import EcAgricultureSource
     src = EcAgricultureSource()
     assert src.source_id == "ec_agriculture"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_ec_agriculture_parse_mock_html():

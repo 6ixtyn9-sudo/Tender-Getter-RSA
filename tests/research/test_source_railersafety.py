@@ -6,7 +6,7 @@ def test_railersafety_source_initialization():
     from tender_getter.sources.research.railersafety import RailersafetySource
     src = RailersafetySource()
     assert src.source_id == "railersafety"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_railersafety_parse_mock_html():

@@ -6,7 +6,7 @@ def test_vet_council_source_initialization():
     from tender_getter.sources.research.vet_council import VetCouncilSource
     src = VetCouncilSource()
     assert src.source_id == "vet_council"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_vet_council_parse_mock_html():

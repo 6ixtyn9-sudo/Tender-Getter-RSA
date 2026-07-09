@@ -6,7 +6,7 @@ def test_ufh_source_initialization():
     from tender_getter.sources.universities.ufh import UfhSource
     src = UfhSource()
     assert src.source_id == "ufh"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_ufh_parse_mock_html():

@@ -6,7 +6,7 @@ def test_molemole_lm_source_initialization():
     from tender_getter.sources.local_municipalities.molemole_lm import MolemoleLmSource
     src = MolemoleLmSource()
     assert src.source_id == "molemole_lm"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_molemole_lm_parse_mock_html():

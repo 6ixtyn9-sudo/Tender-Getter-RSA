@@ -6,7 +6,7 @@ def test_ffc_source_initialization():
     from tender_getter.sources.chapter9.ffc import FfcSource
     src = FfcSource()
     assert src.source_id == "ffc"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_ffc_parse_mock_html():

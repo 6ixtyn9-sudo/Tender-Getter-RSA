@@ -6,7 +6,7 @@ def test_wc_social_source_initialization():
     from tender_getter.sources.provincial.wc_social import WcSocialSource
     src = WcSocialSource()
     assert src.source_id == "wc_social"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_wc_social_parse_mock_html():

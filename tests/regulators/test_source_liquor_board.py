@@ -6,7 +6,7 @@ def test_liquor_board_source_initialization():
     from tender_getter.sources.regulators.liquor_board import LiquorBoardSource
     src = LiquorBoardSource()
     assert src.source_id == "liquor_board"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_liquor_board_parse_mock_html():

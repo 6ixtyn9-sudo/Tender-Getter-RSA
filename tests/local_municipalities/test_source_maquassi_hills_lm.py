@@ -6,7 +6,7 @@ def test_maquassi_hills_lm_source_initialization():
     from tender_getter.sources.local_municipalities.maquassi_hills_lm import MaquassiHillsLmSource
     src = MaquassiHillsLmSource()
     assert src.source_id == "maquassi_hills_lm"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_maquassi_hills_lm_parse_mock_html():

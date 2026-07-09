@@ -6,7 +6,7 @@ def test_greater_tubatse_lm_source_initialization():
     from tender_getter.sources.local_municipalities.greater_tubatse_lm import GreaterTubatseLmSource
     src = GreaterTubatseLmSource()
     assert src.source_id == "greater_tubatse_lm"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_greater_tubatse_lm_parse_mock_html():

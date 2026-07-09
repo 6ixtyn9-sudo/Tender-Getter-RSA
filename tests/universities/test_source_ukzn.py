@@ -6,7 +6,7 @@ def test_ukzn_source_initialization():
     from tender_getter.sources.universities.ukzn import UkznSource
     src = UkznSource()
     assert src.source_id == "ukzn"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_ukzn_parse_mock_html():

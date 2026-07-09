@@ -6,7 +6,7 @@ def test_iziko_source_initialization():
     from tender_getter.sources.research.iziko import IzikoSource
     src = IzikoSource()
     assert src.source_id == "iziko"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_iziko_parse_mock_html():

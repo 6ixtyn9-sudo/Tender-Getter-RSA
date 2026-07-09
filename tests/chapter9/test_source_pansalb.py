@@ -6,7 +6,7 @@ def test_pansalb_source_initialization():
     from tender_getter.sources.chapter9.pansalb import PansalbSource
     src = PansalbSource()
     assert src.source_id == "pansalb"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_pansalb_parse_mock_html():

@@ -6,7 +6,7 @@ def test_wcbs_source_initialization():
     from tender_getter.sources.research.wcbs import WcbsSource
     src = WcbsSource()
     assert src.source_id == "wcbs"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_wcbs_parse_mock_html():

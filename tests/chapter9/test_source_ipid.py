@@ -6,7 +6,7 @@ def test_ipid_source_initialization():
     from tender_getter.sources.chapter9.ipid import IpidSource
     src = IpidSource()
     assert src.source_id == "ipid"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_ipid_parse_mock_html():

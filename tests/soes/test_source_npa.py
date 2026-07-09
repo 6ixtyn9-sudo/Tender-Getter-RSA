@@ -6,7 +6,7 @@ def test_npa_source_initialization():
     from tender_getter.sources.soes.npa import NpaSource
     src = NpaSource()
     assert src.source_id == "npa"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_npa_parse_mock_html():

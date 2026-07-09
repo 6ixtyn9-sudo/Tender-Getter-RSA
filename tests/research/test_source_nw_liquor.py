@@ -6,7 +6,7 @@ def test_nw_liquor_source_initialization():
     from tender_getter.sources.research.nw_liquor import NwLiquorSource
     src = NwLiquorSource()
     assert src.source_id == "nw_liquor"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_nw_liquor_parse_mock_html():

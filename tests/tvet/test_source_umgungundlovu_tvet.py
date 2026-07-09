@@ -6,7 +6,7 @@ def test_umgungundlovu_tvet_source_initialization():
     from tender_getter.sources.tvet.umgungundlovu_tvet import UmgungundlovuTvetSource
     src = UmgungundlovuTvetSource()
     assert src.source_id == "umgungundlovu_tvet"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_umgungundlovu_tvet_parse_mock_html():

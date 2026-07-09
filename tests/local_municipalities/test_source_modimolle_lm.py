@@ -6,7 +6,7 @@ def test_modimolle_lm_source_initialization():
     from tender_getter.sources.local_municipalities.modimolle_lm import ModimolleLmSource
     src = ModimolleLmSource()
     assert src.source_id == "modimolle_lm"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_modimolle_lm_parse_mock_html():

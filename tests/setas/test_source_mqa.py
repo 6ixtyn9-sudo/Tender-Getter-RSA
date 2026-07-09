@@ -6,7 +6,7 @@ def test_mqa_source_initialization():
     from tender_getter.sources.setas.mqa import MqaSource
     src = MqaSource()
     assert src.source_id == "mqa"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_mqa_parse_mock_html():

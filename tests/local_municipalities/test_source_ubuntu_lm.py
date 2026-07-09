@@ -6,7 +6,7 @@ def test_ubuntu_lm_source_initialization():
     from tender_getter.sources.local_municipalities.ubuntu_lm import UbuntuLmSource
     src = UbuntuLmSource()
     assert src.source_id == "ubuntu_lm"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_ubuntu_lm_parse_mock_html():

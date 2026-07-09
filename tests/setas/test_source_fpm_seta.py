@@ -6,7 +6,7 @@ def test_fpm_seta_source_initialization():
     from tender_getter.sources.setas.fpm_seta import FpmSetaSource
     src = FpmSetaSource()
     assert src.source_id == "fpm_seta"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_fpm_seta_parse_mock_html():

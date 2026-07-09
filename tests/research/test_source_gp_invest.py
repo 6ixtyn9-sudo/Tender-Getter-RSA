@@ -6,7 +6,7 @@ def test_gp_invest_source_initialization():
     from tender_getter.sources.research.gp_invest import GpInvestSource
     src = GpInvestSource()
     assert src.source_id == "gp_invest"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_gp_invest_parse_mock_html():

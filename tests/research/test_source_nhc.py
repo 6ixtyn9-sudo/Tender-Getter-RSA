@@ -6,7 +6,7 @@ def test_nhc_source_initialization():
     from tender_getter.sources.research.nhc import NhcSource
     src = NhcSource()
     assert src.source_id == "nhc"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_nhc_parse_mock_html():

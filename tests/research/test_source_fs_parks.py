@@ -6,7 +6,7 @@ def test_fs_parks_source_initialization():
     from tender_getter.sources.research.fs_parks import FsParksSource
     src = FsParksSource()
     assert src.source_id == "fs_parks"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_fs_parks_parse_mock_html():

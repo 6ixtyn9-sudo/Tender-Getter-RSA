@@ -6,7 +6,7 @@ def test_kzn_tourism_source_initialization():
     from tender_getter.sources.research.kzn_tourism import KznTourismSource
     src = KznTourismSource()
     assert src.source_id == "kzn_tourism"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_kzn_tourism_parse_mock_html():

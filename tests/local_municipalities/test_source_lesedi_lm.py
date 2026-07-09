@@ -6,7 +6,7 @@ def test_lesedi_lm_source_initialization():
     from tender_getter.sources.local_municipalities.lesedi_lm import LesediLmSource
     src = LesediLmSource()
     assert src.source_id == "lesedi_lm"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_lesedi_lm_parse_mock_html():

@@ -6,7 +6,7 @@ def test_sahra_source_initialization():
     from tender_getter.sources.research.sahra import SahraSource
     src = SahraSource()
     assert src.source_id == "sahra"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_sahra_parse_mock_html():

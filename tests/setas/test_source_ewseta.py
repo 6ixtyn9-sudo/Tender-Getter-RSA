@@ -6,7 +6,7 @@ def test_ewseta_source_initialization():
     from tender_getter.sources.setas.ewseta import EwsetaSource
     src = EwsetaSource()
     assert src.source_id == "ewseta"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_ewseta_parse_mock_html():

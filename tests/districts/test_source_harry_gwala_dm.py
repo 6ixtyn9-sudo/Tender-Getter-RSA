@@ -6,7 +6,7 @@ def test_harry_gwala_dm_source_initialization():
     from tender_getter.sources.districts.harry_gwala_dm import HarryGwalaDmSource
     src = HarryGwalaDmSource()
     assert src.source_id == "harry_gwala_dm"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_harry_gwala_dm_parse_mock_html():

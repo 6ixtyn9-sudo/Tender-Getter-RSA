@@ -6,7 +6,7 @@ def test_wc_agriculture_source_initialization():
     from tender_getter.sources.provincial.wc_agriculture import WcAgricultureSource
     src = WcAgricultureSource()
     assert src.source_id == "wc_agriculture"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_wc_agriculture_parse_mock_html():

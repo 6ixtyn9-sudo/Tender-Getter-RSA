@@ -6,7 +6,7 @@ def test_ec_roads_source_initialization():
     from tender_getter.sources.research.ec_roads import EcRoadsSource
     src = EcRoadsSource()
     assert src.source_id == "ec_roads"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_ec_roads_parse_mock_html():

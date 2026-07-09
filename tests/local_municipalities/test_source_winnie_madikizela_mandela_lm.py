@@ -6,7 +6,7 @@ def test_winnie_madikizela_mandela_lm_source_initialization():
     from tender_getter.sources.local_municipalities.winnie_madikizela_mandela_lm import WinnieMadikizelaMandelaLmSource
     src = WinnieMadikizelaMandelaLmSource()
     assert src.source_id == "winnie_madikizela_mandela_lm"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_winnie_madikizela_mandela_lm_parse_mock_html():

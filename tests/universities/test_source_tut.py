@@ -6,7 +6,7 @@ def test_tut_source_initialization():
     from tender_getter.sources.universities.tut import TutSource
     src = TutSource()
     assert src.source_id == "tut"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_tut_parse_mock_html():

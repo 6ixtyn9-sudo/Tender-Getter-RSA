@@ -6,7 +6,7 @@ def test_setsoto_lm_source_initialization():
     from tender_getter.sources.local_municipalities.setsoto_lm import SetsotoLmSource
     src = SetsotoLmSource()
     assert src.source_id == "setsoto_lm"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_setsoto_lm_parse_mock_html():

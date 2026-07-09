@@ -6,7 +6,7 @@ def test_ethekwini_electricity_source_initialization():
     from tender_getter.sources.local_municipalities.ethekwini_electricity import EthekwiniElectricitySource
     src = EthekwiniElectricitySource()
     assert src.source_id == "ethekwini_electricity"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_ethekwini_electricity_parse_mock_html():

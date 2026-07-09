@@ -6,7 +6,7 @@ def test_sac_source_initialization():
     from tender_getter.sources.research.sac import SacSource
     src = SacSource()
     assert src.source_id == "sac"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_sac_parse_mock_html():

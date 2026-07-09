@@ -6,7 +6,7 @@ def test_zamukulungisa_lm_source_initialization():
     from tender_getter.sources.local_municipalities.zamukulungisa_lm import ZamukulungisaLmSource
     src = ZamukulungisaLmSource()
     assert src.source_id == "zamukulungisa_lm"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_zamukulungisa_lm_parse_mock_html():

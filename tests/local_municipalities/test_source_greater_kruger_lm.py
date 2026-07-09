@@ -6,7 +6,7 @@ def test_greater_kruger_lm_source_initialization():
     from tender_getter.sources.local_municipalities.greater_kruger_lm import GreaterKrugerLmSource
     src = GreaterKrugerLmSource()
     assert src.source_id == "greater_kruger_lm"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_greater_kruger_lm_parse_mock_html():

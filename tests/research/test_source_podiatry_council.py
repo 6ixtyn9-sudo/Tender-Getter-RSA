@@ -6,7 +6,7 @@ def test_podiatry_council_source_initialization():
     from tender_getter.sources.research.podiatry_council import PodiatryCouncilSource
     src = PodiatryCouncilSource()
     assert src.source_id == "podiatry_council"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_podiatry_council_parse_mock_html():

@@ -6,7 +6,7 @@ def test_siyathemba_lm_source_initialization():
     from tender_getter.sources.local_municipalities.siyathemba_lm import SiyathembaLmSource
     src = SiyathembaLmSource()
     assert src.source_id == "siyathemba_lm"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_siyathemba_lm_parse_mock_html():

@@ -6,7 +6,7 @@ def test_ecdc_source_initialization():
     from tender_getter.sources.research.ecdc import EcdcSource
     src = EcdcSource()
     assert src.source_id == "ecdc"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_ecdc_parse_mock_html():

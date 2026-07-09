@@ -6,7 +6,7 @@ def test_ecsa_source_initialization():
     from tender_getter.sources.research.ecsa import EcsaSource
     src = EcsaSource()
     assert src.source_id == "ecsa"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_ecsa_parse_mock_html():

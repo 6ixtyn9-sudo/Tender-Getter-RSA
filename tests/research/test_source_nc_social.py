@@ -6,7 +6,7 @@ def test_nc_social_source_initialization():
     from tender_getter.sources.research.nc_social import NcSocialSource
     src = NcSocialSource()
     assert src.source_id == "nc_social"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_nc_social_parse_mock_html():

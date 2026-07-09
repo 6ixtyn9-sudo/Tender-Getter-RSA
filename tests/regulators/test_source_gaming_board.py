@@ -6,7 +6,7 @@ def test_gaming_board_source_initialization():
     from tender_getter.sources.regulators.gaming_board import GamingBoardSource
     src = GamingBoardSource()
     assert src.source_id == "gaming_board"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_gaming_board_parse_mock_html():

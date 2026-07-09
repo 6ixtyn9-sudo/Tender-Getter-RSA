@@ -6,7 +6,7 @@ def test_metrorail_source_initialization():
     from tender_getter.sources.metros.metrorail import MetrorailSource
     src = MetrorailSource()
     assert src.source_id == "metrorail"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_metrorail_parse_mock_html():

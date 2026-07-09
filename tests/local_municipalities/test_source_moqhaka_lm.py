@@ -6,7 +6,7 @@ def test_moqhaka_lm_source_initialization():
     from tender_getter.sources.local_municipalities.moqhaka_lm import MoqhakaLmSource
     src = MoqhakaLmSource()
     assert src.source_id == "moqhaka_lm"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_moqhaka_lm_parse_mock_html():

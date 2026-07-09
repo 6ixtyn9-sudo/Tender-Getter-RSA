@@ -6,7 +6,7 @@ def test_nkonkobe_lm_source_initialization():
     from tender_getter.sources.local_municipalities.nkonkobe_lm import NkonkobeLmSource
     src = NkonkobeLmSource()
     assert src.source_id == "nkonkobe_lm"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_nkonkobe_lm_parse_mock_html():

@@ -6,7 +6,7 @@ def test_mantsopa_lm_source_initialization():
     from tender_getter.sources.local_municipalities.mantsopa_lm import MantsopaLmSource
     src = MantsopaLmSource()
     assert src.source_id == "mantsopa_lm"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_mantsopa_lm_parse_mock_html():

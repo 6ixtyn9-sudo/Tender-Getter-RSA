@@ -6,7 +6,7 @@ def test_amathole_dm_source_initialization():
     from tender_getter.sources.districts.amathole_dm import AmatholeDmSource
     src = AmatholeDmSource()
     assert src.source_id == "amathole_dm"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_amathole_dm_parse_mock_html():

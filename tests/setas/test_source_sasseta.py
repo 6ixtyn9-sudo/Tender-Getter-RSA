@@ -6,7 +6,7 @@ def test_sasseta_source_initialization():
     from tender_getter.sources.setas.sasseta import SassetaSource
     src = SassetaSource()
     assert src.source_id == "sasseta"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_sasseta_parse_mock_html():

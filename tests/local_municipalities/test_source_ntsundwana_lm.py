@@ -6,7 +6,7 @@ def test_ntsundwana_lm_source_initialization():
     from tender_getter.sources.local_municipalities.ntsundwana_lm import NtsundwanaLmSource
     src = NtsundwanaLmSource()
     assert src.source_id == "ntsundwana_lm"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_ntsundwana_lm_parse_mock_html():

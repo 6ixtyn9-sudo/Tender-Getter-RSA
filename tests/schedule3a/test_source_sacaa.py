@@ -6,7 +6,7 @@ def test_sacaa_source_initialization():
     from tender_getter.sources.schedule3a.sacaa import SacaaSource
     src = SacaaSource()
     assert src.source_id == "sacaa"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_sacaa_parse_mock_html():

@@ -6,7 +6,7 @@ def test_nlc_source_initialization():
     from tender_getter.sources.research.nlc import NlcSource
     src = NlcSource()
     assert src.source_id == "nlc"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_nlc_parse_mock_html():

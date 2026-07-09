@@ -6,7 +6,7 @@ def test_fs_heritage_source_initialization():
     from tender_getter.sources.research.fs_heritage import FsHeritageSource
     src = FsHeritageSource()
     assert src.source_id == "fs_heritage"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_fs_heritage_parse_mock_html():

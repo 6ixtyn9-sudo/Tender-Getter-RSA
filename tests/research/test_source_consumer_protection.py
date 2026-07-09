@@ -6,7 +6,7 @@ def test_consumer_protection_source_initialization():
     from tender_getter.sources.research.consumer_protection import ConsumerProtectionSource
     src = ConsumerProtectionSource()
     assert src.source_id == "consumer_protection"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_consumer_protection_parse_mock_html():

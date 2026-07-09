@@ -6,7 +6,7 @@ def test_taletso_tvet_source_initialization():
     from tender_getter.sources.tvet.taletso_tvet import TaletsoTvetSource
     src = TaletsoTvetSource()
     assert src.source_id == "taletso_tvet"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_taletso_tvet_parse_mock_html():

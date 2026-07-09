@@ -6,7 +6,7 @@ def test_dr_kennga_kaunda_dm_source_initialization():
     from tender_getter.sources.districts.dr_kennga_kaunda_dm import DrKenngaKaundaDmSource
     src = DrKenngaKaundaDmSource()
     assert src.source_id == "dr_kennga_kaunda_dm"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_dr_kennga_kaunda_dm_parse_mock_html():

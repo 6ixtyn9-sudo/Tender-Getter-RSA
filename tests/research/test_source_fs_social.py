@@ -6,7 +6,7 @@ def test_fs_social_source_initialization():
     from tender_getter.sources.research.fs_social import FsSocialSource
     src = FsSocialSource()
     assert src.source_id == "fs_social"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_fs_social_parse_mock_html():

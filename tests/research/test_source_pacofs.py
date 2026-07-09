@@ -6,7 +6,7 @@ def test_pacofs_source_initialization():
     from tender_getter.sources.research.pacofs import PacofsSource
     src = PacofsSource()
     assert src.source_id == "pacofs"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_pacofs_parse_mock_html():

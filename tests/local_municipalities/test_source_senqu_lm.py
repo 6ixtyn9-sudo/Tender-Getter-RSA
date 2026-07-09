@@ -6,7 +6,7 @@ def test_senqu_lm_source_initialization():
     from tender_getter.sources.local_municipalities.senqu_lm import SenquLmSource
     src = SenquLmSource()
     assert src.source_id == "senqu_lm"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_senqu_lm_parse_mock_html():

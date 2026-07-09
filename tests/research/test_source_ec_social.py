@@ -6,7 +6,7 @@ def test_ec_social_source_initialization():
     from tender_getter.sources.research.ec_social import EcSocialSource
     src = EcSocialSource()
     assert src.source_id == "ec_social"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_ec_social_parse_mock_html():

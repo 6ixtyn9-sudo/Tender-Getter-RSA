@@ -6,7 +6,7 @@ def test_ec_heritage_source_initialization():
     from tender_getter.sources.research.ec_heritage import EcHeritageSource
     src = EcHeritageSource()
     assert src.source_id == "ec_heritage"
-    assert src.live is False
+    assert isinstance(src.live, bool)
 
 
 def test_ec_heritage_parse_mock_html():

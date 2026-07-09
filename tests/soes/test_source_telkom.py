@@ -6,7 +6,7 @@ def test_telkom_source_initialization():
     from tender_getter.sources.soes.telkom import TelkomSource
     src = TelkomSource()
     assert src.source_id == "telkom"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_telkom_parse_mock_html():

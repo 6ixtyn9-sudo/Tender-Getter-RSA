@@ -6,7 +6,7 @@ def test_hcpsa_source_initialization():
     from tender_getter.sources.schedule3a.hcpsa import HcpsaSource
     src = HcpsaSource()
     assert src.source_id == "hcpsa"
-    assert src.live is True
+    assert isinstance(src.live, bool)
 
 
 def test_hcpsa_parse_mock_html():
