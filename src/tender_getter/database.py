@@ -222,6 +222,10 @@ class TenderDatabase(TenderDatabaseBase):
 
     # -- Match results -------------------------------------------------------
 
+    def list_open(self, limit: int = 50, province: Optional[str] = None) -> list[TenderOpportunity]:
+        """Alias for list_open_tenders — queries open tenders ordered by closing date."""
+        return self.list_open_tenders(limit=limit, province=province)
+
     def list_open_tenders(self, limit: int = 50, province: Optional[str] = None) -> list[TenderOpportunity]:
         assert self._conn, "Call connect() first."
         query = "SELECT * FROM tenders"

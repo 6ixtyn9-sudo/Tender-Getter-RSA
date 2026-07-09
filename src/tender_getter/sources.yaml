@@ -448,11 +448,11 @@ sources:
   priority: 3
   free: true
 - id: cidb_itender
-  name: Cidb Itender
-  live: true
-  url: https://www.cidb.org.za/
+  name: CIDB iTender
+  live: false
+  url: https://www.cidb.org.za/itender
   type: html
-  priority: 2
+  priority: 1
   free: true
 - id: cipc
   name: Cipc
@@ -1183,21 +1183,19 @@ sources:
   priority: 3
   free: true
 - id: etenders_csv
-  name: National Treasury eTenders Bulk CSV
-  url: https://data.etenders.gov.za/
-  download_pattern: https://data.etenders.gov.za/Home/DownloadFile/?fileName=DDMMYYYY.csv
+  name: National Treasury eTenders CSV
+  live: true
+  url: https://www.treasury.gov.za
   type: csv
   priority: 1
   free: true
-  live: true
 - id: etenders_ocds
-  name: National Treasury eTenders OCDS API
-  url: https://ocds-api.etenders.gov.za
-  swagger: https://ocds-api.etenders.gov.za/swagger/index.html
-  type: ocds_json
+  name: National Treasury OCDS
+  live: true
+  url: https://www.treasury.gov.za/ocds
+  type: json
   priority: 1
   free: true
-  live: true
 - id: ethekwini
   name: Ethekwini
   live: true
@@ -1465,11 +1463,11 @@ sources:
   priority: 3
   free: true
 - id: gauteng_etenders
-  name: Gauteng Etenders
+  name: Gauteng eTenders
   live: true
-  url: https://etenders.gauteng.gov.za
+  url: https://www.gauteng.gov.za
   type: html
-  priority: 2
+  priority: 1
   free: true
 - id: gauteng_tourism
   name: Gauteng Tourism
@@ -2116,11 +2114,11 @@ sources:
   priority: 3
   free: true
 - id: kzn_treasury
-  name: Kzn Treasury
+  name: KwaZulu-Natal Treasury
   live: true
   url: https://www.kzntreasury.gov.za
   type: html
-  priority: 2
+  priority: 1
   free: true
 - id: kzn_wildlife
   name: Kzn Wildlife
@@ -3012,9 +3010,9 @@ sources:
   priority: 3
   free: true
 - id: nelsonmandelabay
-  name: Nelsonmandelabay
+  name: Nelson Mandela Bay Municipality
   live: true
-  url: https://www.nelsonmandelabay.gov.za/Tenders
+  url: https://www.nelsonmandelabay.gov.za
   type: html
   priority: 2
   free: true

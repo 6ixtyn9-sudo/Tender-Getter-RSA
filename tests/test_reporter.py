@@ -13,8 +13,8 @@ import pytest
 from pathlib import Path
 from datetime import datetime, timezone
 
-from src.tender_getter.schemas import CIDBGrading, Location, CompanyProfile, TenderOpportunity
-from src.tender_getter.reporter import generate_report, _safe_filename, _score_bar
+from tender_getter.schemas import CIDBGrading, Location, CompanyProfile, TenderOpportunity
+from tender_getter.reporter import generate_report, _safe_filename, _score_bar
 
 
 # ---------------------------------------------------------------------------

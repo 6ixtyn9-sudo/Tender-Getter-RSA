@@ -15,8 +15,8 @@ Tests cover:
 import pytest
 from datetime import datetime, timezone
 
-from src.tender_getter.schemas import CIDBGrading, Location, CompanyProfile, TenderOpportunity
-from src.tender_getter.matcher import (
+from tender_getter.schemas import CIDBGrading, Location, CompanyProfile, TenderOpportunity
+from tender_getter.matcher import (
     match, get_bbbee_system, get_bbbee_points, BBBEE_THRESHOLD_ZAR
 )
 

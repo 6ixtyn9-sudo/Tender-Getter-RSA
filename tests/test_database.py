@@ -16,9 +16,9 @@ from datetime import datetime, timezone
 from pathlib import Path
 from unittest.mock import patch, MagicMock
 
-from src.tender_getter.database_base import TenderDatabaseBase
-from src.tender_getter.database import TenderDatabase, get_database_client
-from src.tender_getter.schemas import (
+from tender_getter.database_base import TenderDatabaseBase
+from tender_getter.database import TenderDatabase, get_database_client
+from tender_getter.schemas import (
     CIDBGrading, Location, CompanyProfile, TenderOpportunity, MatchResult,
 )
 
@@ -144,7 +144,7 @@ class TestGetDatabaseClient:
 
     def test_returns_postgres_when_env_set(self):
         """PostgresDatabase is returned when SUPABASE_DB_URL is non-empty."""
-        from src.tender_getter.database_postgres import PostgresDatabase
+        from tender_getter.database_postgres import PostgresDatabase
 
         fake_dsn = "postgresql://postgres:secret@db.example.supabase.co:5432/postgres"
         with patch.dict(os.environ, {"SUPABASE_DB_URL": fake_dsn}):
@@ -154,12 +154,12 @@ class TestGetDatabaseClient:
 
     def test_postgres_client_satisfies_base(self):
         """PostgresDatabase must satisfy the TenderDatabaseBase interface."""
-        from src.tender_getter.database_postgres import PostgresDatabase
+        from tender_getter.database_postgres import PostgresDatabase
         assert issubclass(PostgresDatabase, TenderDatabaseBase)
 
     def test_postgres_not_connected_without_calling_connect(self):
         """Calling upsert before connect() must raise AssertionError."""
-        from src.tender_getter.database_postgres import PostgresDatabase
+        from tender_getter.database_postgres import PostgresDatabase
 
         pg = PostgresDatabase("postgresql://fake:fake@localhost:5432/fake")
         with pytest.raises(AssertionError, match="connect\\(\\)"):

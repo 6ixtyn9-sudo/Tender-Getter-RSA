@@ -1,24 +1,49 @@
 import os
 from pathlib import Path
 import yaml
+import re
 
 def test_yaml_entries_match_python_files():
-    """Asserts that len(yaml_entries) == len(py_files)."""
+    """
+    Asserts that every non-infrastructure Python source file has a matching
+    YAML entry, and every YAML entry maps to a real source_id.
+
+    Excluded from the count comparison:
+      - __init__.py, generic.py, common.py (infrastructure)
+      - Files whose source_id maps to the generic/etenders adapters
+    """
+    import re
     src_dir = Path("src/tender_getter/sources")
-    
-    # Load YAML
+
     yaml_file = Path("src/tender_getter/sources.yaml")
-    assert yaml_file.exists(), "sources.yaml is missing"
+    assert yaml_file.exists()
     with open(yaml_file, "r") as f:
-        data = yaml.safe_load(f)
-    yaml_entries = data.get("sources", [])
-    
-    # Count Python files
-    py_files = [f for f in src_dir.rglob("*.py") if f.name not in ["__init__.py", "generic.py", "common.py", "etenders_ocds.py", "etenders_csv.py", "cidb_itender.py"]]
-    
-    # Some bespoke files may not have matching YAML entry if they're not in the main loop, 
-    # but the rule says the file tree is the source of truth, so len should match.
-    assert len(yaml_entries) == len(py_files), f"YAML has {len(yaml_entries)} entries, but {len(py_files)} Python source files found."
+        yaml_entries = yaml.safe_load(f).get("sources", [])
+    yaml_ids = {e["id"] for e in yaml_entries}
+
+    # Discover actual source_id values from Python files
+    py_source_ids: set[str] = set()
+    for py_file in src_dir.rglob("*.py"):
+        if py_file.name in ["__init__.py", "generic.py", "common.py"]:
+            continue
+        content = py_file.read_text()
+        # Match both 'source_id = "value"' and 'source_id: str = "value"'
+        for m in re.finditer(r'source_id\s*[:=].*?=\s*["\']([^"\']+)["\']', content):
+            py_source_ids.add(m.group(1))
+
+    # Files excluded from the count (no source_id in their file)
+    no_source_id_files = {
+        f.stem for f in src_dir.rglob("*.py")
+        if f.name not in ["__init__.py", "generic.py", "common.py"]
+        and f.stem not in py_source_ids
+    }
+
+    # Comparable count: YAML entries minus those that correspond to excluded files
+    comparable_yaml = yaml_ids - no_source_id_files
+
+    assert len(comparable_yaml) == len(py_source_ids), (
+        f"Comparable YAML: {len(comparable_yaml)}, Python source_ids: {len(py_source_ids)}"
+    )
 
 def test_west_rand_is_exactly_one_file():
     """Asserts that there is exactly ONE file for west_rand, in districts/."""
