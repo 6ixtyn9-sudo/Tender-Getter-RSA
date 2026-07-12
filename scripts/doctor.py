@@ -88,6 +88,26 @@ def check_database():
         return False, str(e)
 
 if __name__ == "__main__":
+    import argparse
+    ap = argparse.ArgumentParser(description="Tender Getter RSA – health check")
+    ap.add_argument("--probe", action="store_true",
+                    help="Probe every live source to see which return REAL data vs mock/dead")
+    ap.add_argument("--all", action="store_true", help="With --probe, include live:false sources too")
+    args = ap.parse_args()
+
+    if args.probe:
+        from tender_getter.pipeline import probe_live_sources
+        s = probe_live_sources(all_sources=args.all)
+        print(f"Tender Getter RSA – source probe ({s['probed']} sources)")
+        print("-" * 50)
+        for st, n in sorted(s["status_counts"].items(), key=lambda x: -x[1]):
+            print(f"  {st:12}: {n}")
+        print(f"\n  REAL sources: {s['live_sources']} | REAL tenders: {s['total_live_tenders']}")
+        print("-" * 50)
+        for r in s["live"][:20]:
+            print(f"  {r['count']:>5}  {r['source_id']}")
+        sys.exit(0)
+
     print("Tender Getter RSA – doctor")
     print("-" * 40)
     results = [

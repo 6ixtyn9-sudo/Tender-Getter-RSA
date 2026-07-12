@@ -1,211 +1,147 @@
 """
-DEPRECATED: scripts/run_poc.py is superseded by scripts/sync_all.py.
+Tender Getter RSA — Proof of Concept / full flow runner.
 
-As of v2.0.0, the Proof-of-Concept runner no longer hard-codes 11 sources.
-It now delegates the ingestion step to the unified aggregator (which
-discovers all 731 wired sources via pkgutil), then runs the matching
-demo against the mock company.
+  ingest REAL tenders -> [enrich: open tender PDFs] -> match REAL companies -> report
 
-To replicate the v1.x behaviour:
-  PYTHONPATH=src:. python scripts/sync_all.py --live-only
-  PYTHONPATH=src:. python scripts/run_poc.py   # this file
+This is the canonical entry point. It delegates to tender_getter.pipeline so the
+logic lives in the library, not in a script.
 
-This file remains for backward compatibility with existing developer
-workflows but is no longer the recommended entry point.
+Defaults to REAL CIDB-sourced companies (Register of Contractors) instead of a
+hard-coded phantom. Use --company <profile.json> to match a single custom client.
+
+Usage:
+  PYTHONPATH=src python scripts/run_poc.py                       # full flow, real CIDB companies
+  PYTHONPATH=src python scripts/run_poc.py --match-only          # reuse DB, match only
+  PYTHONPATH=src python scripts/run_poc.py --enrich              # open tender PDFs + extract fields
+  PYTHONPATH=src python scripts/run_poc.py --company client.json # single custom company
+  PYTHONPATH=src python scripts/run_poc.py --list-companies      # show real CIDB companies
 """
-import sys
+import argparse
 import logging
+import sys
 from pathlib import Path
 
-# Ensure src is on path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
-# Load .env if present
 try:
     from dotenv import load_dotenv  # type: ignore
     load_dotenv()
 except Exception:
     pass
 
-import argparse
-
-
-# -----------------------------------------------------------------------------
-# Mock company and demo tenders (kept from v1.0; used by the matching demo)
-# -----------------------------------------------------------------------------
-
-MOCK_COMPANY = None  # lazy import to avoid top-level Pydantic cost
-
-
-def _build_mock_company():
-    from tender_getter.schemas import CIDBGrading, Location, CompanyProfile
-    return CompanyProfile(
-        registration_number="2019/112233/07",
-        company_name="Sipho Electrical and Civils (Pty) Ltd",
-        csd_number="MAAA0554433",
-        bbbee_level=1,
-        black_ownership_pct=75.0,
-        youth_ownership_pct=30.0,
-        women_ownership_pct=25.0,
-        cidb_gradings=[
-            CIDBGrading(class_code="EE", level=3),
-            CIDBGrading(class_code="CE", level=2),
-        ],
-        location=Location(
-            province="Gauteng",
-            city="Johannesburg",
-            municipality="City of Johannesburg Metropolitan Municipality",
-        ),
-        sectors=["Electrical Engineering", "Civil Engineering"],
-        has_tax_pin=True,
-        has_coida=True,
-        is_active=True,
-    )
-
-
-# Demo tenders – kept as fallback if the DB yields nothing.
-def _build_demo_tenders():
-    from datetime import datetime, timezone
-    from tender_getter.schemas import TenderOpportunity
-    return [
-        TenderOpportunity(
-            tender_id="COJ/EE/2026/012",
-            title="Soweto Substation Transformer Maintenance",
-            issuing_entity="City of Johannesburg",
-            closing_date=datetime(2026, 8, 15, tzinfo=timezone.utc),
-            estimated_value=1_500_000,
-            required_cidb_class="EE",
-            required_cidb_level=3,
-            mandatory_csd=True,
-            tax_compliance_required=True,
-            location_target="Gauteng",
-        ),
-        TenderOpportunity(
-            tender_id="SANRAL/CE/2026/045",
-            title="N1 Bridge Joint Structural Repair",
-            issuing_entity="SANRAL",
-            closing_date=datetime(2026, 8, 20, tzinfo=timezone.utc),
-            estimated_value=2_500_000,
-            required_cidb_class="CE",
-            required_cidb_level=3,
-            mandatory_csd=True,
-            tax_compliance_required=True,
-            location_target="Gauteng",
-        ),
-        TenderOpportunity(
-            tender_id="CPT/EE/2026/089",
-            title="Cape Town Harbour Electrical Reticulation",
-            issuing_entity="City of Cape Town",
-            closing_date=datetime(2026, 9, 1, tzinfo=timezone.utc),
-            estimated_value=800_000,
-            required_cidb_class="EE",
-            required_cidb_level=2,
-            mandatory_csd=True,
-            tax_compliance_required=True,
-            location_target="Western Cape",
-        ),
-    ]
-
-
-# -----------------------------------------------------------------------------
-# Main: delegate ingestion to aggregator, then run the match demo
-# -----------------------------------------------------------------------------
-
-def print_separator(char: str = "-", width: int = 80):
-    print(char * width)
-
 
 def main():
-    parser = argparse.ArgumentParser(
-        description="Tender-Getter RSA – Proof of Concept (delegates to aggregator)"
+    ap = argparse.ArgumentParser(description="Tender Getter RSA — POC / flow runner")
+    ap.add_argument("--limit", type=int, default=None, help="Max tenders per source during ingest")
+    ap.add_argument("--match-only", action="store_true", help="Skip ingestion, match on existing DB")
+    ap.add_argument("--enrich", action="store_true",
+                    help="Open tender PDFs and extract CIDB/value/date (Gemini for scanned)")
+    ap.add_argument("--enrich-limit", type=int, default=60, help="Max tenders to enrich")
+    ap.add_argument("--company", help="Path to a single company profile JSON")
+    ap.add_argument("--strict", action="store_true",
+                    help="Strict full matcher (hard-disqualify on unknown CSD/tax) "
+                         "instead of CIDB screening mode")
+    ap.add_argument("--no-reports", action="store_true", help="Skip writing .md reports")
+    ap.add_argument("--match-limit", type=int, default=500)
+    ap.add_argument("--workers", type=int, default=25)
+    ap.add_argument("--list-companies", action="store_true",
+                    help="List real CIDB companies available for matching, then exit")
+    ap.add_argument("-v", "--verbose", action="store_true")
+    args = ap.parse_args()
+
+    logging.basicConfig(
+        level=logging.INFO if args.verbose else logging.WARNING,
+        format="%(levelname)s %(name)s: %(message)s",
     )
-    parser.add_argument("--limit", type=int, default=None, help="Max tenders per source")
-    parser.add_argument("--live-only", action="store_true", help="Skip sources flagged live:false")
-    parser.add_argument("--match-only", action="store_true", help="Skip ingestion, run match demo only")
-    args = parser.parse_args()
 
-    print()
-    print("=" * 50)
-    print("      TENDER GETTER RSA - PROOF OF CONCEPT")
-    print("=" * 50)
-    print("  (deprecated – delegates to scripts/sync_all.py)")
-    print()
-
-    # Step 1-3: Sync via aggregator (replaces v1.x hard-coded 11 sources).
-    if not args.match_only:
-        from tender_getter.aggregator import sync_all_sources
-        from tender_getter.database import get_database_client
-        logging.basicConfig(level=logging.INFO, format="%(levelname)s %(name)s: %(message)s")
-        print("[1/4] Running unified aggregator (all 731 sources, threaded)…")
-        summary = sync_all_sources(limit_per_source=args.limit, live_only=args.live_only)
-        print(f"        → {summary['tenders_unique']} unique tenders from "
-              f"{summary['sources_ok']}/{summary['sources_total']} sources in "
-              f"{summary['duration_s']}s "
-              f"({summary['sources_skipped_live_false']} skipped via live:false)")
-    else:
-        summary = None
-        print("[1/4] --match-only – skipping ingestion")
-
-    # Step 2: Save the mock company.
+    from tender_getter.pipeline import (
+        ingest_real_tenders, enrich_open_tenders, run_pipeline_match,
+        load_company, load_companies,
+    )
     from tender_getter.database import get_database_client
+
+    if args.list_companies:
+        companies = load_companies()
+        print(f"\n{len(companies)} REAL companies available (CIDB Register of Contractors):\n")
+        for c in sorted(companies, key=lambda c: -max((g.level for g in c.cidb_gradings), default=0)):
+            grades = " ".join(f"{g.class_code}{g.level}" for g in c.cidb_gradings)
+            print(f"  {grades:10} {c.registration_number:14} {c.company_name}")
+        return 0
+
     db = get_database_client()
-    try:
+    if hasattr(db, "connect"):
         db.connect()
-    except Exception as e:
-        print(f"Database connect failed: {e}")
-        return 1
-    print(f"[2/4] Database connected: {type(db).__name__}")
 
-    company = _build_mock_company()
-    db.upsert_company(company)
-    cidb_str = ", ".join(f"{g.class_code}{g.level}" for g in company.cidb_gradings)
-    print(f"[3/4] Client Profile Saved: {company.company_name} (CIDB: {cidb_str})")
+    sep = "=" * 64
 
-    # Step 3: Pull tenders from DB (or fall back to mocks).
-    tenders_to_match = []
-    used_mocks = False
-    try:
-        tenders_to_match = db.list_open_tenders(limit=25, province=company.location.province)
-        if not tenders_to_match:
-            tenders_to_match = db.list_open_tenders(limit=25)
-    except Exception as e:
-        print(f"  list_open_tenders failed: {e}")
-
-    if not tenders_to_match:
-        tenders_to_match = _build_demo_tenders()
-        used_mocks = True
-        print(f"[4/4] {len(tenders_to_match)} demo tenders cached (live sources yielded 0).")
+    # --- 1. INGEST ---
+    ing = None
+    if not args.match_only:
+        print("\n[1/3] Ingesting REAL tenders (mock-free, capturing document URLs)…")
+        ing = ingest_real_tenders(db, max_workers=args.workers)
+        print(f"      → {ing['real_tenders_unique']} real tenders from "
+              f"{ing['sources_live_yielding_data']} live sources")
+        try:
+            import sqlite3
+            _c = sqlite3.connect(str(getattr(db, "db_path", "localdata/tender_getter.db")))
+            n = _c.execute(
+                "SELECT COUNT(*) FROM tenders WHERE raw_document_url IS NOT NULL").fetchone()[0]
+            _c.close()
+            print(f"      → tenders with a document URL: {n}")
+        except Exception:
+            pass
     else:
-        print(f"[4/4] {len(tenders_to_match)} open tenders loaded from DB")
+        print("\n[1/3] --match-only: skipping ingestion")
 
-    # Step 4: Run matching.
-    from tender_getter.matcher import match
-    print_separator()
-    print(f"MATCH REPORT FOR: {company.company_name}")
-    bbbee_label = "Non-Compliant" if company.bbbee_level == 9 else f"Level {company.bbbee_level}"
-    print(f"Province: {company.location.province} | B-BBEE: {bbbee_label}")
-    print_separator()
+    # --- 2. ENRICH ---
+    enr = None
+    if args.enrich:
+        print(f"\n[2/3] Opening & parsing tender documents (limit {args.enrich_limit})…")
+        enr = enrich_open_tenders(db, limit=args.enrich_limit, use_gemini=True)
+        m = enr["methods"]
+        print(f"      → enriched {enr['tenders_enriched']}/{enr['tenders_considered']} tenders, "
+              f"{enr['fields_extracted']} fields extracted")
+        print(f"      → methods: local_regex={m.get('local_regex', 0)} "
+              f"gemini_vision={m.get('gemini_vision', 0)} no_doc={m.get('no_doc', 0)} "
+              f"failed={m.get('failed', 0)}")
+    else:
+        print("\n[2/3] Skipping enrichment (use --enrich to open tender PDFs)")
 
-    eligible_count = 0
-    for tender in tenders_to_match[:25]:
-        result = match(company, tender)
-        db.save_match(company, result)
-        if result.is_eligible:
-            eligible_count += 1
-        status_icon = "✅ ELIGIBLE" if result.is_eligible else "❌ DISQUALIFIED"
-        print(f"Tender ID : {result.tender_id}")
-        print(f"Title     : {result.tender_title}")
-        print(f"Status    : {status_icon} (Match Score: {result.match_score}%)")
-        print(f"Feedback  : {result.feedback}")
-        print_separator()
+    # --- 3. MATCH real companies ---
+    if args.company:
+        companies = [load_company(Path(args.company))]
+    else:
+        companies = load_companies()
+    print(f"\n[3/3] Matching {len(companies)} real CIDB companies against open tenders…")
 
-    db.close()
-    print(f"\nEvaluated {len(tenders_to_match[:25])} tenders – {eligible_count} eligible")
-    print(f"DB driver: {type(db).__name__}")
-    print(f"Results persisted to matches table")
-    if used_mocks:
-        print("Note: using demo tenders (live sources yielded 0 rows this run).")
-    print("Day 2 milestone: COMPLETE ✅ (deprecated entry point)")
+    summary = run_pipeline_match(
+        companies=companies, db=db,
+        match_limit=args.match_limit, write_reports=not args.no_reports,
+        partial_compliance=not args.strict,
+    )
+
+    print("\n" + sep)
+    print("  TENDER GETTER RSA — RESULT")
+    print(sep)
+    print(f"  Companies matched : {summary['companies_matched']}")
+    print(f"  Tenders evaluated : {summary['tenders_evaluated']}")
+    print(f"  ✅ Screened-in    : {summary['screened_in']}")
+    print(f"  ❌ Blocked (CIDB) : {summary['blocked']}")
+    print(f"  Reports written   : {summary['reports_written']}")
+    if ing:
+        print("-" * 64)
+        print(f"  Ingest : {ing['real_tenders_unique']} real tenders / "
+              f"{ing['sources_live_yielding_data']} live sources")
+    if enr:
+        print(f"  Enrich : {enr['fields_extracted']} fields from {enr['tenders_enriched']} documents")
+    print("-" * 64)
+    for top in summary["top_matches"][:6]:
+        print(f"  • [{top['grades']}] {top['company'][:28]:28} → {top['tender'][:28]:28} "
+              f"({top['score']:.0f}%)")
+    print(sep)
+
+    if hasattr(db, "close"):
+        db.close()
     return 0
 
 

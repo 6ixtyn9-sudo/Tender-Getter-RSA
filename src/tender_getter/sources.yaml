@@ -2,14 +2,14 @@ sources:
 - id: aberdeen_plain_lm
   name: Aberdeen Plain Lm
   live: false
-  url: https://www.aplm.gov.za/procurement
+  url: https://bnlm.gov.za/documents/tenders/
   type: html
   priority: 3
   free: true
 - id: acsa
   name: Acsa
   live: false
-  url: https://www.airports.co.za/business/tender-bulletin
+  url: https://www.airports.co.za/business/supply-chain-management/current-and-future-tenders#
   type: html
   priority: 3
   free: true
@@ -23,7 +23,7 @@ sources:
 - id: agriseta
   name: Agriseta
   live: true
-  url: https://www.agriseta.co.za/tenders
+  url: https://www.agriseta.co.za/tenders/
   type: html
   priority: 3
   free: true
