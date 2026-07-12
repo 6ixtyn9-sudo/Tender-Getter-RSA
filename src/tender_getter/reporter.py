@@ -21,7 +21,7 @@ from .schemas import CompanyProfile, TenderOpportunity, MatchResult
 from .matcher import match as run_match, CIDB_LIMITS
 
 # Default output directory relative to project root
-DEFAULT_OUTPUT_DIR = Path(__file__).resolve().parents[3] / "localdata"
+DEFAULT_OUTPUT_DIR = Path(__file__).resolve().parents[2] / "localdata"
 
 
 # ---------------------------------------------------------------------------

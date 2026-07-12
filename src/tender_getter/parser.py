@@ -43,7 +43,7 @@ SBD_KEYWORDS = [
     "B-BBEE", "closing date", "bid number",
 ]
 
-GEMINI_MODEL = "gemini-1.5-pro"
+GEMINI_MODEL = "gemini-2.5-flash"
 
 # The strict JSON schema the model must produce
 EXTRACTION_SYSTEM_PROMPT = """

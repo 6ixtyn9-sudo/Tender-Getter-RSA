@@ -22,7 +22,7 @@ from typing import Optional
 from .database_base import TenderDatabaseBase
 from .schemas import CompanyProfile, TenderOpportunity, MatchResult
 
-DEFAULT_DB_PATH = Path(__file__).resolve().parents[3] / "localdata" / "tender_getter.db"
+DEFAULT_DB_PATH = Path(__file__).resolve().parents[2] / "localdata" / "tender_getter.db"
 
 
 # ---------------------------------------------------------------------------
