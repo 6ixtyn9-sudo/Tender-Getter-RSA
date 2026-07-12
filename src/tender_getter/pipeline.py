@@ -620,6 +620,7 @@ def run_pipeline_match(
     match_limit: int = 500,
     write_reports: bool = True,
     partial_compliance: bool = True,
+    persist: bool = True,
 ) -> dict:
     """Match a set of real companies against open tenders in the DB."""
     from datetime import datetime, timezone
@@ -643,6 +644,12 @@ def run_pipeline_match(
 
     for company in companies:
         results = screen_company(company, valid, partial_compliance=partial_compliance)
+        if persist and hasattr(db, "save_match"):
+            for res in results:
+                try:
+                    db.save_match(company, res)
+                except Exception as exc:
+                    logger.warning("save_match failed %s: %s", res.tender_id, exc)
         if write_reports:
             from .reporter import generate_report
             out_dir = Path(__file__).resolve().parents[2] / "localdata"
