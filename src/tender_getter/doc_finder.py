@@ -43,6 +43,7 @@ class _LinkTableParser(HTMLParser):
         self.links: list[tuple[str, str]] = []  # (text, href) anywhere
         self._cur_row: Optional[list[dict]] = None
         self._cur_cell: Optional[dict] = None
+        self._cur_cell_hrefs: list[str] = []  # all hrefs in current cell
         self._cur_href: Optional[str] = None
         self._cur_text: list[str] = []
 
@@ -52,6 +53,7 @@ class _LinkTableParser(HTMLParser):
             self._cur_row = []
         elif tag in ("td", "th"):
             self._cur_cell = {"text": "", "href": None}
+            self._cur_cell_hrefs = []
         elif tag == "a" and "href" in a:
             self._cur_href = a["href"]
 
@@ -66,19 +68,23 @@ class _LinkTableParser(HTMLParser):
         if tag in ("td", "th") and self._cur_cell is not None:
             self._cur_cell["text"] = " ".join(self._cur_text)
             self._cur_text = []
-            if self._cur_href:
-                self._cur_cell["href"] = self._cur_href
+            # Pick the first doc-looking href from this cell's links
+            if self._cur_cell_hrefs:
+                self._cur_cell["href"] = self._cur_cell_hrefs[0]
             if self._cur_row is not None:
                 self._cur_row.append(self._cur_cell)
             self._cur_cell = None
+            self._cur_cell_hrefs = []
             self._cur_href = None
         elif tag == "tr" and self._cur_row is not None:
             if self._cur_row:
                 self.rows.append(self._cur_row)
             self._cur_row = None
         elif tag == "a":
+            # Save href to the current cell BEFORE clearing (</a> fires before </td>)
+            if self._cur_href is not None and self._cur_cell is not None:
+                self._cur_cell_hrefs.append(self._cur_href)
             self._cur_href = None
-            self._cur_text = []
 
 
 def _is_doc_url(href: str, base_netloc: str) -> bool:
