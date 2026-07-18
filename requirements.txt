@@ -1,3 +1,4 @@
+# Tender Getter RSA - Security Hardened Dependencies
 pydantic>=2.0
 pdfplumber>=0.10
 pypdf>=4.0
@@ -13,3 +14,5 @@ twilio>=8.10
 python-multipart>=0.0.6
 Pillow>=10.0
 httpx>=0.25
+certifi>=2023.7.22
+slowapi>=0.1.9

@@ -1,17 +1,29 @@
 """
 Tender Getter AI Gateway — 7-key Gemini gateway with rate limiting and key rotation.
 No fallbacks, no OpenRouter, single user type (SMME owner).
+SECURE VERSION: No key logging, proper error handling.
 """
 
 import asyncio
 import logging
 import os
+import re
 from dataclasses import dataclass
 from typing import Any, Optional
 
 import google.generativeai as genai
 
 logger = logging.getLogger(__name__)
+
+# Key pattern for safe logging (only first 4 + last 4 chars)
+KEY_LOG_PATTERN = re.compile(r"(.{4}).*(.{4})")
+
+
+def _mask_key(key: str) -> str:
+    """Safely mask API key for logging."""
+    if len(key) >= 8:
+        return f"{key[:4]}...{key[-4:]}"
+    return "****"
 
 
 # ---------------------------------------------------------------------------
@@ -57,7 +69,10 @@ class KeyManager:
             if k and k not in self.keys:
                 self.keys.append(k)
 
-        logger.info(f"[TG-AI] Loaded {len(self.keys)} Gemini key(s)")
+        if not self.keys:
+            logger.warning("[TG-AI] No Gemini API keys configured!")
+        else:
+            logger.info(f"[TG-AI] Loaded {len(self.keys)} Gemini key(s)")
 
     def get_available_key(self, exclude: Optional[set[str]] = None) -> Optional[str]:
         """Get next available key not in exclude set."""
@@ -70,7 +85,7 @@ class KeyManager:
     def mark_exhausted(self, key: str) -> None:
         """Mark a key as exhausted (429)."""
         self.exhausted_keys.add(key)
-        logger.warning(f"[TG-AI] Key exhausted (429): {key[:8]}...")
+        logger.warning(f"[TG-AI] Key exhausted (429): {_mask_key(key)}")
 
     def reset_exhausted(self) -> None:
         """Reset exhausted keys (call periodically)."""
@@ -108,6 +123,7 @@ class AIGateway:
     """
     7-key Gemini gateway with automatic key rotation on 429.
     No OpenRouter, no model fallback, single SMME owner persona.
+    SECURE: No key logging, proper error handling.
     """
 
     def __init__(self, config: Optional[GatewayConfig] = None):
@@ -165,6 +181,7 @@ class AIGateway:
 
         key = self.key_manager.get_available_key(exclude=used_keys)
         if not key:
+            logger.error("[TG-AI] All 7 Gemini keys exhausted")
             return {"error": "All 7 Gemini keys exhausted"}
 
         try:
@@ -190,8 +207,9 @@ class AIGateway:
 
         except Exception as e:
             error_msg = str(e)
-            logger.warning(f"[TG-AI] Gemini error with key {key[:8]}...: {error_msg}")
+            logger.warning(f"[TG-AI] Gemini error with key {_mask_key(key)}: {error_msg}")
 
+            # Check for rate limiting
             if "429" in error_msg or "quota" in error_msg.lower():
                 self.key_manager.mark_exhausted(key)
                 used_keys.add(key)
@@ -199,13 +217,16 @@ class AIGateway:
                     model, system_prompt, messages, temperature, used_keys
                 )
 
+            # Transient overload - retry with backoff
             if "503" in error_msg or "overload" in error_msg.lower():
                 await asyncio.sleep(self.config.base_delay_ms / 1000)
                 return await self._call_gemini_with_rotation(
                     model, system_prompt, messages, temperature, used_keys
                 )
 
-            return {"error": error_msg}
+            # Other errors - log but don't expose details
+            logger.error(f"[TG-AI] Gemini error: {type(e).__name__}")
+            return {"error": "AI service temporarily unavailable"}
 
     def _convert_messages(self, messages: list[dict[str, str]]) -> list[dict]:
         """Convert standard messages to Gemini format."""

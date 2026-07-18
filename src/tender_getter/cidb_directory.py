@@ -21,6 +21,8 @@ WAF that 403-blocks cloud/sandbox IPs (TLS-fingerprint + IP reputation). This
 module will fetch live data when run from a clean/residential IP. From blocked
 environments it falls back to REAL captured seed records (see SEED_CONTRACTORS)
 — these are genuine records harvested from the public register, NOT synthetic.
+
+SECURE VERSION: SSL verification enforced with certifi.
 """
 from __future__ import annotations
 
@@ -28,6 +30,7 @@ import json
 import logging
 import re
 import ssl
+import certifi
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Optional
@@ -35,7 +38,7 @@ from urllib.parse import urlencode
 from urllib.request import urlopen, Request
 from urllib.error import URLError, HTTPError
 
-from .schemas import CIDBGrading, Location, CompanyProfile
+from ..schemas import CIDBGrading, Location, CompanyProfile
 
 logger = logging.getLogger(__name__)
 
@@ -92,14 +95,15 @@ def parse_grading(raw: str) -> Optional[CIDBGrading]:
 
 
 # ---------------------------------------------------------------------------
-# HTTP fetch (same resilient pattern as the rest of the codebase)
+# HTTP fetch (SECURE: SSL verification with certifi)
 # ---------------------------------------------------------------------------
 
-def _ssl_ctx():
-    try:
-        return ssl._create_unverified_context()
-    except Exception:
-        return None
+def _ssl_ctx() -> ssl.SSLContext:
+    """Create SSL context with proper CA verification."""
+    ctx = ssl.create_default_context(cafile=certifi.where())
+    ctx.check_hostname = True
+    ctx.verify_mode = ssl.CERT_REQUIRED
+    return ctx
 
 
 def fetch_contractor_page(
@@ -122,9 +126,10 @@ def fetch_contractor_page(
     url = f"{CIDB_SEARCH_URL}?{urlencode(params)}"
     req = Request(url, headers={"User-Agent": _UA, "Accept": "application/json, text/html;q=0.9"})
     kw = {"timeout": timeout}
-    ctx = _ssl_ctx()
-    if ctx:
-        kw["context"] = ctx
+    ctx = ssl.create_default_context(cafile=certifi.where())
+    ctx.check_hostname = True
+    ctx.verify_mode = ssl.CERT_REQUIRED
+    kw["context"] = ctx
     with urlopen(req, **kw) as resp:
         body = resp.read().decode("utf-8", "replace")
     data = json.loads(body)
@@ -133,7 +138,7 @@ def fetch_contractor_page(
 
 
 # ---------------------------------------------------------------------------
-# Row -> CompanyProfile
+# Row -> CompanyProfile (unchanged)
 # ---------------------------------------------------------------------------
 
 def rows_to_company_profiles(
@@ -142,7 +147,7 @@ def rows_to_company_profiles(
     only_active: bool = True,
 ) -> list[CompanyProfile]:
     """Merge CIDB rows (grouped by CRS number) into CompanyProfile objects."""
-    from .sources.common import province_from_text
+    from ..sources.common import province_from_text
 
     grouped: dict[str, dict] = {}
     for row in rows:

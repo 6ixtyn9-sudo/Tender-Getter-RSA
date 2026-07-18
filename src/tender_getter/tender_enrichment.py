@@ -17,6 +17,8 @@ PIPELINE (per tender):
 Gemini is used only when needed and only when a key is present, so the chain is
 fully runnable now (text PDFs) and upgrades automatically (scanned PDFs) once
 GEMINI_API_KEY is added to .env.
+
+SECURE VERSION: SSL verification with certifi, proper error handling.
 """
 from __future__ import annotations
 
@@ -32,7 +34,7 @@ from urllib.parse import urlparse
 from urllib.request import urlopen, Request
 from urllib.error import URLError, HTTPError
 
-from .schemas import TenderOpportunity
+from ..schemas import TenderOpportunity
 
 logger = logging.getLogger(__name__)
 
@@ -58,7 +60,7 @@ _VALID_CIDB = {"GB", "CE", "ME", "EE", "EB", "EP", "SB", "SO", "SI", "SL", "SJ",
 
 # Value: "R 5 600 000", "R5,6 million", "estimated value of R3 000 000.00"
 _VALUE_RE = re.compile(
-    r"(?:estimated\s+(?:contract\s+)?value|tender\s+value|contract\s+value|value\s*[:\-]|"
+    r"(?:estimated\s+(?:contract\s+)?value|tender\s+value|contract\s+value|value\s*[:\\-]|"
     r"not\s+exceeding|NTE|in\s+excess\s+of)[^R]{0,15}R\s?([\d][\d ,\.]{3,})"
     r"|R\s?([\d]{1,3}(?:[ ,]\d{3})+)[^.]{0,20}(?:excl|vat|million|value)",
     re.IGNORECASE,
@@ -67,12 +69,12 @@ _MILLION_RE = re.compile(r"R\s?([\d.,]+)\s*(?:million|mil)\b", re.IGNORECASE)
 
 _CLOSING_RE = re.compile(
     r"(?:closing\s+(?:date|time)|closes?\s+on|submit[^.\n]{0,20}by|deadline)[^:\n]{0,15}"
-    r"[:\-]?\s*((?:\d{1,2}[\s/-]+\w+[\s/-]+\d{2,4})|(?:\w+\s+\d{1,2},?\s+\d{4})|(?:\d{4}/\d{1,2}/\d{1,2})|(?:\d{1,2}\s+\w+\s+\d{4}))",
+    r"[:\\-]?\s*((?:\d{1,2}[\s/-]+\w+[\s/-]+\d{2,4})|(?:\w+\s+\d{1,2},?\s+\d{4})|(?:\d{4}/\d{1,2}/\d{1,2})|(?:\d{1,2}\s+\w+\s+\d{4}))",
     re.IGNORECASE,
 )
 
 _BID_NO_RE = re.compile(
-    r"(?:tender|bid|RFQ|RFP|RFT)\s*(?:no\.?|number|#|ref(?:erence)?)\s*[:\-]?\s*([A-Z0-9][A-Z0-9/\-_\.]{3,24})",
+    r"(?:tender|bid|RFQ|RFP|RFT)\s*(?:no\.?|number|#|ref(?:erence)?)\s*[:\\-]?\s*([A-Z0-9][A-Z0-9/\-_\.]{3,24})",
     re.IGNORECASE,
 )
 
@@ -152,10 +154,10 @@ class GeminiKeyPool:
         return f"GeminiKeyPool({self.total} keys, {self.available} available)"
 
 
-_KEY_POOL: Optional[GeminiKeyPool] = None
+_KEY_POOL: Optional["GeminiKeyPool"] = None
 
 
-def _key_pool() -> GeminiKeyPool:
+def _key_pool() -> "GeminiKeyPool":
     global _KEY_POOL
     if _KEY_POOL is None:
         _KEY_POOL = GeminiKeyPool()
@@ -197,9 +199,8 @@ _GEMINI_PROMPT = (
     "- bid_number: the official bid/tender reference number\n"
     "- bbbee_points_system: '80/20' or '90/10' if the PPPFA preference system is stated\n"
     "- location_target: the province name if work is localised, else 'National'\n"
-    "Return null for any field not found in the document."
+    "Return null for any field not found in the document.\n"
 )
-
 
 def _trim_pdf(pdf_bytes: bytes, max_pages: int = 8) -> bytes:
     """Extract the first max_pages to cut token cost for Gemini.
@@ -224,7 +225,7 @@ def _trim_pdf(pdf_bytes: bytes, max_pages: int = 8) -> bytes:
 
 def extract_fields_local(text: str) -> dict:
     """Run regex extractors over PDF text. Returns only fields found."""
-    from .sources.common import parse_closing_date, province_from_text
+    from ..sources.common import parse_closing_date, province_from_text
     out: dict = {}
 
     # CIDB
@@ -256,6 +257,7 @@ def extract_fields_local(text: str) -> dict:
     # Closing date
     cm = _CLOSING_RE.search(text or "")
     if cm:
+        from ..sources.common import parse_closing_date
         cd = parse_closing_date(cm.group(1))
         if cd.year < 2099:
             out["closing_date"] = cd
@@ -273,6 +275,7 @@ def extract_fields_local(text: str) -> dict:
     # Province hint
     pm = _PROVINCE_HINT_RE.search(text or "")
     if pm:
+        from ..sources.common import province_from_text
         prov = province_from_text(pm.group(0))
         if prov:
             out["location_target"] = prov
@@ -283,7 +286,6 @@ def extract_fields_local(text: str) -> dict:
 # ---------------------------------------------------------------------------
 # Gemini vision extraction (for scanned PDFs) — key pool + structured output
 # ---------------------------------------------------------------------------
-
 
 def _extract_fields_gemini(pdf_bytes: bytes, mime: str = "application/pdf") -> dict:
     """Send the PDF to Gemini vision via REST with key rotation + structured JSON.
@@ -314,10 +316,11 @@ def _extract_fields_gemini(pdf_bytes: bytes, mime: str = "application/pdf") -> d
         },
     }).encode()
 
-    ctx = _ssl_ctx()
     kw_base = {"timeout": 90}
-    if ctx:
-        kw_base["context"] = ctx
+    ctx = ssl.create_default_context(cafile=certifi.where())
+    ctx.check_hostname = True
+    ctx.verify_mode = ssl.CERT_REQUIRED
+    kw_base["context"] = ctx
 
     last_err = None
     for _attempt in range(pool.total):
@@ -330,7 +333,7 @@ def _extract_fields_gemini(pdf_bytes: bytes, mime: str = "application/pdf") -> d
                f":generateContent?key={api_key}")
         req = Request(url, data=payload, headers={"Content-Type": "application/json"})
         try:
-            with urlopen(req, **kw_base) as resp:
+            with urlopen(req, context=ctx, timeout=90) as resp:
                 data = json.loads(resp.read())
             pool.advance()  # spread load round-robin
             break
@@ -363,7 +366,7 @@ def _extract_fields_gemini(pdf_bytes: bytes, mime: str = "application/pdf") -> d
             result[k] = None
 
     if result.get("closing_date"):
-        from .sources.common import parse_closing_date
+        from ..sources.common import parse_closing_date
         cd = parse_closing_date(result["closing_date"])
         if cd.year < 2099:
             result["closing_date"] = cd
@@ -378,7 +381,7 @@ class _GeminiRateBlocked(Exception):
 
 
 # ---------------------------------------------------------------------------
-# Download + per-tender enrichment
+# Download + per-tender enrichment (SECURE: SSL verification)
 # ---------------------------------------------------------------------------
 
 def _parse_gemini_json(raw: str) -> Optional[dict]:
@@ -393,7 +396,7 @@ def _parse_gemini_json(raw: str) -> Optional[dict]:
     except json.JSONDecodeError:
         pass
     # Try to extract just the {...} block
-    m = re.search(r"\{[^{}]*\}", clean, re.DOTALL)
+    m = re.search(r"\{.*\}", clean, re.DOTALL)
     if m:
         try:
             return json.loads(m.group(0))
@@ -407,16 +410,11 @@ def _parse_gemini_json(raw: str) -> Optional[dict]:
         return None
 
 
-def _ssl_ctx():
-    import ssl
-    try:
-        return ssl._create_unverified_context()
-    except Exception:
-        return None
-
-
 def download_pdf(url: str, cache_key: Optional[str] = None) -> Optional[bytes]:
-    """Download a PDF, cached by cache_key under localdata/tender_docs/."""
+    """Download a PDF, cached by cache_key under localdata/tender_docs/.
+    
+    SECURE: SSL verification with certifi, proper timeout.
+    """
     DOC_CACHE_DIR.mkdir(parents=True, exist_ok=True)
     if cache_key:
         safe = re.sub(r"[^A-Za-z0-9]+", "_", cache_key)[:80]
@@ -425,9 +423,10 @@ def download_pdf(url: str, cache_key: Optional[str] = None) -> Optional[bytes]:
             return cached.read_bytes()
     req = Request(url, headers={"User-Agent": _UA, "Accept": "application/pdf,*/*"})
     kw = {"timeout": 25}
-    ctx = _ssl_ctx()
-    if ctx:
-        kw["context"] = ctx
+    ctx = ssl.create_default_context(cafile=certifi.where())
+    ctx.check_hostname = True
+    ctx.verify_mode = ssl.CERT_REQUIRED
+    kw["context"] = ctx
     try:
         with urlopen(req, **kw) as r:
             data = r.read()
@@ -507,3 +506,8 @@ def apply_fields(tender: TenderOpportunity, fields: dict) -> TenderOpportunity:
     if fields.get("location_target") and not tender.location_target:
         tender.location_target = fields["location_target"]
     return tender
+
+
+class _GeminiRateBlocked(Exception):
+    """All keys are rate-limited; caller should stop calling Gemini."""
+    pass
