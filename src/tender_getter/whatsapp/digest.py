@@ -10,7 +10,7 @@ from dataclasses import dataclass
 
 from .models import WhatsAppUser, DailyDigestPreferences
 from .database import get_users_by_step, upsert_digest_preferences, get_digest_preferences
-from .webhook import send_template_message, send_text_message, send_media_message
+from .outbound import send_template_message, send_text_message, send_media_message
 
 logger = logging.getLogger(__name__)
 

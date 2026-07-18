@@ -8,7 +8,8 @@ import re
 from typing import Optional, Dict, Any, List, Tuple
 from datetime import datetime
 
-from .models import WhatsAppUser, OnboardingStep, CIDBGrading, Location
+from .models import WhatsAppUser, OnboardingStep, DocumentType, VerificationStatus
+from ..schemas import CIDBGrading, Location, CompanyProfile
 from .database import upsert_user, upsert_conversation_state, get_conversation_state
 from .media import guess_document_type
 
