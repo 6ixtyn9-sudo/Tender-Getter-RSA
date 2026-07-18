@@ -1,0 +1,253 @@
+{
+  "templates": [
+    {
+      "friendly_name": "tender_getter_daily_digest",
+      "language": "en",
+      "category": "UTILITY",
+      "components": [
+        {
+          "type": "HEADER",
+          "format": "TEXT",
+          "text": "🌅 Daily Tender Matches"
+        },
+        {
+          "type": "BODY",
+          "text": "Good morning {{1}}! You have {{2}} new tender match{{3}} today. Top match: {{4}} ({{5}} match)."
+        },
+        {
+          "type": "FOOTER",
+          "text": "Reply 'tenders' to view all | 'digest off' to pause"
+        },
+        {
+          "type": "BUTTONS",
+          "buttons": [
+            {
+              "type": "QUICK_REPLY",
+              "text": "View Tenders"
+            },
+            {
+              "type": "QUICK_REPLY",
+              "text": "My Profile"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "friendly_name": "tender_getter_high_value_alert",
+      "language": "en",
+      "category": "UTILITY",
+      "components": [
+        {
+          "type": "HEADER",
+          "format": "TEXT",
+          "text": "🚨 High-Value Tender Alert"
+        },
+        {
+          "type": "BODY",
+          "text": "New high-value tender: {{1}}\nValue: R{{2}}\nCloses: {{3}}\nMatch: {{4}}%"
+        },
+        {
+          "type": "FOOTER",
+          "text": "Reply 'verify csd' to check documents"
+        },
+        {
+          "type": "BUTTONS",
+          "buttons": [
+            {
+              "type": "QUICK_REPLY",
+              "text": "Verify CSD"
+            },
+            {
+              "type": "QUICK_REPLY",
+              "text": "View Details"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "friendly_name": "tender_getter_report_ready",
+      "language": "en",
+      "category": "UTILITY",
+      "components": [
+        {
+          "type": "HEADER",
+          "format": "DOCUMENT"
+        },
+        {
+          "type": "BODY",
+          "text": "Your compliance report for {{1}} is ready.\nMatch Score: {{2}}%\nBid: {{3}}"
+        },
+        {
+          "type": "FOOTER",
+          "text": "Tender Getter RSA"
+        },
+        {
+          "type": "BUTTONS",
+          "buttons": [
+            {
+              "type": "QUICK_REPLY",
+              "text": "View Report"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "friendly_name": "tender_getter_welcome",
+      "language": "en",
+      "category": "UTILITY",
+      "components": [
+        {
+          "type": "HEADER",
+          "format": "TEXT",
+          "text": "👋 Welcome to Tender Getter RSA"
+        },
+        {
+          "type": "BODY",
+          "text": "I find tenders you can actually win. Type 'onboard' to set up your profile, or 'menu' for commands."
+        },
+        {
+          "type": "FOOTER",
+          "text": "Tender Getter RSA"
+        },
+        {
+          "type": "BUTTONS",
+          "buttons": [
+            {
+              "type": "QUICK_REPLY",
+              "text": "Onboard"
+            },
+            {
+              "type": "QUICK_REPLY",
+              "text": "Menu"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "friendly_name": "tender_getter_verification_reminder",
+      "language": "en",
+      "category": "UTILITY",
+      "components": [
+        {
+          "type": "HEADER",
+          "format": "TEXT",
+          "text": "📋 Document Verification Needed"
+        },
+        {
+          "type": "BODY",
+          "text": "Your {{1}} document needs to be uploaded/updated for tender eligibility."
+        },
+        {
+          "type": "FOOTER",
+          "text": "Reply 'verify {{1}}' to upload"
+        },
+        {
+          "type": "BUTTONS",
+          "buttons": [
+            {
+              "type": "QUICK_REPLY",
+              "text": "Verify {{1}}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "friendly_name": "tender_getter_onboarding_step1",
+      "language": "en",
+      "category": "UTILITY",
+      "components": [
+        {
+          "type": "HEADER",
+          "format": "TEXT",
+          "text": "🚀 Tender Getter Onboarding"
+        },
+        {
+          "type": "BODY",
+          "text": "Welcome! I'll help you set up your profile in 5 steps:\n1️⃣ Company name & CIDB lookup\n2️⃣ CIDB grading confirmation\n3️⃣ Document upload (CSD, B-BBEE, Tax, CIDB)\n4️⃣ Sector & province\n5️⃣ POPIA consent\n\nWhat's your company name?"
+        },
+        {
+          "type": "FOOTER",
+          "text": "Type 'cancel' to exit"
+        }
+      ]
+    },
+    {
+      "friendly_name": "tender_getter_onboarding_cidb",
+      "language": "en",
+      "category": "UTILITY",
+      "components": [
+        {
+          "type": "HEADER",
+          "format": "TEXT",
+          "text": "🔍 CIDB Grading Found"
+        },
+        {
+          "type": "BODY",
+          "text": "We found {{1}} CIDB match(es) for \"{{2}}\":\n\n{{3}}\n\nReply with the *number* of your company, or *0* if none match."
+        },
+        {
+          "type": "FOOTER",
+          "text": "Or enter manually: 'GB 3' or 'CE 2'"
+        }
+      ]
+    },
+    {
+      "friendly_name": "tender_getter_onboarding_docs",
+      "language": "en",
+      "category": "UTILITY",
+      "components": [
+        {
+          "type": "HEADER",
+          "format": "TEXT",
+          "text": "📄 Upload Compliance Documents"
+        },
+        {
+          "type": "BODY",
+          "text": "Please upload the following (PDF or photo):\n\n{{1}}\n\nSend each as a separate message. I'll extract details with AI."
+        },
+        {
+          "type": "FOOTER",
+          "text": "Type 'done' when finished, 'skip' to continue"
+        }
+      ]
+    },
+    {
+      "friendly_name": "tender_getter_onboarding_complete",
+      "language": "en",
+      "category": "UTILITY",
+      "components": [
+        {
+          "type": "HEADER",
+          "format": "TEXT",
+          "text": "🎉 Onboarding Complete!"
+        },
+        {
+          "type": "BODY",
+          "text": "Welcome, {{1}}!\n\n✅ CIDB: {{2}}\n✅ Province: {{3}}\n✅ Sectors: {{4}}\n\nYou'll receive daily tender matches at 07:00."
+        },
+        {
+          "type": "FOOTER",
+          "text": "Tender Getter RSA"
+        },
+        {
+          "type": "BUTTONS",
+          "buttons": [
+            {
+              "type": "QUICK_REPLY",
+              "text": "View Tenders"
+            },
+            {
+              "type": "QUICK_REPLY",
+              "text": "My Profile"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
