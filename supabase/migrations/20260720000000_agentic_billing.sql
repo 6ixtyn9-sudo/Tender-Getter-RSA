@@ -16,7 +16,7 @@ CREATE TABLE IF NOT EXISTS subscription_plans (
 -- One paying owner and one subscription per registered company. Beta access is
 -- represented as an explicit complimentary subscription, never a hidden bypass.
 CREATE TABLE IF NOT EXISTS company_subscriptions (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     registration_number TEXT NOT NULL REFERENCES company_profiles(registration_number) ON DELETE CASCADE,
     owner_phone_number TEXT NOT NULL REFERENCES whatsapp_users(phone_number) ON DELETE RESTRICT,
     plan_code TEXT NOT NULL REFERENCES subscription_plans(plan_code),
@@ -36,7 +36,7 @@ CREATE TABLE IF NOT EXISTS company_subscriptions (
 );
 
 CREATE TABLE IF NOT EXISTS checkout_sessions (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     registration_number TEXT NOT NULL REFERENCES company_profiles(registration_number) ON DELETE CASCADE,
     owner_phone_number TEXT NOT NULL REFERENCES whatsapp_users(phone_number) ON DELETE CASCADE,
     plan_code TEXT NOT NULL REFERENCES subscription_plans(plan_code),
@@ -51,7 +51,7 @@ CREATE TABLE IF NOT EXISTS checkout_sessions (
 );
 
 CREATE TABLE IF NOT EXISTS payment_events (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     provider TEXT NOT NULL,
     provider_event_id TEXT NOT NULL,
     event_type TEXT NOT NULL,
@@ -65,7 +65,7 @@ CREATE TABLE IF NOT EXISTS payment_events (
 -- Durable, idempotent autonomous work. A worker claims one queued job at a
 -- time; no user-facing workflow depends on an in-memory background task.
 CREATE TABLE IF NOT EXISTS agent_jobs (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     idempotency_key TEXT NOT NULL UNIQUE,
     job_type TEXT NOT NULL CHECK (job_type IN ('ingest','enrich','match','deliver_digest','build_bid_pack','payment_reconcile')),
     payload JSONB NOT NULL DEFAULT '{}'::jsonb,
@@ -80,7 +80,7 @@ CREATE TABLE IF NOT EXISTS agent_jobs (
 );
 
 CREATE TABLE IF NOT EXISTS agent_actions (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     agent_name TEXT NOT NULL,
     registration_number TEXT REFERENCES company_profiles(registration_number) ON DELETE SET NULL,
     tender_id TEXT REFERENCES tenders(tender_id) ON DELETE SET NULL,
@@ -91,7 +91,7 @@ CREATE TABLE IF NOT EXISTS agent_actions (
 );
 
 CREATE TABLE IF NOT EXISTS natural_language_feedback (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     owner_phone_number TEXT NOT NULL REFERENCES whatsapp_users(phone_number) ON DELETE CASCADE,
     tender_id TEXT REFERENCES tenders(tender_id) ON DELETE SET NULL,
     raw_text TEXT NOT NULL,
