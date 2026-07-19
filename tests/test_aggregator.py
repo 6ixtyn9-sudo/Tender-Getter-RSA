@@ -20,6 +20,9 @@ def test_discover_finds_many_sources():
 @pytest.mark.slow
 def test_sync_all_runs_with_limit():
     summary = sync_all_sources(limit_per_source=1, verbose=False)
+    assert summary["data_mode"] == "real_only"
     assert summary["sources_total"] >= 700
-    assert summary["sources_ok"] >= summary["sources_total"] * 0.9
-    assert summary["tenders_unique"] >= 700
+    # Network availability and public portals change constantly.  A real-only
+    # sync must report honest results rather than fixture-backed success.
+    assert summary["sources_ok"] + summary["sources_failed"] <= summary["sources_total"]
+    assert summary["tenders_unique"] >= 0

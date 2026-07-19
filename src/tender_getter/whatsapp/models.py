@@ -6,7 +6,7 @@ Extends core schemas with WhatsApp-specific fields.
 from enum import Enum
 from datetime import datetime
 from typing import Optional, Dict, List, Any
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, ConfigDict
 
 
 class OnboardingStep(str, Enum):
@@ -86,8 +86,7 @@ class WhatsAppUser(BaseModel):
     created_at: datetime = Field(default_factory=datetime.utcnow)
     updated_at: datetime = Field(default_factory=datetime.utcnow)
     
-    class Config:
-        use_enum_values = True
+    model_config = ConfigDict(use_enum_values=True)
 
 
 class ConversationState(BaseModel):

@@ -47,15 +47,27 @@ def discover_source_classes() -> Dict[str, type]:
                 logger.debug("Skipping module %s: %s", mod_name, exc)
                 continue
             for _, obj in inspect.getmembers(mod, inspect.isclass):
+                # Aggregator adapters are invoked explicitly; they are not entity
+                # plug-ins and must not enter the customer-source registry.
+                if ".aggregators." in mod_name:
+                    continue
                 if obj.__name__ == "TenderSource":
                     continue
                 if hasattr(obj, "source_id") and callable(getattr(obj, "fetch", None)):
                     try:
                         sid = getattr(obj, "source_id", None)
                         if isinstance(sid, str) and sid:
+                            if sid in found and found[sid] is not obj:
+                                raise RuntimeError(
+                                    f"Duplicate tender source_id {sid!r}: "
+                                    f"{found[sid].__module__}.{found[sid].__name__} and "
+                                    f"{obj.__module__}.{obj.__name__}"
+                                )
                             found[sid] = obj
+                    except RuntimeError:
+                        raise
                     except Exception:
-                        pass
+                        logger.exception("Invalid source class in %s", mod_name)
             if is_pkg:
                 try:
                     sub_pkg = importlib.import_module(mod_name)
@@ -114,8 +126,14 @@ def sync_all_sources(
     max_workers: int = 20,
     use_threads: bool = True,
     live_only: bool = False,
+    allow_mock_fallback: bool = False,
 ) -> Dict:
-    """Fetch all sources, deduplicate, upsert to DB."""
+    """Fetch source plug-ins, deduplicate, and upsert to DB.
+
+    Real data is the safe default.  Set ``allow_mock_fallback=True`` only for
+    parser-development diagnostics; that mode is explicitly labelled in the
+    returned summary and must never feed customer matching.
+    """
     start = datetime.now(timezone.utc)
     if db is None:
         db = get_database()
@@ -132,7 +150,16 @@ def sync_all_sources(
         sid = getattr(inst, "source_id", inst.__class__.__name__)
         t0 = time.time()
         try:
-            tenders = inst.fetch(limit=limit_per_source)
+            if allow_mock_fallback:
+                tenders = inst.fetch(limit=limit_per_source)
+            else:
+                # The canonical pipeline helper bypasses MOCK_HTML fallbacks.
+                from .pipeline import _fetch_one_real
+                _, tenders, error = _fetch_one_real(inst)
+                if error:
+                    raise RuntimeError(error)
+                if limit_per_source is not None:
+                    tenders = tenders[:limit_per_source]
             elapsed = time.time() - t0
             count = len(tenders) if tenders else 0
             return {"source_id": sid, "status": "ok", "count": count,
@@ -203,6 +230,7 @@ def sync_all_sources(
 
     end = datetime.now(timezone.utc)
     summary = {
+        "data_mode": "diagnostic_mock_allowed" if allow_mock_fallback else "real_only",
         "started_at": start.isoformat(),
         "ended_at": end.isoformat(),
         "duration_s": round((end - start).total_seconds(), 2),

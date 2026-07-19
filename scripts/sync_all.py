@@ -26,6 +26,7 @@ def main():
     ap.add_argument("--json", action="store_true", help="Output JSON summary")
     ap.add_argument("--live-only", action="store_true", help="Skip sources flagged live:false")
     ap.add_argument("--sequential", action="store_true", help="Run sequentially instead of ThreadPool")
+    ap.add_argument("--allow-mock-fallback", action="store_true", help="DIAGNOSTIC ONLY: permit fixture fallback data")
     ap.add_argument("-v", "--verbose", action="count", default=1)
     args = ap.parse_args()
 
@@ -38,6 +39,7 @@ def main():
         verbose=True,
         use_threads=not args.sequential,
         live_only=args.live_only,
+        allow_mock_fallback=args.allow_mock_fallback,
     )
 
     if args.json:
@@ -46,6 +48,7 @@ def main():
         print(f"\n{'='*60}")
         print(f"Tender-Getter RSA – Sync Summary")
         print(f"{'='*60}")
+        print(f"Data mode          : {summary['data_mode']}")
         print(f"Sources candidates : {summary['class_total']}")
         print(f"Sources skipped     : {summary['sources_skipped_live_false']} (live:false)")
         print(f"Sources OK          : {summary['sources_ok']}/{summary['sources_total']}")

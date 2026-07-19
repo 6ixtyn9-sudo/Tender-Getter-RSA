@@ -37,9 +37,18 @@ class AIMessageHandler:
         self._load_user_contexts()
 
     def _load_user_contexts(self) -> None:
-        """Load persisted conversation contexts from database."""
-        # TODO: Load from Supabase conversation_states table
-        pass
+        """Contexts are loaded per user from persistence, never shared globally."""
+        return None
+
+    def _context_for(self, user: WhatsAppUser) -> dict:
+        from ..whatsapp.database import get_conversation_state
+        state = get_conversation_state(user.phone_number)
+        return state.context_data if state and state.context_data else {}
+
+    def _save_context(self, user: WhatsAppUser, context: dict) -> None:
+        from ..whatsapp.database import upsert_conversation_state
+        from ..whatsapp.models import ConversationState
+        upsert_conversation_state(ConversationState(user_id=user.phone_number, context_data=context))
 
     async def handle_message(
         self,
@@ -69,8 +78,11 @@ class AIMessageHandler:
         if is_greeting(text) and len(text.split()) <= 2:
             return await self._handle_greeting(user)
 
-        # Classify intent with context
-        intent = self.router.classify_and_route(text)
+        # Conversation context is persisted per user; a singleton router must not
+        # leak an upload/onboarding state between WhatsApp users.
+        from .intent_classifier import classify_intent
+        context = self._context_for(user)
+        intent = classify_intent(text, context)
         logger.info(f"[TG-AI] User {user.phone_number}: intent={intent.intent.value}, confidence={intent.confidence:.2f}")
 
         # Route to handler
@@ -121,13 +133,8 @@ class AIMessageHandler:
                 "Type *onboard* to set up your profile — takes 2 minutes."
             )
 
-        # Extract filters from intent
         filters = self._extract_tender_filters(intent)
-        
-        # TODO: Query database with filters
-        # For now, return natural response
-        response = self._format_tender_list(user, filters)
-        return response
+        return self._format_tender_list(user, filters)
 
     async def _handle_show_tender_detail(self, user: WhatsAppUser, intent: ClassifiedIntent, message_sid: str) -> str:
         """Show detailed tender info."""
@@ -138,15 +145,21 @@ class AIMessageHandler:
         if not tender_id:
             return "Which tender would you like details for? You can say the tender ID (e.g., *COJ/EE/2026/012*) or reply to a tender from your list."
 
-        # TODO: Fetch tender detail
-        return (
-            f"📋 *Tender: {tender_id}*\n\n"
-            f"[Detail view — fetching from database...]\n\n"
-            f"*Quick actions:*\n"
-            f"📄 *Get compliance report* — Full checklist\n"
-            f"📥 *Download bid docs* — If available\n"
-            f"❌ *Not interested* — Improves future matches"
-        )
+        from ..database import get_database_client
+        db = get_database_client().connect()
+        try:
+            tender = next((t for t in db.list_open_tenders(limit=10000) if t.tender_id.lower() == tender_id.lower()), None)
+        finally:
+            db.close()
+        if tender is None:
+            return f"I could not find an open tender with reference *{tender_id}*. Check the reference and try again."
+        value = f"R{tender.estimated_value:,.0f}" if tender.estimated_value is not None else "Not published"
+        cidb = f"{tender.required_cidb_class or '—'}{tender.required_cidb_level or ''}"
+        return (f"📋 *{tender.tender_id}*\n{tender.title}\n\n"
+                f"Issuer: {tender.issuing_entity}\nCloses: {tender.closing_date:%d %b %Y %H:%M}\n"
+                f"CIDB: {cidb} | Value: {value}\n"
+                f"Location: {tender.location_target or 'Not specified'}\n"
+                f"Documents: {tender.raw_document_url or 'Ask issuer'}")
 
     async def _handle_filter_tenders(self, user: WhatsAppUser, intent: ClassifiedIntent, message_sid: str) -> str:
         """Filter tenders by natural language criteria."""
@@ -193,7 +206,9 @@ class AIMessageHandler:
             )
 
         doc_type = doc_types[0]
-        self.router.update_context("awaiting_document", doc_type)
+        context = self._context_for(user)
+        context["awaiting_document"] = doc_type
+        self._save_context(user, context)
         
         labels = {
             "csd_letter": "CSD Registration Letter",
@@ -214,10 +229,9 @@ class AIMessageHandler:
 
     async def _handle_media_upload(self, user: WhatsAppUser, media_url: str, media_type: str, message_sid: str) -> str:
         """Process uploaded document with AI."""
-        # TODO: Download, upload to Supabase, parse with Gemini
-        doc_type = self.router.get_context("awaiting_document")
-        self.router.update_context("awaiting_document", None)
-        
+        context = self._context_for(user)
+        context.pop("awaiting_document", None)
+        self._save_context(user, context)
         return (
             f"📄 Received your document!\n\n"
             f"✅ Uploaded successfully.\n"
@@ -241,13 +255,16 @@ class AIMessageHandler:
         enable = any(w in text for w in ["on", "enable", "start", "yes", "please"])
         disable = any(w in text for w in ["off", "disable", "stop", "pause", "no"])
 
+        from ..whatsapp.database import get_digest_preferences, upsert_digest_preferences
+        from ..whatsapp.models import DailyDigestPreferences
+        prefs = get_digest_preferences(user.phone_number) or DailyDigestPreferences(user_id=user.phone_number)
         if enable:
-            # TODO: Update preferences in DB
-            return "☀️ Daily digest *enabled* — you'll receive matches at 07:00 SAST."
+            prefs.enabled = True
         elif disable:
-            return "🌙 Daily digest *disabled* — you won't receive morning messages. Type *digest on* to re-enable."
-        else:
-            return "Daily digest is currently ON. Type *digest off* to pause, or *digest on* to resume."
+            prefs.enabled = False
+        upsert_digest_preferences(prefs)
+        state = "enabled" if prefs.enabled else "disabled"
+        return f"☀️ Daily digest *{state}*. " + ("You'll receive matches at 07:00 SAST." if prefs.enabled else "Type *digest on* to resume.")
 
     async def _handle_update_preferences(self, user: WhatsAppUser, intent: ClassifiedIntent, message_sid: str) -> str:
         """Update sectors, province, digest time."""
@@ -389,7 +406,21 @@ class AIMessageHandler:
         return await self._handle_explain_gate(user, intent, message_sid)
 
     async def _handle_company_lookup(self, user: WhatsAppUser, intent: ClassifiedIntent, message_sid: str) -> str:
-        return "Company lookup coming soon — type *onboard* to register your company instead."
+        """Look up a contractor in the public CIDB register without inventing a result."""
+        from ..whatsapp.onboarding import lookup_cidb_register
+        query = intent.original_text.strip()
+        for prefix in ("lookup", "find", "company", "contractor"):
+            if query.lower().startswith(prefix):
+                query = query[len(prefix):].strip(" :,-")
+        if len(query) < 3:
+            return "Tell me the company name to look up, for example: *lookup Example Construction*."
+        records = await lookup_cidb_register(query)
+        if not records:
+            return f"I could not find *{query}* in the public CIDB register. Check the spelling or continue onboarding with your CIDB certificate."
+        lines = [f"🏗️ *CIDB results for {query}*"]
+        for record in records[:3]:
+            lines.append(f"• {record.get('company_name') or record.get('Contractor Name', 'Contractor')} — {record.get('grading') or record.get('Grading', 'grading not published')}")
+        return "\n".join(lines) + "\n\nPlease verify the current CIDB status before bidding."
 
     async def _handle_match_company(self, user: WhatsAppUser, intent: ClassifiedIntent, message_sid: str) -> str:
         return "Running fresh match... Type *tenders* in a moment to see results."
@@ -432,8 +463,18 @@ class AIMessageHandler:
 
     def _get_today_match_count(self, user: WhatsAppUser) -> int:
         """Get today's match count for user."""
-        # TODO: Query database
-        return 0
+        if not user.registration_number:
+            return 0
+        from ..database import get_database_client
+        from ..pipeline import _is_open_and_valid
+        from ..whatsapp.matching import match_user_tenders
+        from datetime import datetime, timezone
+        db = get_database_client().connect()
+        try:
+            tenders = [t for t in db.list_open_tenders(limit=10000) if _is_open_and_valid(t, datetime.now(timezone.utc))]
+        finally:
+            db.close()
+        return sum(1 for _, result in match_user_tenders(user, tenders) if result.is_eligible)
 
     def _verification_summary(self, user: WhatsAppUser) -> str:
         statuses = [user.csd_status, user.bbbee_status, user.tax_status, user.cidb_status]
@@ -465,8 +506,10 @@ class AIMessageHandler:
         if entities.get("cidb_classes"):
             filters["cidb_class"] = entities["cidb_classes"][0]
         if entities.get("cidb_grades"):
-            # Parse "GB 3" format
-            pass
+            try:
+                filters["cidb_level"] = int(entities["cidb_grades"][0])
+            except (ValueError, TypeError):
+                pass
         if entities.get("monetary_values"):
             mv = entities["monetary_values"][0]
             if mv["unit"] == "M":
@@ -479,22 +522,37 @@ class AIMessageHandler:
         return filters
 
     def _format_tender_list(self, user: WhatsAppUser, filters: dict) -> str:
-        """Format tender list response."""
-        filter_desc = []
-        if filters.get("province"):
-            filter_desc.append(f"in {filters['province']}")
-        if filters.get("cidb_class"):
-            filter_desc.append(f"CIDB {filters['cidb_class']}")
-        if filters.get("max_value"):
-            filter_desc.append(f"under R{filters['max_value']:,.0f}")
-
-        filter_str = " ".join(filter_desc) if filter_desc else "all"
-
-        return (
-            f"📋 *Your Tender Matches ({filter_str})*\n\n"
-            f"[Fetching from database...]\n\n"
-            f"💡 *Tip:* Say \"Gauteng under R2M\" or \"CIDB CE3 this week\" to filter."
-        )
+        """Query real, open tenders and return only eligible matches."""
+        from datetime import datetime, timezone
+        from ..database import get_database_client
+        from ..pipeline import _is_open_and_valid
+        from ..whatsapp.matching import match_user_tenders
+        db = get_database_client().connect()
+        try:
+            tenders = db.list_open_tenders(limit=10000)
+        finally:
+            db.close()
+        filtered = []
+        for tender in tenders:
+            if not _is_open_and_valid(tender, datetime.now(timezone.utc)):
+                continue
+            if filters.get("province") and (tender.location_target or "national").lower() not in {"national", filters["province"].lower()}:
+                continue
+            if filters.get("cidb_class") and (tender.required_cidb_class or "").upper() != filters["cidb_class"].upper():
+                continue
+            if filters.get("cidb_level") and (tender.required_cidb_level or 0) != filters["cidb_level"]:
+                continue
+            if filters.get("max_value") and tender.estimated_value is not None and tender.estimated_value > filters["max_value"]:
+                continue
+            filtered.append(tender)
+        eligible = [(t, r) for t, r in match_user_tenders(user, filtered) if r.is_eligible][:5]
+        if not eligible:
+            return "📋 No open *eligible* matches were found for that filter. I only show tenders that pass the recorded CSD, tax, CIDB and location gates."
+        lines = ["📋 *Your eligible tender matches*"]
+        for tender, result in eligible:
+            lines.append(f"\n• *{tender.tender_id}* — {tender.title[:90]}\n  {result.match_score:.0f}% | closes {tender.closing_date:%d %b} | {tender.issuing_entity[:45]}")
+        lines.append("\nVerify all documents and tender conditions with the issuer before bidding.")
+        return "\n".join(lines)
 
 
 # ─────────────────────────────────────────────────────────────────────────────

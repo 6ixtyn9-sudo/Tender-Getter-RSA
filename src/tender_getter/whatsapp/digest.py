@@ -8,7 +8,7 @@ from datetime import datetime, time, timedelta
 from typing import List, Dict, Any, Optional
 from dataclasses import dataclass
 
-from .models import WhatsAppUser, DailyDigestPreferences
+from .models import WhatsAppUser, DailyDigestPreferences, OnboardingStep
 from .database import get_users_by_step, upsert_digest_preferences, get_digest_preferences
 from .outbound import send_template_message, send_text_message, send_media_message
 
@@ -187,96 +187,38 @@ async def send_report_notification(user: WhatsAppUser, match: TenderMatch, repor
 
 
 async def run_daily_digest_job() -> Dict[str, int]:
-    """
-    Main job to run daily (scheduled via cron/Cloud Scheduler).
-    Fetches matches for all users and sends digests.
-    """
-    from ..pipeline import run_pipeline_match
+    """Match each consented, onboarded user against live open tenders and deliver a digest."""
+    from datetime import timezone
     from ..database import get_database_client
-    from ..schemas import CompanyProfile
-    
+    from ..pipeline import _is_open_and_valid
+    from .matching import match_user_tenders
     stats = {"sent": 0, "failed": 0, "skipped": 0, "total_users": 0}
-    
-    # Get all onboarded users
-    users = get_users_by_step("complete")  # OnboardingStep.COMPLETE
+    users = get_users_by_step(OnboardingStep.COMPLETE)
     stats["total_users"] = len(users)
-    
-    if not users:
-        logger.info("No onboarded users for daily digest")
-        return stats
-    
-    # Get database client
-    db = get_database_client()
-    if hasattr(db, "connect"):
-        db.connect()
-    
+    db = get_database_client().connect()
     try:
-        # Get all open tenders
-        tenders = db.list_open_tenders(limit=10000)
-        
-        # Filter to open, valid tenders
-        from ..pipeline import _is_open_and_valid
-        now = datetime.now()
-        valid_tenders = [t for t in tenders if _is_open_and_valid(t, now)]
-        
-        # Process each user
+        now = datetime.now(timezone.utc)
+        open_tenders = [t for t in db.list_open_tenders(limit=10000) if _is_open_and_valid(t, now)]
         for user in users:
-            if not user.registration_number:
+            if user.opted_out_at or not user.popia_consent:
                 stats["skipped"] += 1
                 continue
-            
-            # Load company profile
-            company = CompanyProfile(
-                registration_number=user.registration_number,
-                company_name=user.onboarding_data.get("company_name", ""),
-                csd_number=user.onboarding_data.get("csd_number"),
-                bbbee_level=user.onboarding_data.get("bbbee_level", 9),
-                cidb_gradings=[
-                    type('CIDBGrading', (), g)() for g in user.onboarding_data.get("cidb_gradings", [])
-                ],
-                location=type('Location', (), {
-                    "province": user.province,
-                    "city": "Unknown",
-                })(),
-                sectors=user.sectors,
-                has_tax_pin=user.tax_status == "verified",
-            )
-            
-            # Run matching
-            from ..matcher import match as run_match
-            matches = []
-            for tender in valid_tenders:
-                result = run_match(company, tender)
+            records = []
+            for tender, result in match_user_tenders(user, open_tenders):
                 if result.is_eligible:
-                    matches.append(TenderMatch(
-                        tender_id=result.tender_id,
-                        title=result.tender_title,
-                        issuing_entity=tender.issuing_entity,
-                        closing_date=tender.closing_date,
-                        estimated_value=tender.estimated_value,
-                        required_cidb_class=tender.required_cidb_class,
-                        required_cidb_level=tender.required_cidb_level,
-                        location_target=tender.location_target,
-                        match_score=result.match_score,
-                        bbbee_points=result.bbbee_points,
-                        bbbee_system=result.bbbee_system or "80/20",
-                    ))
-            
-            # Sort by score
-            matches.sort(key=lambda m: -m.match_score)
-            
-            # Send digest
-            success = await send_daily_digest(user, matches)
-            if success:
-                stats["sent"] += 1
-            else:
+                    records.append(TenderMatch(tender_id=tender.tender_id, title=tender.title, issuing_entity=tender.issuing_entity,
+                        closing_date=tender.closing_date, estimated_value=tender.estimated_value,
+                        required_cidb_class=tender.required_cidb_class, required_cidb_level=tender.required_cidb_level,
+                        location_target=tender.location_target, match_score=result.match_score,
+                        bbbee_points=result.bbbee_points, bbbee_system=result.bbbee_system or "80/20"))
+            try:
+                if await send_daily_digest(user, records): stats["sent"] += 1
+                else: stats["skipped"] += 1
+            except Exception:
+                logger.exception("Daily digest failed for %s", user.phone_number)
                 stats["failed"] += 1
-                
     finally:
-        if hasattr(db, "close"):
-            db.close()
-    
-    logger.info(f"Daily digest job completed: {stats}")
+        db.close()
     return stats
 
 
@@ -293,14 +235,8 @@ def schedule_daily_digest():
     3. APScheduler in-process
     4. System cron on VM
     
-    Example Cloud Scheduler:
-    ```
-    gcloud scheduler jobs create http daily-digest \
-        --schedule="0 5 * * *" \  # 05:00 UTC = 07:00 SAST
-        --uri="https://your-cloud-run-url/digest/trigger" \
-        --http-method=POST \
-        --oidc-service-account-email=your-sa@project.iam.gserviceaccount.com
-    ```
+    Example: schedule Cloud Scheduler at ``0 5 * * *`` (05:00 UTC / 07:00 SAST)
+    to invoke an authenticated digest-job endpoint or Cloud Run Job.
     """
     pass
 

@@ -41,3 +41,10 @@ localdata/*.db
 localdata/*.db-*
 localdata/*.md
 !localdata/.gitkeep
+
+# Runtime-only tooling and generated delivery artifacts
+ngrok.zip
+webhook.log
+localdata/tender_docs/
+localdata/*.pdf
+localdata/*.json

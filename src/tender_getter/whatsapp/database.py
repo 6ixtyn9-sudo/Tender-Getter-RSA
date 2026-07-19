@@ -344,12 +344,9 @@ def init_whatsapp_tables():
         logger.info("Skipping table creation — using in-memory store")
         return
     
-    # Table creation SQL would go here
-    # For now, we rely on manual creation or Supabase dashboard
-    logger.info("WhatsApp tables should be created via Supabase dashboard")
-    logger.info("Required tables:")
-    for name, table in TABLES.items():
-        logger.info(f"  - {table}")
+    # DDL is versioned and deployed with Supabase migrations, not executed by
+    # the application service role. See whatsapp_and_privacy.sql.
+    logger.info("WhatsApp schema is managed by Supabase migration whatsapp_and_privacy.sql")
 
 
 # SQL for manual table creation (run in Supabase SQL editor)

@@ -16,3 +16,4 @@ Pillow>=10.0
 httpx>=0.25
 certifi>=2023.7.22
 slowapi>=0.1.9
+reportlab>=4.0

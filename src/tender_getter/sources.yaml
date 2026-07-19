@@ -5060,3 +5060,11 @@ sources:
   type: html
   priority: 2
   free: true
+
+- id: etenders_web
+  name: National Treasury eTenders web portal adapter
+  url: https://www.etenders.gov.za
+  live: false
+  type: html
+  priority: 1
+  free: true

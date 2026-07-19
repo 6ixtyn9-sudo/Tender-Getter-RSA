@@ -455,7 +455,7 @@ class TenderBulletinsSource:
         tenders = fetch_tenderbulletins("city-of-tshwane", "City of Tshwane", limit=50)
     """
 
-    source_id: str = "tenderbulletins"
+    adapter_id: str = "tenderbulletins"
     live: bool = True
 
     def __init__(
@@ -465,12 +465,12 @@ class TenderBulletinsSource:
         slug: str = "",
     ):
         """Initialize with a source_id (looked up in SLUG_MAP) or explicit slug."""
-        self.source_id = source_id or "tenderbulletins"
+        self.source_id = source_id or ""
         self.issuing_entity = issuing_entity
         self.slug = slug or resolve_slug(source_id, issuing_entity) or ""
         if not self.slug:
             logger.warning(
-                "TenderBulletinsSource: no slug for source_id='%s' entity='%s'",
+                "TenderBulletinsSource: no slug for source id='%s' entity='%s'",
                 source_id, issuing_entity,
             )
 

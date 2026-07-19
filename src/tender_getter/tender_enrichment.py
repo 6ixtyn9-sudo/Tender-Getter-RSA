@@ -34,7 +34,7 @@ from urllib.parse import urlparse
 from urllib.request import urlopen, Request
 from urllib.error import URLError, HTTPError
 
-from ..schemas import TenderOpportunity
+from .schemas import TenderOpportunity
 
 logger = logging.getLogger(__name__)
 
@@ -225,7 +225,7 @@ def _trim_pdf(pdf_bytes: bytes, max_pages: int = 8) -> bytes:
 
 def extract_fields_local(text: str) -> dict:
     """Run regex extractors over PDF text. Returns only fields found."""
-    from ..sources.common import parse_closing_date, province_from_text
+    from .sources.common import parse_closing_date, province_from_text
     out: dict = {}
 
     # CIDB
@@ -257,7 +257,7 @@ def extract_fields_local(text: str) -> dict:
     # Closing date
     cm = _CLOSING_RE.search(text or "")
     if cm:
-        from ..sources.common import parse_closing_date
+        from .sources.common import parse_closing_date
         cd = parse_closing_date(cm.group(1))
         if cd.year < 2099:
             out["closing_date"] = cd
@@ -275,7 +275,7 @@ def extract_fields_local(text: str) -> dict:
     # Province hint
     pm = _PROVINCE_HINT_RE.search(text or "")
     if pm:
-        from ..sources.common import province_from_text
+        from .sources.common import province_from_text
         prov = province_from_text(pm.group(0))
         if prov:
             out["location_target"] = prov
@@ -366,7 +366,7 @@ def _extract_fields_gemini(pdf_bytes: bytes, mime: str = "application/pdf") -> d
             result[k] = None
 
     if result.get("closing_date"):
-        from ..sources.common import parse_closing_date
+        from .sources.common import parse_closing_date
         cd = parse_closing_date(result["closing_date"])
         if cd.year < 2099:
             result["closing_date"] = cd
