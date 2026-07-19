@@ -52,6 +52,9 @@ class Intent(str, Enum):
     # Company actions
     COMPANY_LOOKUP = "company_lookup"
     MATCH_COMPANY = "match_company"
+    UPGRADE_PLAN = "upgrade_plan"
+    MANAGE_BILLING = "manage_billing"
+    BID_CRAFT = "bid_craft"
 
     # Unknown
     UNKNOWN = "unknown"
@@ -169,6 +172,9 @@ INTENT_KEYWORDS = {
         "match.*company", "run.*match", "refresh.*match", "re-match",
         "check.*match", "scan.*tender",
     ],
+    Intent.UPGRADE_PLAN: ["upgrade", "subscribe", "subscription", "price", "pricing", "plan", "pay monthly", "pay yearly", "annual"],
+    Intent.MANAGE_BILLING: ["invoice", "billing", "debit order", "debit-order", "cancel subscription", "payment failed", "payment method"],
+    Intent.BID_CRAFT: ["proposal", "bid pack", "draft bid", "prepare bid", "methodology", "executive summary"],
 }
 
 # Quick reply suggestions per intent
@@ -181,6 +187,8 @@ QUICK_REPLIES = {
     Intent.HELP: ["📋 Show tenders", "👤 My profile", "🚀 Onboard", "⚙️ Settings", "❌ Stop"],
     Intent.EXPLAIN_GATE: ["📖 Explain CIDB gate", "📖 Explain CSD gate", "📖 Explain Tax gate", "📖 Explain B-BBEE gate"],
     Intent.EXPLAIN_SCORING: ["📖 How scoring works", "📖 B-BBEE points", "📖 Match % meaning"],
+    Intent.UPGRADE_PLAN: ["Upgrade", "Monthly plan", "Annual plan", "VIP Bid-Craft"],
+    Intent.BID_CRAFT: ["Prepare a bid pack", "Draft methodology", "Show plans"],
     Intent.UNKNOWN: ["📋 Show tenders", "👤 My profile", "❓ Help", "⚙️ Settings"],
 }
 

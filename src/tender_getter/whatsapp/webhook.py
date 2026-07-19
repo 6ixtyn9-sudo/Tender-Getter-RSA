@@ -149,6 +149,31 @@ async def whatsapp_webhook(
     return Response(content=str(twiml), media_type="application/xml")
 
 
+@app.post("/billing/paystack/webhook")
+async def paystack_billing_webhook(request: Request):
+    """Idempotently activate a paid entitlement after verified hosted checkout."""
+    body = await request.body()
+    from ..billing.service import BillingService
+    service = BillingService()
+    if not service.provider.verify_webhook(body, request.headers.get("x-paystack-signature", "")):
+        raise HTTPException(status_code=403, detail="Invalid payment signature")
+    import json
+    event = json.loads(body.decode("utf-8")); event_id = event.get("data", {}).get("id") or event.get("data", {}).get("reference")
+    if not event_id or not service.client:
+        return Response(status_code=204)
+    # Insert is the durable idempotency boundary. Duplicate provider retries do
+    # not create another subscription or change entitlement state.
+    existing = service.client.table("payment_events").select("id").eq("provider", "paystack").eq("provider_event_id", str(event_id)).execute().data
+    if existing: return Response(status_code=204)
+    service.client.table("payment_events").insert({"provider": "paystack", "provider_event_id": str(event_id), "event_type": event.get("event", "unknown"), "payload": event, "processed_at": datetime.utcnow().isoformat()}).execute()
+    if event.get("event") == "charge.success":
+        metadata = event.get("data", {}).get("metadata", {}) or {}
+        if all(metadata.get(k) for k in ("registration_number", "owner_phone", "plan")):
+            interval = metadata.get("billing_interval", "monthly")
+            service.client.table("company_subscriptions").upsert({"registration_number": metadata["registration_number"], "owner_phone_number": metadata["owner_phone"], "plan_code": metadata["plan"], "status": "active", "billing_provider": "paystack", "provider_customer_id": str(event.get("data", {}).get("customer", {}).get("customer_code", "")), "provider_subscription_id": str(event.get("data", {}).get("reference", event_id)), "billing_interval": interval}, on_conflict="registration_number").execute()
+    return Response(status_code=204)
+
+
 @app.post("/whatsapp/status")
 async def whatsapp_status_callback(request: Request, MessageSid: str = Form(...), MessageStatus: str = Form(...), To: str = Form(""), From: str = Form("")):
     form_data = dict(await request.form())

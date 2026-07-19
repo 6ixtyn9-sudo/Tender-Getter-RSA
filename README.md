@@ -134,3 +134,7 @@ PYTHONPATH=src:. pytest -q
 python scripts/twilio/create_templates.py
 ./scripts/deploy/cloudrun.sh <PROJECT_ID>
 ```
+
+## Agentic commercial beta
+
+Tender Getter is designed as a WhatsApp-first autonomous procurement agent. Customer plans are paid (`starter`, `pro`, `vip`); beta access is an explicit, expiring entitlement. See [Agentic Commercial Beta](docs/agentic-commercial-beta.md) for the billing, debit-order, autonomous-agent and VIP Bid-Craft rollout.

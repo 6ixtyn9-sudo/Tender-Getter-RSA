@@ -80,8 +80,8 @@ async def send_daily_digest(user: WhatsAppUser, matches: List[TenderMatch]) -> b
                 "top_score": f"{filtered[0].match_score:.0f}%" if filtered else "0%",
             }
         )
-        # Also send detailed text as fallback
-        send_text_message(user.phone_number, message)
+        # A template is the one outbound delivery for this digest. Text is only
+        # used in the exception fallback, preventing duplicate WhatsApps.
         return True
     except Exception as e:
         logger.warning(f"Template failed, sending text only: {e}")

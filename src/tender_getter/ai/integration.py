@@ -84,6 +84,15 @@ class AIMessageHandler:
         context = self._context_for(user)
         intent = classify_intent(text, context)
         logger.info(f"[TG-AI] User {user.phone_number}: intent={intent.intent.value}, confidence={intent.confidence:.2f}")
+        # Every natural-language message is a learning signal. This does not
+        # require buttons or a human reviewer, and is safe to lose in local dev.
+        try:
+            from ..agents.feedback import interpret_feedback
+            from ..agents.store import AgentStore
+            signal = interpret_feedback(text)
+            AgentStore().record_feedback(user.phone_number, text, intent=intent.intent.value, sentiment=signal.sentiment, confidence=signal.confidence, signals=signal.signals)
+        except Exception:
+            logger.exception("Could not persist natural-language feedback")
 
         # Route to handler
         handler_name = f"_handle_{intent.intent.value}"
@@ -404,6 +413,40 @@ class AIMessageHandler:
 
     async def _handle_explain_csd(self, user: WhatsAppUser, intent: ClassifiedIntent, message_sid: str) -> str:
         return await self._handle_explain_gate(user, intent, message_sid)
+
+    async def _handle_upgrade_plan(self, user: WhatsAppUser, intent: ClassifiedIntent, message_sid: str) -> str:
+        """Start a paid-plan checkout from WhatsApp; beta access is explicit, not a free plan."""
+        text = intent.original_text.lower()
+        plan = "vip" if "vip" in text or "proposal" in text else "pro" if "pro" in text else "starter"
+        interval = "annual" if any(word in text for word in ("annual", "year", "yearly")) else "monthly"
+        if not user.registration_number:
+            return "Complete your company profile first, then I can set up your paid plan securely."
+        email = user.onboarding_data.get("billing_email")
+        if not email:
+            context = self._context_for(user); context["awaiting_billing_email"] = {"plan": plan, "interval": interval}; self._save_context(user, context)
+            return "I can set up your *paid* plan now. Please reply with the email address for invoices and your secure payment link."
+        return await self._create_checkout(user, plan, interval, email)
+
+    async def _handle_manage_billing(self, user: WhatsAppUser, intent: ClassifiedIntent, message_sid: str) -> str:
+        return ("I can help with your subscription, annual renewal, invoice, cancellation or debit-order mandate. "
+                "Tell me what you need in your own words—for example: _switch to annual_, _send my invoice_, or _set up debit order_.")
+
+    async def _handle_bid_craft(self, user: WhatsAppUser, intent: ClassifiedIntent, message_sid: str) -> str:
+        from ..billing.service import BillingService
+        entitlement = BillingService().entitlement_for(user.registration_number)
+        if not entitlement.bid_craft:
+            return "Bid-Craft is included with the *VIP paid plan*. Say *upgrade to VIP* and I will send a secure checkout link."
+        return "Send the tender reference or reply to a tender alert with *prepare bid*. I will build the compliance matrix and a draft bid pack from the tender evidence."
+
+    async def _create_checkout(self, user: WhatsAppUser, plan: str, interval: str, email: str) -> str:
+        from ..billing.models import PlanCode, BillingInterval
+        from ..billing.service import BillingService
+        try:
+            url = await BillingService().create_checkout(registration_number=user.registration_number, owner_phone=user.phone_number, email=email, plan=PlanCode(plan), interval=BillingInterval(interval))
+        except Exception as exc:
+            logger.warning("Checkout unavailable: %s", exc)
+            return "Secure checkout is being prepared. I have saved your plan request and will send the link when payments are configured."
+        return f"Here is your secure {interval} *{plan.title()}* checkout: {url}\n\nNever send card or banking details in WhatsApp."
 
     async def _handle_company_lookup(self, user: WhatsAppUser, intent: ClassifiedIntent, message_sid: str) -> str:
         """Look up a contractor in the public CIDB register without inventing a result."""

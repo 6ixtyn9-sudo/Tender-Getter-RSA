@@ -65,3 +65,15 @@ Never configure `TG_ALLOW_INSECURE_WEBHOOK=1` in production.
 The full suite includes the live source tests. Live public sites are inherently variable; tests now verify honest real-only reporting instead of treating mock fallback as a successful live source.
 
 Docker was not built in this workspace because Docker is not installed here. The Dockerfile consumes `requirements.txt`; it will include FastAPI, Uvicorn, Twilio, ReportLab and the rest of the declared runtime dependencies. The webhook now binds to Cloud Run's `PORT` environment variable (default `8080`) and exposes `/health`.
+
+## Agentic billing and Bid-Craft
+
+The commercial beta adds autonomous agent decisions, durable job/audit records, natural-language customer feedback, paid-plan entitlements and secure hosted checkout boundaries. Apply the migrations in this exact order:
+
+```text
+20260707000000_initial_schema.sql
+20260719000000_whatsapp_and_privacy.sql
+20260720000000_agentic_billing.sql
+```
+
+All customer plans are paid (`starter`, `pro`, `vip`). Invited pilot users receive a visible, expiring `beta` entitlement rather than a hidden free-plan bypass. See [Agentic Commercial Beta](agentic-commercial-beta.md).
