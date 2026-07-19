@@ -48,3 +48,7 @@ webhook.log
 localdata/tender_docs/
 localdata/*.pdf
 localdata/*.json
+
+# Private incorporation, banking, tax and legal records — never commit.
+/company_admin/
+/Tender Getter RSA/
