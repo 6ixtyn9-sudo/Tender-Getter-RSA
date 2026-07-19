@@ -107,10 +107,28 @@ async def cancel_onboarding(user: WhatsAppUser) -> str:
 # Step 1: Company Name
 # ---------------------------------------------------------------------------
 
+# WhatsApp markup/control characters — user names must not break message
+# formatting or carry hidden control bytes into AI payloads.
+_NAME_MARKUP = re.compile(r"[*_`~]+")
+_NAME_CONTROL = re.compile(r"[\x00-\x1f\x7f]+")
+
+
+def _sanitize_display_name(raw: str, max_len: int = 160) -> str:
+    """Reduce free-text input to a safe single-line display name.
+
+    Strips WhatsApp markup characters and control bytes, collapses
+    whitespace, and bounds length. The sanitised value is what flows into
+    WhatsApp replies, digests, and Bid-Craft AI payloads.
+    """
+    text = _NAME_CONTROL.sub(" ", raw or "")
+    text = _NAME_MARKUP.sub("", text)
+    return " ".join(text.split())[:max_len].strip()
+
+
 async def handle_company_name(user: WhatsAppUser, body: str, message_sid: str) -> str:
     """Handle company name input and lookup CIDB."""
-    company_name = body.strip()
-    
+    company_name = _sanitize_display_name(body)
+
     if len(company_name) < 2:
         return "Please enter a valid company name (at least 2 characters)."
     

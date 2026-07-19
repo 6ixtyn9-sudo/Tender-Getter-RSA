@@ -449,13 +449,13 @@ class AIMessageHandler:
 
     async def _handle_bid_craft(self, user: WhatsAppUser, intent: ClassifiedIntent, message_sid: str) -> str:
         from ..billing.service import BillingService
-        entitlement = BillingService().entitlement_for(user.registration_number)
+        entitlement = BillingService().entitlement_for(user.registration_number, owner_phone=user.phone_number)
         if not entitlement.bid_craft:
             return "Bid-Craft is included with the *VIP paid plan*. Say *upgrade to VIP* and I will send a secure checkout link."
         tender_id = intent.entities.get("tender_ids", [None])[0] or extract_tender_id(intent.original_text)
         if not tender_id:
             return "Send the tender reference or reply to a tender alert with *prepare bid*. I will reserve one of your included monthly Bid-Craft packs and build it from tender evidence."
-        if not BillingService().reserve_bid_craft_pack(user.registration_number, tender_id):
+        if not BillingService().reserve_bid_craft_pack(user.registration_number, tender_id, owner_phone=user.phone_number):
             return "Your included VIP Bid-Craft packs are used for this month, or this tender reference is not available. Say *show plans* if you need more bid-pack capacity."
         from ..agents.store import AgentStore
         AgentStore().enqueue("build_bid_pack", {"registration_number": user.registration_number, "tender_id": tender_id, "owner_phone": user.phone_number}, f"bid_craft:{user.registration_number}:{tender_id}")

@@ -138,11 +138,12 @@ def build_digest_message(user: WhatsAppUser, matches: List[TenderMatch], prefs: 
 async def send_tender_alert(user: WhatsAppUser, match: TenderMatch) -> bool:
     """Send immediate alert for high-value match."""
     try:
+        value_str = f"R{match.estimated_value:,.0f}" if match.estimated_value is not None else "Value not disclosed"
         message = (
             f"🚨 *High-Value Tender Alert!*\n\n"
             f"*{match.title}*\n"
             f"📋 {match.tender_id} | {match.issuing_entity}\n"
-            f"💰 R{match.estimated_value:,.0f}\n"
+            f"💰 {value_str}\n"
             f"📍 {match.location_target or 'National'}\n"
             f"⏰ Closes: {match.closing_date.strftime('%d %b %Y')}\n"
             f"📊 Match: {match.match_score:.0f}%\n\n"

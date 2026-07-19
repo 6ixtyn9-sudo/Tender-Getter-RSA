@@ -45,11 +45,23 @@ class BillingService:
         caps = DEFAULT_CAPABILITIES.get(plan, {})
         return Entitlement(plan, True, bool(caps.get("bid_craft")), True, True)
 
-    def entitlement_for(self, registration_number: str | None) -> Entitlement:
+    def entitlement_for(self, registration_number: str | None, owner_phone: str | None = None) -> Entitlement:
+        """Entitlement for a company — optionally bound to the caller's phone.
+
+        A WhatsApp number can claim ANY registration number at onboarding, so
+        a bare registration lookup would let a squatter inherit (or burn) the
+        real owner's paid subscription. When owner_phone is supplied, the
+        subscription's recorded owner must match or the entitlement fails closed.
+        """
         if not registration_number or not self.client:
             return self.entitlement(None)
-        rows = self.client.table("company_subscriptions").select("plan_code,status,current_period_end,beta_expires_at,trial_expires_at").eq("registration_number", registration_number).execute().data
-        return self.entitlement(rows[0] if rows else None)
+        rows = self.client.table("company_subscriptions").select("plan_code,status,current_period_end,beta_expires_at,trial_expires_at,owner_phone_number").eq("registration_number", registration_number).execute().data
+        subscription = rows[0] if rows else None
+        if subscription and owner_phone is not None:
+            if str(subscription.get("owner_phone_number") or "") != str(owner_phone):
+                logger.warning("Entitlement lookup blocked: phone %s does not own subscription for %s", owner_phone, registration_number)
+                return self.entitlement(None)
+        return self.entitlement(subscription)
 
     def tax_configuration(self) -> dict:
         if not self.client:
@@ -127,8 +139,19 @@ class BillingService:
             raise ProviderNotConfigured("Billing persistence is not configured")
         self.client.table("billing_requests").insert({"registration_number": registration_number, "owner_phone_number": owner_phone, "requested_method": method}).execute()
 
-    def reserve_bid_craft_pack(self, registration_number: str, tender_id: str) -> bool:
+    def reserve_bid_craft_pack(self, registration_number: str, tender_id: str, owner_phone: str | None = None) -> bool:
+        """Reserve a monthly Bid-Craft pack — ownership-gated when a phone is known.
+
+        The reservation RPC is keyed by registration number; binding it here to
+        the subscription's owner phone stops a squatter from burning the real
+        owner's included packs.
+        """
         if not self.client:
             return False
+        if owner_phone is not None:
+            subscription = self.subscription_for_phone(owner_phone)
+            if not subscription or str(subscription.get("registration_number") or "") != str(registration_number):
+                logger.warning("Bid-Craft reservation blocked: phone %s does not own %s", owner_phone, registration_number)
+                return False
         result = self.client.rpc("reserve_bid_craft_pack", {"company_reg": registration_number, "bid_tender_id": tender_id}).execute()
         return bool(result.data)

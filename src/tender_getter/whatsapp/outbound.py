@@ -3,6 +3,7 @@ Outbound message helpers for WhatsApp — shared between webhook, digest, and AI
 Breaks circular import between webhook.py and digest.py.
 """
 
+import json
 import os
 from typing import Optional
 
@@ -50,6 +51,8 @@ def send_template_message(to: str, template_sid: str, variables: dict) -> str:
         from_=TWILIO_WHATSAPP_FROM,
         to=f"whatsapp:{to}",
         content_sid=template_sid,
-        content_variables=str(variables).replace("'", '"'),
+        # Proper JSON — user-controlled values (company names, quotes) must
+        # never be able to corrupt the payload the way str().replace() did.
+        content_variables=json.dumps(variables),
     )
     return message.sid
