@@ -111,3 +111,26 @@ Build Window: May 19 — August 17, 2026
 Production Deployment: Google Cloud Run (Containerized Serverless Engine)
 LLM Engine: Gemini 1.5 Pro (Deep Document Auditing) & Gemini 1.5 Flash (Categorization)
 Disclaimer: Tender Getter RSA is an independent software tool utilizing AI-native analytics. Bidders must verify all final compliance items with official state platforms (CSD, SARS, CIDB).
+## Repository layout
+
+```text
+src/                 Application packages
+scripts/             Operational CLI tools
+  deploy/            Cloud Run deployment and Secret Manager setup
+  twilio/            Twilio Content Template administration
+  manual/            Explicit local smoke checks (not pytest tests)
+docs/                Architecture, guardrails, and hardening notes
+config/twilio/       Twilio template definitions
+supabase/migrations/ Database schema changes
+tests/               Automated test suite
+```
+
+Common commands:
+
+```bash
+PYTHONPATH=src:. python scripts/doctor.py
+PYTHONPATH=src:. python scripts/sync_all.py --live-only
+PYTHONPATH=src:. pytest -q
+python scripts/twilio/create_templates.py
+./scripts/deploy/cloudrun.sh <PROJECT_ID>
+```
