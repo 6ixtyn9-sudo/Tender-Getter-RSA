@@ -345,8 +345,8 @@ def init_whatsapp_tables():
         return
     
     # DDL is versioned and deployed with Supabase migrations, not executed by
-    # the application service role. See whatsapp_and_privacy.sql.
-    logger.info("WhatsApp schema is managed by Supabase migration whatsapp_and_privacy.sql")
+    # the application service role. See 20260719000000_whatsapp_and_privacy.sql.
+    logger.info("WhatsApp schema is managed by Supabase migration 20260719000000_whatsapp_and_privacy.sql")
 
 
 # SQL for manual table creation (run in Supabase SQL editor)

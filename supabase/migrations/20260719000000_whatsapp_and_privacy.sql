@@ -1,5 +1,5 @@
 -- Tender Getter RSA — WhatsApp, POPIA and delivery persistence
--- Apply after 20260707_initial_schema.sql. All statements are idempotent.
+-- Apply after 20260707000000_initial_schema.sql. All statements are idempotent.
 
 CREATE TABLE IF NOT EXISTS whatsapp_users (
     whatsapp_id TEXT PRIMARY KEY,

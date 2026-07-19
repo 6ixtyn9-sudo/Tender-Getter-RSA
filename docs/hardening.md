@@ -26,14 +26,14 @@ The source registry now rejects duplicate IDs during discovery, treats aggregato
 - The webhook adds rate limiting, replay suppression, content-type and size checks for documents, and defensive response headers.
 - Per-user conversation state is persisted rather than shared through a singleton router.
 - Tender list, filtering, detail lookup, CIDB lookup and digest preference changes now query/update real persistence paths.
-- `supabase/migrations/whatsapp_and_privacy.sql` adds WhatsApp users, state, media, outbound delivery, daily preferences, immutable consent logging and opt-out suppression.
+- `supabase/migrations/20260719000000_whatsapp_and_privacy.sql` adds WhatsApp users, state, media, outbound delivery, daily preferences, immutable consent logging and opt-out suppression.
 
 Apply migrations in order before production deployment:
 
 ```bash
 supabase db push
-# or apply supabase/migrations/20260707_initial_schema.sql and then
-# supabase/migrations/whatsapp_and_privacy.sql in Supabase SQL Editor
+# or apply supabase/migrations/20260707000000_initial_schema.sql and then
+# supabase/migrations/20260719000000_whatsapp_and_privacy.sql in Supabase SQL Editor
 ```
 
 ## Reports
