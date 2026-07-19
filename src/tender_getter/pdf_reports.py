@@ -26,3 +26,25 @@ def generate_report_pdf(company: CompanyProfile, tender: TenderOpportunity, resu
         else: story.append(Paragraph(line.replace('&','&amp;').replace('<','&lt;').replace('>','&gt;'), normal))
     SimpleDocTemplate(str(path), pagesize=A4, rightMargin=16*mm, leftMargin=16*mm, topMargin=16*mm, bottomMargin=16*mm).build(story)
     return path
+
+def render_text_pdf(title: str, content: str, filename_stem: str, output_dir: Path | None = None) -> Path:
+    """Render an evidence-bound agent draft into a portable WhatsApp document."""
+    from reportlab.lib.pagesizes import A4
+    from reportlab.lib.styles import getSampleStyleSheet
+    from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer
+    from reportlab.lib.units import mm
+    import re
+    directory = Path(output_dir) if output_dir else Path(__file__).resolve().parents[2] / "localdata"
+    directory.mkdir(parents=True, exist_ok=True)
+    safe = re.sub(r"[^A-Za-z0-9_-]+", "_", filename_stem).strip("_")
+    path = directory / f"TG_BID_CRAFT_{safe}.pdf"
+    styles = getSampleStyleSheet(); body = styles["BodyText"]; body.leading = 14
+    story = [Paragraph(f"<b>{title}</b>", styles["Title"]), Spacer(1, 8)]
+    for line in content.splitlines():
+        text = line.strip()
+        if not text: story.append(Spacer(1, 4)); continue
+        escaped = text.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+        style = styles["Heading2"] if text.startswith("##") else body
+        story.append(Paragraph(escaped.lstrip("# "), style))
+    SimpleDocTemplate(str(path), pagesize=A4, rightMargin=16*mm, leftMargin=16*mm, topMargin=16*mm, bottomMargin=16*mm).build(story)
+    return path

@@ -417,6 +417,10 @@ class AIMessageHandler:
     async def _handle_upgrade_plan(self, user: WhatsAppUser, intent: ClassifiedIntent, message_sid: str) -> str:
         """Start a paid-plan checkout from WhatsApp; beta access is explicit, not a free plan."""
         text = intent.original_text.lower()
+        from ..billing.service import BillingService
+        billing = BillingService()
+        if any(word in text for word in ("price", "pricing", "plans", "how much")) and not any(name in text for name in ("starter", "pro", "vip")):
+            return billing.available_plans_message()
         plan = "vip" if "vip" in text or "proposal" in text else "pro" if "pro" in text else "starter"
         interval = "annual" if any(word in text for word in ("annual", "year", "yearly")) else "monthly"
         if not user.registration_number:
@@ -433,15 +437,29 @@ class AIMessageHandler:
         billing = BillingService()
         if any(word in text for word in ("paid", "payment status", "my plan", "am i", "confirm payment", "subscription status")):
             return billing.status_message(user.phone_number)
-        return ("I can check your payment status using this WhatsApp number, manage annual renewal, or start a debit-order mandate. "
-                "Tell me naturally—for example: _have I paid?_, _switch to annual_, or _set up debit order_.")
+        if "debit" in text:
+            if not user.registration_number:
+                return "Complete your company profile first, then I can start your secure debit-order mandate request."
+            billing.request_payment_method(user.registration_number, user.phone_number, "debitcheck" if "debicheck" in text else "debit_order")
+            return "I have recorded your debit-order request against this WhatsApp number. I will only send a provider-approved mandate link—never send banking details in this chat."
+        if any(word in text for word in ("price", "pricing", "plans", "how much")):
+            return billing.available_plans_message()
+        return ("I can check your payment status using this WhatsApp number, show paid plans, manage annual renewal, or start a debit-order mandate. "
+                "Tell me naturally—for example: _have I paid?_, _show plans_, _switch to annual_, or _set up debit order_.")
 
     async def _handle_bid_craft(self, user: WhatsAppUser, intent: ClassifiedIntent, message_sid: str) -> str:
         from ..billing.service import BillingService
         entitlement = BillingService().entitlement_for(user.registration_number)
         if not entitlement.bid_craft:
             return "Bid-Craft is included with the *VIP paid plan*. Say *upgrade to VIP* and I will send a secure checkout link."
-        return "Send the tender reference or reply to a tender alert with *prepare bid*. I will build the compliance matrix and a draft bid pack from the tender evidence."
+        tender_id = intent.entities.get("tender_ids", [None])[0] or extract_tender_id(intent.original_text)
+        if not tender_id:
+            return "Send the tender reference or reply to a tender alert with *prepare bid*. I will reserve one of your included monthly Bid-Craft packs and build it from tender evidence."
+        if not BillingService().reserve_bid_craft_pack(user.registration_number, tender_id):
+            return "Your included VIP Bid-Craft packs are used for this month, or this tender reference is not available. Say *show plans* if you need more bid-pack capacity."
+        from ..agents.store import AgentStore
+        AgentStore().enqueue("build_bid_pack", {"registration_number": user.registration_number, "tender_id": tender_id, "owner_phone": user.phone_number}, f"bid_craft:{user.registration_number}:{tender_id}")
+        return f"I have reserved your Bid-Craft pack for *{tender_id}*. I will send the compliance matrix and draft once the agent finishes extracting the tender evidence."
 
     async def _create_checkout(self, user: WhatsAppUser, plan: str, interval: str, email: str) -> str:
         from ..billing.models import PlanCode, BillingInterval

@@ -47,3 +47,17 @@ The code provides the correct durable data model and checkout boundary. Provider
 ## Security Resilience gate
 
 Do not enable real checkout, debit orders or unattended document processing until the controls in [Security Resilience Readiness](Security Resilience-readiness.md) are executed and evidenced.
+
+## Approved launch catalogue
+
+The approved public prices are stored in `20260720030000_commercial_catalog.sql` and seeded into `subscription_plans`:
+
+| Plan | Monthly | Annual | Annual saving |
+|---|---:|---:|---:|
+| Starter | R249 | R2,490 | R498 |
+| Pro | R549 | R5,490 | R1,098 |
+| VIP Bid-Craft | R1,490 | R14,900 | R2,980 |
+
+VIP includes two Bid-Craft packs per calendar month. Additional packs are priced at R650 and must be purchased/configured through the billing catalogue before charging. Annual payment is an upfront annual checkout; a monthly debit order remains monthly billing and does not receive the annual upfront-payment price.
+
+All displayed prices require a final VAT display decision with the business accountant before public launch.

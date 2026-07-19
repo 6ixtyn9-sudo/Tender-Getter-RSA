@@ -57,3 +57,7 @@ def test_distributed_inbound_guard_has_development_fallback(monkeypatch):
 def test_expired_beta_has_no_entitlements():
     expired = (datetime.now(timezone.utc) - timedelta(minutes=1)).isoformat()
     assert not BillingService().entitlement({"plan_code":"vip", "status":"beta", "beta_expires_at": expired}).active
+
+def test_expiry_requires_the_correct_status_timestamp():
+    future = (datetime.now(timezone.utc) + timedelta(days=1)).isoformat()
+    assert BillingService().entitlement({"plan_code":"vip", "status":"trial", "trial_expires_at":future}).bid_craft

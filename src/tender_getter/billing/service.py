@@ -39,7 +39,7 @@ class BillingService:
     def entitlement_for(self, registration_number: str | None) -> Entitlement:
         if not registration_number or not self.client:
             return self.entitlement(None)
-        rows = self.client.table("company_subscriptions").select("plan_code,status,current_period_end,beta_expires_at").eq("registration_number", registration_number).execute().data
+        rows = self.client.table("company_subscriptions").select("plan_code,status,current_period_end,beta_expires_at,trial_expires_at").eq("registration_number", registration_number).execute().data
         return self.entitlement(rows[0] if rows else None)
 
     async def create_checkout(self, *, registration_number: str, owner_phone: str, email: str, plan: PlanCode, interval: BillingInterval) -> str:
@@ -70,3 +70,31 @@ class BillingService:
         if subscription["status"] == "beta":
             return f"You are on the *{plan} beta* entitlement. It expires on {subscription.get('beta_expires_at') or 'the date agreed with the beta team'}."
         return f"Your *{plan}* plan is *{status}* on {interval} billing. Your WhatsApp number is the account reference."
+
+    def available_plans_message(self) -> str:
+        """Render the database catalogue; prices are never duplicated in code."""
+        if not self.client:
+            return "Paid plan information is temporarily unavailable. Please try again shortly."
+        rows = self.client.table("subscription_plans").select("*").eq("active", True).execute().data
+        if not rows:
+            return "Paid plans are being finalised. Please try again shortly."
+        lines = ["*Tender Getter paid plans*"]
+        for row in sorted(rows, key=lambda item: (item["monthly_amount_cents"], item["plan_code"])):
+            monthly = row["monthly_amount_cents"] / 100
+            annual = row["annual_amount_cents"] / 100
+            saving = (monthly * 12) - annual
+            label = row["display_name"]
+            lines.append(f"\n*{label}* — R{monthly:,.0f}/month or R{annual:,.0f}/year (save R{saving:,.0f})")
+        lines.append("\nReply naturally with _upgrade to Starter_, _I want Pro yearly_, or _VIP monthly_.")
+        return "\n".join(lines)
+
+    def request_payment_method(self, registration_number: str, owner_phone: str, method: str) -> None:
+        if not self.client:
+            raise ProviderNotConfigured("Billing persistence is not configured")
+        self.client.table("billing_requests").insert({"registration_number": registration_number, "owner_phone_number": owner_phone, "requested_method": method}).execute()
+
+    def reserve_bid_craft_pack(self, registration_number: str, tender_id: str) -> bool:
+        if not self.client:
+            return False
+        result = self.client.rpc("reserve_bid_craft_pack", {"company_reg": registration_number, "bid_tender_id": tender_id}).execute()
+        return bool(result.data)
