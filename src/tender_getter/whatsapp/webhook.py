@@ -9,6 +9,7 @@ from __future__ import annotations
 import asyncio
 import logging
 import os
+import re
 import time
 from collections import defaultdict, deque
 from datetime import datetime
@@ -160,18 +161,40 @@ async def whatsapp_webhook(
     return Response(content=str(twiml), media_type="application/xml")
 
 
+def _coerce_amount(value: Any) -> Optional[int]:
+    """Strictly coerce a payment amount; anything sloppy is a mismatch, not a crash."""
+    if isinstance(value, bool):
+        return None
+    if isinstance(value, int):
+        return value
+    if isinstance(value, float) and value.is_integer():
+        return int(value)
+    if isinstance(value, str) and value.strip().isdigit():
+        return int(value.strip())
+    return None
+
+
 @app.post("/billing/paystack/webhook")
 async def paystack_billing_webhook(request: Request):
     """Idempotently activate a paid entitlement after verified hosted checkout."""
     body = await request.body()
     if len(body) > 512_000:
         raise HTTPException(status_code=413, detail="Payment payload too large")
+    import json
     from ..billing.service import BillingService
     service = BillingService()
     if not service.provider.verify_webhook(body, request.headers.get("x-paystack-signature", "")):
         raise HTTPException(status_code=403, detail="Invalid payment signature")
-    import json
-    event = json.loads(body.decode("utf-8")); event_id = event.get("data", {}).get("id") or event.get("data", {}).get("reference")
+    try:
+        event = json.loads(body.decode("utf-8"))
+    except (UnicodeDecodeError, json.JSONDecodeError):
+        raise HTTPException(status_code=400, detail="Malformed payment payload")
+    if not isinstance(event, dict):
+        return Response(status_code=204)
+    payment_data = event.get("data")
+    if not isinstance(payment_data, dict):
+        return Response(status_code=204)
+    event_id = payment_data.get("id") or payment_data.get("reference")
     if not event_id or not service.client:
         return Response(status_code=204)
     # Insert is the durable idempotency boundary. Duplicate provider retries do
@@ -186,14 +209,15 @@ async def paystack_billing_webhook(request: Request):
         if "duplicate" in str(exc).lower() or "23505" in str(exc): return Response(status_code=204)
         raise
     if event.get("event") == "charge.success":
-        payment = event.get("data", {}) or {}
+        payment = payment_data
         reference = str(payment.get("reference", ""))
         sessions = service.client.table("checkout_sessions").select("*").eq("provider", "paystack").eq("provider_reference", reference).execute().data
         if not sessions:
             logger.error("Verified payment has no matching checkout session: %s", reference)
             return Response(status_code=204)
         session = sessions[0]
-        if int(payment.get("amount", -1)) != int(session["amount_cents"]) or payment.get("currency", "ZAR") != session["currency"]:
+        amount = _coerce_amount(payment.get("amount"))
+        if amount is None or amount != int(session["amount_cents"]) or str(payment.get("currency", "ZAR")) != str(session["currency"]):
             logger.error("Payment amount/currency mismatch for checkout %s", reference)
             return Response(status_code=204)
         service.client.table("checkout_sessions").update({"status": "paid"}).eq("id", session["id"]).execute()
@@ -266,18 +290,81 @@ async def process_media_async(media: MediaMessage, user: WhatsAppUser) -> None:
             logger.exception("Could not send media-processing failure notice")
 
 
+# CSD supplier numbers follow the MAAA<digits> format on official letters.
+_CSD_NUMBER_PATTERN = re.compile(r"^MAAA\d{4,}$", re.IGNORECASE)
+
+# SARS Tax Compliance PINs are short alphanumeric codes; keep the check lenient
+# but require substance (5+ alphanumerics).
+_TAX_PIN_PATTERN = re.compile(r"^[A-Z0-9\-\s]{5,32}$", re.IGNORECASE)
+
+
+def _identity_conflict(user: WhatsAppUser, parsed: dict[str, Any]) -> bool:
+    """True when the uploaded document names a DIFFERENT company than the profile."""
+    on_file = (user.registration_number or "").strip().upper()
+    doc_reg = str(parsed.get("registration_number") or "").strip().upper()
+    return bool(on_file and doc_reg and on_file != doc_reg)
+
+
 async def update_user_from_parsed_data(user: WhatsAppUser, doc_type: Optional[DocumentType], parsed: dict[str, Any], storage_path: Optional[str]) -> None:
+    """
+    Grant verification from an AI-parsed upload — with a trust boundary.
+
+    An uploaded document is user-controlled evidence, never ground truth:
+      * A company-registration mismatch with the profile is a fraud signal —
+        nothing is verified in that case.
+      * Each credential is shape-checked (MAAA format, B-BBEE level 1–8,
+        CIDB class whitelist + level 1–9) before any status flips.
+    """
     if doc_type is None:
         return
-    if doc_type == DocumentType.CSD_LETTER and (parsed.get("csd_number") or parsed.get("supplier_number")):
-        user.csd_status = VerificationStatus.VERIFIED
-        user.registration_number = parsed.get("registration_number") or user.registration_number
-    elif doc_type == DocumentType.BBBEE_CERT and parsed.get("bbbee_level"):
-        user.bbbee_status = VerificationStatus.VERIFIED
-    elif doc_type == DocumentType.TAX_PIN and (parsed.get("tax_pin") or parsed.get("pin_number")):
-        user.tax_status = VerificationStatus.VERIFIED
-    elif doc_type == DocumentType.CIDB_CERT and parsed.get("cidb_gradings"):
-        user.cidb_status = VerificationStatus.VERIFIED
+
+    if _identity_conflict(user, parsed):
+        logger.warning(
+            "Verification blocked for %s: document registration %r does not match profile %r",
+            user.phone_number, parsed.get("registration_number"), user.registration_number,
+        )
+        if storage_path:
+            user.documents[doc_type.value] = storage_path
+            upsert_user(user)
+        return
+
+    if doc_type == DocumentType.CSD_LETTER:
+        csd = str(parsed.get("csd_number") or parsed.get("supplier_number") or "").strip()
+        if _CSD_NUMBER_PATTERN.match(csd):
+            user.csd_status = VerificationStatus.VERIFIED
+            user.registration_number = user.registration_number or str(parsed.get("registration_number") or "") or None
+    elif doc_type == DocumentType.BBBEE_CERT:
+        level = parsed.get("bbbee_level")
+        if isinstance(level, bool):
+            level = None
+        elif isinstance(level, str) and level.strip().isdigit():
+            level = int(level.strip())
+        if isinstance(level, int) and 1 <= level <= 8:
+            user.bbbee_status = VerificationStatus.VERIFIED
+    elif doc_type == DocumentType.TAX_PIN:
+        pin = str(parsed.get("tax_pin") or parsed.get("pin_number") or "").strip()
+        if _TAX_PIN_PATTERN.match(pin):
+            user.tax_status = VerificationStatus.VERIFIED
+    elif doc_type == DocumentType.CIDB_CERT:
+        from ..parser import CIDB_CLASS_CODES
+
+        gradings = parsed.get("cidb_gradings")
+        valid = False
+        if isinstance(gradings, list):
+            for g in gradings:
+                if not isinstance(g, dict):
+                    continue
+                code = str(g.get("class_code") or "").strip().upper()
+                lvl = g.get("level")
+                if isinstance(lvl, bool):
+                    continue
+                if isinstance(lvl, str) and lvl.strip().isdigit():
+                    lvl = int(lvl.strip())
+                if code in CIDB_CLASS_CODES and isinstance(lvl, int) and 1 <= lvl <= 9:
+                    valid = True
+                    break
+        if valid:
+            user.cidb_status = VerificationStatus.VERIFIED
     if storage_path:
         user.documents[doc_type.value] = storage_path
     upsert_user(user)

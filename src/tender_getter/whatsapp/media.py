@@ -6,8 +6,10 @@ import os
 import io
 import logging
 import mimetypes
+import re
 from typing import Optional, Dict, Any, BinaryIO
 from datetime import datetime
+from urllib.parse import urljoin, urlparse
 import uuid
 
 import httpx
@@ -76,8 +78,17 @@ class MediaTooLargeError(ValueError):
 
 # Host allowlist for server-side media fetches (SSRF defence-in-depth).
 # Override with TG_MEDIA_HOST_ALLOWLIST="host1,host2" — each entry also
-# matches its subdomains.
-_DEFAULT_MEDIA_HOSTS = ("twilio.com",)
+# matches its subdomains. api.twilio.com media URLs 307-redirect to the
+# Twilio CDN, so the CDN host is allowlisted explicitly.
+_DEFAULT_MEDIA_HOSTS = ("twilio.com", "twiliocdn.com")
+_REDIRECT_STATUSES = (301, 302, 303, 307, 308)
+_MAX_REDIRECTS = 5
+
+
+def _safe_path_component(value: str) -> str:
+    """Sanitise a user-derived string into a single safe path/storage segment."""
+    cleaned = re.sub(r"[^A-Za-z0-9_-]+", "_", value or "")
+    return cleaned.strip("_") or "unknown"
 
 
 def _allowed_media_hosts() -> tuple[str, ...]:
@@ -131,22 +142,33 @@ async def download_media(
 
     chunks: list[bytes] = []
     total = 0
+    url = media_url
     async with httpx.AsyncClient(timeout=timeout) as client:
-        async with client.stream("GET", media_url, auth=auth) as response:
-            response.raise_for_status()
-            declared = response.headers.get("Content-Length", "")
-            if declared.isdigit() and int(declared) > limit:
-                raise MediaTooLargeError(
-                    f"Media exceeds the {limit // (1024 * 1024)} MB download limit"
-                )
-            async for chunk in response.aiter_bytes(64 * 1024):
-                total += len(chunk)
-                if total > limit:
+        for _hop in range(_MAX_REDIRECTS + 1):
+            hop_host = (urlparse(url).hostname or "").lower()
+            # Twilio credentials must never travel to another host: only send
+            # auth while we are still on a *.twilio.com address.
+            hop_auth = auth if (hop_host == "twilio.com" or hop_host.endswith(".twilio.com")) else None
+            async with client.stream("GET", url, auth=hop_auth) as response:
+                if response.status_code in _REDIRECT_STATUSES and "location" in response.headers:
+                    url = urljoin(url, response.headers["location"])
+                    _enforce_allowed_media_host(url)  # re-validate EVERY hop
+                    continue
+                response.raise_for_status()
+                declared = response.headers.get("Content-Length", "")
+                if declared.isdigit() and int(declared) > limit:
                     raise MediaTooLargeError(
                         f"Media exceeds the {limit // (1024 * 1024)} MB download limit"
                     )
-                chunks.append(chunk)
-    return b"".join(chunks)
+                async for chunk in response.aiter_bytes(64 * 1024):
+                    total += len(chunk)
+                    if total > limit:
+                        raise MediaTooLargeError(
+                            f"Media exceeds the {limit // (1024 * 1024)} MB download limit"
+                        )
+                    chunks.append(chunk)
+                return b"".join(chunks)
+    raise ValueError(f"Too many redirects while fetching media (>{_MAX_REDIRECTS} hops)")
 
 
 async def download_media_to_file(
@@ -193,9 +215,9 @@ async def upload_to_supabase(
             ext = mimetypes.guess_extension(mime_type) or ".bin"
             filename = f"{uuid.uuid4().hex}{ext}"
         
-        # Path: user_id/year/month/day/filename
+        # Path: user_id/year/month/day/filename (sanitised segments only)
         date_path = datetime.utcnow().strftime("%Y/%m/%d")
-        storage_path = f"{user_id}/{date_path}/{filename}"
+        storage_path = f"{_safe_path_component(user_id)}/{date_path}/{filename}"
         
         # Upload
         result = supabase.storage.from_(SUPABASE_BUCKET).upload(
@@ -224,7 +246,7 @@ async def _save_locally(
     import pathlib
     
     base_dir = pathlib.Path("localdata/whatsapp_media")
-    user_dir = base_dir / user_id.replace("+", "").replace(":", "_")
+    user_dir = base_dir / _safe_path_component(user_id)
     user_dir.mkdir(parents=True, exist_ok=True)
     
     if not filename:
@@ -419,24 +441,37 @@ Return ONLY valid JSON with the following schema:
 
 
 def _parse_gemini_response(text: str) -> Optional[Dict[str, Any]]:
-    """Parse Gemini response, extracting JSON."""
+    """
+    Parse a Gemini response into a dict.
+
+    Robust against markdown fences and multi-object/padded text: strips
+    fences, tries the whole body, then scans for the first balanced JSON
+    object (a greedy ``\\{.*\\}`` span can glue two objects into invalid JSON).
+    The first top-level dict wins — trailing attacker-crafted objects are
+    never preferred over the model's primary answer.
+    """
     import json
-    import re
-    
-    # Try to find JSON in response
-    json_match = re.search(r'\{.*\}', text, re.DOTALL)
-    if json_match:
-        try:
-            return json.loads(json_match.group())
-        except json.JSONDecodeError:
-            pass
-    
-    # Try full text
+
+    candidate = re.sub(r"```(?:json)?", "", text).strip()
+
     try:
-        return json.loads(text)
+        parsed = json.loads(candidate)
+        if isinstance(parsed, dict):
+            return parsed
     except json.JSONDecodeError:
         pass
-    
+
+    decoder = json.JSONDecoder()
+    for idx, char in enumerate(candidate):
+        if char != "{":
+            continue
+        try:
+            obj, _end = decoder.raw_decode(candidate[idx:])
+        except json.JSONDecodeError:
+            continue
+        if isinstance(obj, dict):
+            return obj
+
     logger.warning(f"Failed to parse Gemini response as JSON: {text[:200]}")
     return None
 

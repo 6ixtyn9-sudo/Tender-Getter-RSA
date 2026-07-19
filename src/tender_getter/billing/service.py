@@ -1,10 +1,13 @@
 from __future__ import annotations
+import logging
 import os, secrets, re
 from datetime import datetime, timezone
 from dataclasses import dataclass
 from typing import Any
 from .models import BillingInterval, DEFAULT_CAPABILITIES, Entitlement, PlanCode, SubscriptionStatus
 from .providers import PaystackProvider, ProviderNotConfigured
+
+logger = logging.getLogger(__name__)
 
 class BillingService:
     """Commercial policy service. All customer plans are paid; beta access is an
@@ -32,8 +35,14 @@ class BillingService:
                     return Entitlement(PlanCode.STARTER, False, False, False, False)
             except ValueError:
                 return Entitlement(PlanCode.STARTER, False, False, False, False)
-        plan = PlanCode(subscription["plan_code"])
-        caps = DEFAULT_CAPABILITIES[plan]
+        try:
+            plan = PlanCode(subscription["plan_code"])
+        except (KeyError, ValueError):
+            # A corrupted or unknown plan code must fail CLOSED — never crash
+            # and never grant capabilities the catalogue does not define.
+            logger.warning("Unknown plan_code on subscription: %r", subscription.get("plan_code"))
+            return Entitlement(PlanCode.STARTER, False, False, False, False)
+        caps = DEFAULT_CAPABILITIES.get(plan, {})
         return Entitlement(plan, True, bool(caps.get("bid_craft")), True, True)
 
     def entitlement_for(self, registration_number: str | None) -> Entitlement:

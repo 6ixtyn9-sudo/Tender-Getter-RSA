@@ -17,6 +17,23 @@ locks the fix in place. Current coverage:
     prompt-injection extras, invalid enums are nulled — never passed through).
 9.  Parser: PDF pre-screener has page and character caps (anti-DoS).
 
+Round 2:
+10. Media download follows Twilio CDN redirects without leaking Twilio
+    credentials to other hosts; every hop is re-checked against the allowlist;
+    redirect loops are capped.
+11. Media storage paths are traversal-proof (local + Supabase segments).
+12. Verification trust boundary: uploaded docs are shape-checked and
+    cross-checked against the profile before any status flips to VERIFIED.
+13. Paystack webhook: signed-but-malformed payloads get 400 (never 500);
+    non-dict/unparsable amounts can never activate an entitlement.
+14. Billing entitlement fails closed on unknown/corrupted plan codes.
+15. Agent job queue: enqueue retries never reset or duplicate an existing job.
+16. POPIA: SA ID (13-digit) and card (16-digit) numbers are redacted from
+    persisted feedback.
+17. Gateway concurrency limiter holds under a 30-call hammer.
+18. Gemini response parser takes the first balanced JSON object (never a
+    greedily-glued span or trailing attacker object).
+
 All external systems (Gemini, Twilio, HTTP) are mocked — no network access.
 """
 
@@ -24,6 +41,7 @@ import asyncio
 import json
 import math
 from datetime import datetime, timezone
+from pathlib import Path
 from types import SimpleNamespace
 
 import pytest
@@ -62,6 +80,7 @@ class _FakeStreamResponse:
         self._chunks = chunks
         self.headers = headers or {}
         self.consumed = 0
+        self.status_code = 200
 
     def raise_for_status(self):
         return None
@@ -450,3 +469,512 @@ def test_pdf_extract_char_cap_is_enforced(monkeypatch):
     out = parser.extract_relevant_pages("big.pdf")
     assert len(out) <= 100 + len("\n[TRUNCATED]")
     assert out.endswith("[TRUNCATED]")
+
+
+# ===========================================================================
+# ROUND 2 — billing, agent store, media redirects, path traversal,
+# verification trust boundary, POPIA redaction, concurrency
+# ===========================================================================
+
+
+# ---------------------------------------------------------------------------
+# 10 — Media download follows redirects WITHOUT leaking Twilio credentials
+# ---------------------------------------------------------------------------
+
+
+class _RedirectFakeClient:
+    """Per-URL plan fake: plans[url] = {status, location, chunks, headers}."""
+
+    plans: dict = {}
+    requests: list = []
+    last_stream = None
+
+    def __init__(self, timeout=None):
+        pass
+
+    async def __aenter__(self):
+        return self
+
+    async def __aexit__(self, *args):
+        return False
+
+    def stream(self, method, url, auth=None):
+        type(self).requests.append((url, auth))
+        plan = type(self).plans.get(url)
+        if plan is None:
+            plan = {"status": 404, "chunks": [], "headers": {}}
+
+        class _Resp:
+            def __init__(self, plan):
+                self.status_code = plan.get("status", 200)
+                self.headers = plan.get("headers", {})
+                if plan.get("location"):
+                    self.headers["location"] = plan["location"]
+                self._chunks = plan.get("chunks", [])
+
+            def raise_for_status(self):
+                if self.status_code >= 400:
+                    raise RuntimeError(f"HTTP {self.status_code}")
+
+            async def aiter_bytes(self, size):
+                for c in self._chunks:
+                    yield c
+
+        class _Ctx:
+            def __init__(self, resp):
+                self._resp = resp
+
+            async def __aenter__(self):
+                return self._resp
+
+            async def __aexit__(self, *a):
+                return False
+
+        resp = _Resp(plan)
+        type(self).last_stream = resp
+        return _Ctx(resp)
+
+
+def _install_redirect_fake(monkeypatch):
+    import tender_getter.whatsapp.media as media
+
+    _RedirectFakeClient.plans = {}
+    _RedirectFakeClient.requests = []
+    monkeypatch.setattr(media.httpx, "AsyncClient", _RedirectFakeClient)
+    return media
+
+
+def test_media_download_follows_twilio_redirect_without_leaking_auth(monkeypatch):
+    media = _install_redirect_fake(monkeypatch)
+    _RedirectFakeClient.plans = {
+        "https://api.twilio.com/2010-04-01/Accounts/AC1/Media/MM1": {
+            "status": 307,
+            "location": "https://media.twiliocdn.com/MM1",
+        },
+        "https://media.twiliocdn.com/MM1": {"status": 200, "chunks": [b"PDFBYTES"]},
+    }
+
+    data = asyncio.run(
+        media.download_media(
+            "https://api.twilio.com/2010-04-01/Accounts/AC1/Media/MM1",
+            auth=("AC1", "secret-token"),
+            max_bytes=1024,
+        )
+    )
+    assert data == b"PDFBYTES"
+    hop2 = [r for r in _RedirectFakeClient.requests if "twiliocdn" in r[0]]
+    assert hop2 and hop2[0][1] is None  # Twilio credentials must NOT cross hosts
+
+
+def test_media_download_refuses_redirect_off_allowlist(monkeypatch):
+    media = _install_redirect_fake(monkeypatch)
+    _RedirectFakeClient.plans = {
+        "https://api.twilio.com/media/MM1": {
+            "status": 302,
+            "location": "https://169.254.169.254/latest/meta-data",
+        }
+    }
+
+    with pytest.raises(ValueError):
+        asyncio.run(
+            media.download_media("https://api.twilio.com/media/MM1", auth=("a", "b"), max_bytes=1024)
+        )
+    assert len(_RedirectFakeClient.requests) == 1  # second hop never attempted
+
+
+def test_media_download_redirect_loops_are_capped(monkeypatch):
+    media = _install_redirect_fake(monkeypatch)
+    _RedirectFakeClient.plans = {
+        "https://api.twilio.com/loop": {"status": 302, "location": "https://api.twilio.com/loop"}
+    }
+
+    with pytest.raises(ValueError, match="redirect"):
+        asyncio.run(
+            media.download_media("https://api.twilio.com/loop", auth=("a", "b"), max_bytes=1024)
+        )
+    assert len(_RedirectFakeClient.requests) <= 6  # hard hop budget
+
+
+# ---------------------------------------------------------------------------
+# 11 — Storage path traversal
+# ---------------------------------------------------------------------------
+
+
+def test_local_media_save_blocks_path_traversal(monkeypatch, tmp_path):
+    import tender_getter.whatsapp.media as media
+
+    monkeypatch.chdir(tmp_path)
+    evil_user = "../../outside"
+    returned = asyncio.run(
+        media._save_locally(b"data", "application/pdf", evil_user, "doc.pdf")
+    )
+    resolved = (tmp_path / returned).resolve()
+    assert str(resolved).startswith(str((tmp_path / "localdata" / "whatsapp_media").resolve()))
+    assert ".." not in Path(returned).parts
+    assert not (tmp_path / "outside").exists()
+
+    # And the storage path builder used for Supabase must sanitise equally.
+    safe = media._safe_path_component("../../etc/passwd")
+    assert "/" not in safe and ".." not in safe
+
+
+# ---------------------------------------------------------------------------
+# 12 — Verification trust boundary (uploaded doc ≠ instantly verified)
+# ---------------------------------------------------------------------------
+
+
+def _mk_user(reg="2020/111111/07"):
+    from tender_getter.whatsapp.models import WhatsAppUser
+
+    return WhatsAppUser(
+        whatsapp_id="whatsapp:+271",
+        phone_number="+271",
+        registration_number=reg,
+    )
+
+
+def _run_update(monkeypatch, user, doc_type, parsed):
+    import tender_getter.whatsapp.webhook as webhook
+
+    saved = {}
+    monkeypatch.setattr(webhook, "upsert_user", lambda u: saved.update(user=u))
+    asyncio.run(webhook.update_user_from_parsed_data(user, doc_type, parsed, None))
+    return saved
+
+
+def test_csd_not_verified_when_registration_mismatch(monkeypatch):
+    from tender_getter.whatsapp.models import DocumentType
+
+    user = _mk_user("2020/111111/07")
+    parsed = {"csd_number": "MAAA1234567", "registration_number": "1999/HACKED/07"}
+    _run_update(monkeypatch, user, DocumentType.CSD_LETTER, parsed)
+    assert user.csd_status != "verified"
+
+
+def test_csd_not_verified_with_malformed_number(monkeypatch):
+    from tender_getter.whatsapp.models import DocumentType
+
+    user = _mk_user()
+    parsed = {"csd_number": "FREE-TEXT"}
+    _run_update(monkeypatch, user, DocumentType.CSD_LETTER, parsed)
+    assert user.csd_status != "verified"
+
+
+def test_csd_verified_only_with_consistent_document(monkeypatch):
+    from tender_getter.whatsapp.models import DocumentType
+
+    user = _mk_user("2020/111111/07")
+    parsed = {"csd_number": "MAAA1234567", "registration_number": "2020/111111/07"}
+    _run_update(monkeypatch, user, DocumentType.CSD_LETTER, parsed)
+    assert user.csd_status == "verified"
+
+
+def test_bbbee_not_verified_with_impossible_level(monkeypatch):
+    from tender_getter.whatsapp.models import DocumentType
+
+    user = _mk_user()
+    _run_update(monkeypatch, user, DocumentType.BBBEE_CERT, {"bbbee_level": 0})
+    assert user.bbbee_status != "verified"
+    _run_update(monkeypatch, user, DocumentType.BBBEE_CERT, {"bbbee_level": 3})
+    assert user.bbbee_status == "verified"
+
+
+def test_cidb_not_verified_with_unknown_class(monkeypatch):
+    from tender_getter.whatsapp.models import DocumentType
+
+    user = _mk_user()
+    parsed = {"cidb_gradings": [{"class_code": "XX", "level": 3}]}
+    _run_update(monkeypatch, user, DocumentType.CIDB_CERT, parsed)
+    assert user.cidb_status != "verified"
+    parsed_ok = {"cidb_gradings": [{"class_code": "ce", "level": 3}]}
+    _run_update(monkeypatch, user, DocumentType.CIDB_CERT, parsed_ok)
+    assert user.cidb_status == "verified"
+
+
+# ---------------------------------------------------------------------------
+# 13 — Paystack webhook payload hardening (signed but hostile bodies)
+# ---------------------------------------------------------------------------
+
+
+class _FakeQuery:
+    def __init__(self, store, name):
+        self._store = store
+        self._name = name
+        self._filters = []
+        self._update_payload = None
+
+    def select(self, *_cols):
+        return self
+
+    def eq(self, col, val):
+        self._filters.append((col, str(val)))
+        return self
+
+    def insert(self, row):
+        self._store.setdefault(self._name, []).append(dict(row))
+        return self
+
+    def update(self, values):
+        self._update_payload = values
+        for row in self._store.get(self._name, []):
+            if all(str(row.get(c)) == v for c, v in self._filters):
+                row.update(values)
+        return self
+
+    def upsert(self, row, on_conflict=None):
+        rows = self._store.setdefault(self._name, [])
+        for existing in rows:
+            if on_conflict and existing.get(on_conflict) == row.get(on_conflict):
+                existing.update(row)
+                return self
+        rows.append(dict(row))
+        return self
+
+    def execute(self):
+        rows = self._store.get(self._name, [])
+        if self._update_payload is not None:
+            return SimpleNamespace(data=rows)
+        filtered = [
+            row for row in rows if all(str(row.get(c)) == v for c, v in self._filters)
+        ]
+        self._filters = []
+        return SimpleNamespace(data=filtered)
+
+
+class _FakeSupabase:
+    def __init__(self):
+        self.store = {
+            "payment_events": [],
+            "checkout_sessions": [
+                {
+                    "id": 7,
+                    "provider": "paystack",
+                    "provider_reference": "REF123",
+                    "amount_cents": 19900,
+                    "currency": "ZAR",
+                    "registration_number": "2020/111111/07",
+                    "owner_phone_number": "+271",
+                    "plan_code": "pro",
+                    "billing_interval": "monthly",
+                    "customer_reference": "TG-271-ABC",
+                    "status": "open",
+                }
+            ],
+            "company_subscriptions": [],
+        }
+
+    def table(self, name):
+        return _FakeQuery(self.store, name)
+
+
+def _install_fake_billing(monkeypatch, secret="rt-secret"):
+    from tender_getter.billing.providers import PaystackProvider
+
+    fake = _FakeSupabase()
+    service = SimpleNamespace(client=fake, provider=PaystackProvider(secret))
+    monkeypatch.setattr("tender_getter.billing.service.BillingService", lambda: service)
+    return fake, secret
+
+
+def _paystack_headers(body, secret):
+    import hashlib
+    import hmac as _hmac
+
+    sig = _hmac.new(secret.encode(), body, hashlib.sha512).hexdigest()
+    return {"x-paystack-signature": sig}
+
+
+def _client():
+    from fastapi.testclient import TestClient
+    from tender_getter.whatsapp.webhook import app
+
+    return TestClient(app)
+
+
+def test_paystack_signed_malformed_json_returns_400_not_500(monkeypatch):
+    _fake, secret = _install_fake_billing(monkeypatch)
+    body = b"this is { not json"
+    resp = _client().post(
+        "/billing/paystack/webhook", content=body, headers=_paystack_headers(body, secret)
+    )
+    assert resp.status_code == 400
+
+
+def test_paystack_signed_event_with_non_dict_data_is_ignored(monkeypatch):
+    _fake, secret = _install_fake_billing(monkeypatch)
+    body = json.dumps({"event": "charge.success", "data": ["unexpected", "list"]}).encode()
+    resp = _client().post(
+        "/billing/paystack/webhook", content=body, headers=_paystack_headers(body, secret)
+    )
+    assert resp.status_code in (200, 204)
+    assert _fake.store["checkout_sessions"][0]["status"] == "open"
+
+
+def test_paystack_unparsable_amount_does_not_activate(monkeypatch):
+    _fake, secret = _install_fake_billing(monkeypatch)
+    body = json.dumps(
+        {
+            "event": "charge.success",
+            "data": {"id": 99, "reference": "REF123", "amount": "R19,900", "currency": "ZAR"},
+        }
+    ).encode()
+    resp = _client().post(
+        "/billing/paystack/webhook", content=body, headers=_paystack_headers(body, secret)
+    )
+    assert resp.status_code in (200, 204)
+    assert _fake.store["checkout_sessions"][0]["status"] == "open"
+    assert _fake.store["company_subscriptions"] == []
+
+
+def test_paystack_valid_event_activates(monkeypatch):
+    import tender_getter.whatsapp.webhook as webhook
+
+    _fake, secret = _install_fake_billing(monkeypatch)
+    monkeypatch.setattr(webhook, "send_text_message", lambda *_a, **_k: "SMfake")
+    body = json.dumps(
+        {
+            "event": "charge.success",
+            "data": {
+                "id": 100,
+                "reference": "REF123",
+                "amount": 19900,
+                "currency": "ZAR",
+                "customer": {"customer_code": "CUS_x"},
+            },
+        }
+    ).encode()
+    resp = _client().post(
+        "/billing/paystack/webhook", content=body, headers=_paystack_headers(body, secret)
+    )
+    assert resp.status_code in (200, 204)
+    assert _fake.store["checkout_sessions"][0]["status"] == "paid"
+    assert _fake.store["company_subscriptions"][0]["status"] == "active"
+
+
+# ---------------------------------------------------------------------------
+# 14 — Billing entitlement fails closed on unknown plan
+# ---------------------------------------------------------------------------
+
+
+def test_entitlement_unknown_plan_code_fails_closed(monkeypatch):
+    from tender_getter.billing.service import BillingService
+
+    service = BillingService()
+    result = service.entitlement({"status": "active", "plan_code": "quantum-enterprise"})
+    assert result.plan.value == "starter"
+    assert result.active is False
+    assert result.bid_craft is False
+
+
+# ---------------------------------------------------------------------------
+# 15 — Agent job queue idempotency
+# ---------------------------------------------------------------------------
+
+
+def test_agent_store_enqueue_does_not_reset_existing_job(monkeypatch):
+    from tender_getter.agents.store import AgentStore
+
+    monkeypatch.delenv("SUPABASE_URL", raising=False)
+    monkeypatch.delenv("SUPABASE_SERVICE_ROLE_KEY", raising=False)
+    store = AgentStore()
+
+    first_id = store.enqueue("process_document", {"message_sid": "MM1"}, "process_document:MM1")
+    claimed = store.claim_next("w1")
+    assert claimed and claimed["status"] == "running"
+
+    second_id = store.enqueue("process_document", {"message_sid": "MM1"}, "process_document:MM1")
+    assert second_id == first_id  # retry must not create a second job…
+    assert store._memory["process_document:MM1"]["status"] == "running"  # …nor reset its state
+
+
+# ---------------------------------------------------------------------------
+# 16 — POPIA redaction of SA ID / card numbers in feedback
+# ---------------------------------------------------------------------------
+
+
+def test_feedback_redacts_sa_id_and_card_numbers():
+    from tender_getter.agents.store import AgentStore
+
+    store = AgentStore()
+    captured = {}
+
+    class _Capture:
+        def table(self, _name):
+            class _T:
+                def insert(self, row):
+                    captured.update(row)
+                    return self
+
+                def execute(self):
+                    return SimpleNamespace(data=[dict(captured)])
+
+            return _T()
+
+    store._client = _Capture()
+    store.record_feedback(
+        "+271",
+        "my id 9001015009087 and card 4242424242424242 pin 987654",
+        intent="complaint",
+    )
+    text = captured["raw_text"]
+    assert "9001015009087" not in text
+    assert "4242424242424242" not in text
+    assert "[SA_ID_REDACTED]" in text
+    assert "[CARD_REDACTED]" in text
+
+
+# ---------------------------------------------------------------------------
+# 17 — Gateway concurrency limiter under hammer
+# ---------------------------------------------------------------------------
+
+
+def test_gateway_never_exceeds_max_concurrent(monkeypatch):
+    from tender_getter.ai.gateway import AIGateway, GatewayConfig
+
+    monkeypatch.setenv("GEMINI_API_KEY", "k1")
+    _quiet(monkeypatch)
+
+    state = {"in_flight": 0, "peak": 0}
+
+    class _HammerClient:
+        def __init__(self, api_key=None, **kwargs):
+            async def gen(*, model, contents, config=None):
+                state["in_flight"] += 1
+                state["peak"] = max(state["peak"], state["in_flight"])
+                await asyncio.sleep(0.02)
+                state["in_flight"] -= 1
+                return SimpleNamespace(text="ok")
+
+            self.aio = SimpleNamespace(models=SimpleNamespace(generate_content=gen))
+
+    monkeypatch.setattr("google.genai.Client", _HammerClient)
+
+    gateway = AIGateway(GatewayConfig(max_concurrent=3, base_delay_ms=1))
+
+    async def hammer():
+        await asyncio.gather(
+            *[gateway.generate("s", [{"role": "user", "content": "hi"}]) for _ in range(30)]
+        )
+
+    asyncio.run(hammer())
+    assert state["peak"] <= 3
+    assert state["in_flight"] == 0
+
+
+# ---------------------------------------------------------------------------
+# 18 — Gemini response parser handles multi-object / fenced payloads
+# ---------------------------------------------------------------------------
+
+
+def test_parse_gemini_response_extracts_first_balanced_object():
+    from tender_getter.whatsapp.media import _parse_gemini_response
+
+    text = 'note {"csd_number": "MAAA1"} trailing {"unrelated": true} end'
+    assert _parse_gemini_response(text) == {"csd_number": "MAAA1"}
+
+
+def test_parse_gemini_response_handles_fenced_and_plain():
+    from tender_getter.whatsapp.media import _parse_gemini_response
+
+    assert _parse_gemini_response('```json\n{"bid_number": "B/1"}\n```') == {"bid_number": "B/1"}
+    assert _parse_gemini_response("not json at all") is None

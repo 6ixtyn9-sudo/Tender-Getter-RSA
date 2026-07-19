@@ -16,10 +16,30 @@ class AgentStore:
             pass
 
     def enqueue(self, job_type: str, payload: dict[str, Any], idempotency_key: str) -> str:
+        """Insert a job once per idempotency_key — NEVER reset an existing job.
+
+        A retry (provider redelivery, user double-send, worker requeue) must
+        return the original job id and leave its status untouched; an upsert
+        here would silently revert a 'running' job to 'queued' and cause
+        duplicate processing.
+        """
         row = {"job_type": job_type, "payload": payload, "idempotency_key": idempotency_key, "status": "queued"}
         if self._client:
-            result = self._client.table("agent_jobs").upsert(row, on_conflict="idempotency_key").execute()
-            return result.data[0]["id"]
+            existing = self._client.table("agent_jobs").select("id").eq("idempotency_key", idempotency_key).execute().data
+            if existing:
+                return existing[0]["id"]
+            try:
+                result = self._client.table("agent_jobs").insert(row).execute()
+                return result.data[0]["id"]
+            except Exception as exc:
+                if "duplicate" in str(exc).lower() or "23505" in str(exc):
+                    raced = self._client.table("agent_jobs").select("id").eq("idempotency_key", idempotency_key).execute().data
+                    if raced:
+                        return raced[0]["id"]
+                raise
+        existing = self._memory.get(idempotency_key)
+        if existing is not None:
+            return existing["id"]
         row["id"] = str(uuid.uuid4()); row["created_at"] = datetime.now(timezone.utc).isoformat(); self._memory[idempotency_key] = row
         return row["id"]
 
@@ -34,6 +54,10 @@ class AgentStore:
         safe = raw_text[:1000]
         safe = re.sub(r"\bMAAA[0-9A-Z-]+\b", "[CSD_REDACTED]", safe, flags=re.I)
         safe = re.sub(r"\b(?:tax\s*pin|pin)\s*[:#-]?\s*[A-Z0-9-]{6,}\b", "[TAX_PIN_REDACTED]", safe, flags=re.I)
+        # POPIA: South African ID numbers (13 digits) and bank card numbers
+        # (16 digits) are not signals — never persist them.
+        safe = re.sub(r"\b\d{13}\b", "[SA_ID_REDACTED]", safe)
+        safe = re.sub(r"\b\d{16}\b", "[CARD_REDACTED]", safe)
         row = {"owner_phone_number": owner_phone_number, "raw_text": safe, "tender_id": tender_id, "intent": intent, "sentiment": sentiment, "confidence": confidence, "extracted_signals": signals or {}}
         if self._client: self._client.table("natural_language_feedback").insert(row).execute()
 
