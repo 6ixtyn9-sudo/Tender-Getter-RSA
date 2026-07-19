@@ -9,10 +9,27 @@ Submitted to the Build with Gemini XPRIZE hackathon (Small Business Services, Ma
 
 ## Why it exists
 
-Existing tender notification services (R250–R800/month) forward raw email lists of
-links. Tender Getter RSA does the heavy lifting competitors list as "coming soon":
-hard regulatory gating, PPPFA preference-point math, scanned-PDF extraction, and
-WhatsApp delivery — the channel SA small business actually runs on.
+The South African state is the biggest buyer in the economy, and procurement law
+(the PPPFA) reserves preference points specifically to push that spend toward
+small, black-owned businesses. The demand for the township electrician, the
+Limpopo security company, the Eastern Cape builder is **written into legislation**.
+
+But the road to a bid was built for companies with a tender office: 100-page
+scanned PDFs, CSD/SARS/CIDB compliance gates, PPPFA point math, briefing-session
+logistics. Incumbent "tender alert" services sell the raw start of that road —
+a daily email of links, R250–R800/month, laptop-first, in procurement-speak —
+and stop there. The one-person CC that could do the work either never hears
+about the tender or drowns in the paperwork before the closing date.
+Transformation policy dies in the last mile, and the work flows to whoever
+already has a bid office.
+
+Tender Getter RSA **is** the bid office — in the pocket of the business that
+can't afford one, on the platform it already runs on. It knows the company's
+CIDB grade and tax status, watches every public tender source, says in plain
+language on WhatsApp which tenders they actually qualify for and exactly what
+each one demands, then helps draft the response. And because access only matters
+if it's fair, the same pipeline verifies that companies are real and active —
+phantom paperwork doesn't crowd legitimate SMMEs out.
 
 ## Start here: repository state
 
