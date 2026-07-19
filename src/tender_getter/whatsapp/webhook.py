@@ -328,6 +328,50 @@ async def update_user_from_parsed_data(user: WhatsAppUser, doc_type: Optional[Do
             upsert_user(user)
         return
 
+    # Root-of-truth guard: the company must exist AND be active in a public
+    # register before any uploaded document can count as verification.
+    from ..company_registry import (
+        check_company_active, is_cipc_registration, registry_decision,
+    )
+    candidate_reg = (
+        str(parsed.get("registration_number") or "").strip()
+        or (user.registration_number or "").strip()
+    )
+    status_attr = {
+        DocumentType.CSD_LETTER: "csd_status",
+        DocumentType.BBBEE_CERT: "bbbee_status",
+        DocumentType.TAX_PIN: "tax_status",
+        DocumentType.CIDB_CERT: "cidb_status",
+    }.get(doc_type)
+    if is_cipc_registration(candidate_reg):
+        check = await check_company_active(
+            candidate_reg,
+            parsed.get("company_name") or user.onboarding_data.get("company_name"),
+        )
+        decision = registry_decision(check)
+        if decision == "block":
+            logger.warning(
+                "Verification refused for %s: %s is not an active registered company (%s: %s)",
+                user.phone_number, candidate_reg, check.source, check.detail,
+            )
+            if status_attr:
+                setattr(user, status_attr, VerificationStatus.FAILED)
+            if storage_path:
+                user.documents[doc_type.value] = storage_path
+            upsert_user(user)
+            return
+        if decision == "hold":
+            logger.info(
+                "Verification held for %s: public registry unreachable for %s — held in pending",
+                user.phone_number, candidate_reg,
+            )
+            if status_attr:
+                setattr(user, status_attr, VerificationStatus.PENDING)
+            if storage_path:
+                user.documents[doc_type.value] = storage_path
+            upsert_user(user)
+            return
+
     if doc_type == DocumentType.CSD_LETTER:
         csd = str(parsed.get("csd_number") or parsed.get("supplier_number") or "").strip()
         if _CSD_NUMBER_PATTERN.match(csd):

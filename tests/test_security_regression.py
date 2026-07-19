@@ -46,6 +46,16 @@ Round 3:
 23. Onboarding company names are sanitised (markup/control chars, length cap)
     before they touch WhatsApp markdown or AI payloads.
 
+Round 4:
+24. CIPC-format detection (2019/123456/07) — WA-… placeholders and MAAA…
+    numbers skip the guard entirely.
+25. Public-registry providers (CSD, CIDB) verdicts via mocked transport:
+    ACTIVE allows, INACTIVE/NOT_FOUND block, outage holds UNKNOWN.
+26. Provider chain stops at first definitive answer; TTL cache prevents
+    repeat registry hits (resource protection).
+27. Phantom-company uploads are REFUSED (inactive), held PENDING on outage
+    (never branded as fraud), and verified normally when truly active.
+
 All external systems (Gemini, Twilio, HTTP) are mocked — no network access.
 """
 
@@ -1214,3 +1224,209 @@ def test_company_name_is_sanitised_at_intake(monkeypatch):
     assert "\n" not in name and "\t" not in name
     assert len(name) <= 160
     assert name.startswith("EVIL Corp")
+
+
+# ===========================================================================
+# ROUND 4 — public-registry root-of-truth guard (phantom company defense)
+# ===========================================================================
+
+
+@pytest.fixture(autouse=True)
+def _registry_allows_by_default(monkeypatch):
+    """Default stub: the public registry permits verification.
+
+    Webhook verification tests from earlier rounds predate the guard; without
+    a stub their parsed CIPC numbers would trigger real network lookups.
+    Round-4 tests override this stub with their own monkeypatching.
+    """
+    from tender_getter.company_registry import RegistryCheck, RegistryStatus
+
+    async def _allow(_reg, _name=None):
+        return RegistryCheck(RegistryStatus.ACTIVE, "stub", "test default")
+
+    monkeypatch.setattr("tender_getter.company_registry.check_company_active", _allow)
+
+
+from tender_getter.company_registry import (  # noqa: E402
+    RegistryCheck,
+    RegistryStatus,
+    check_company_active as _real_check_company_active,
+    is_cipc_registration,
+    registry_decision,
+    _reset_cache,
+)
+
+
+# ---------------------------------------------------------------------------
+# 24 — CIPC format detection (placeholders and MAAA numbers must skip)
+# ---------------------------------------------------------------------------
+
+
+def test_cipc_format_detector():
+    assert is_cipc_registration("2020/123456/07")
+    assert not is_cipc_registration("WA-+2782000111")
+    assert not is_cipc_registration("MAAA1234567")
+    assert not is_cipc_registration("")
+    assert not is_cipc_registration(None)
+
+
+# ---------------------------------------------------------------------------
+# 25 — Provider verdicts via mocked transport
+# ---------------------------------------------------------------------------
+
+
+def _mock_fetch(monkeypatch, payload_or_exc):
+    async def _fake(_url, timeout=8.0):
+        if isinstance(payload_or_exc, Exception):
+            raise payload_or_exc
+        return payload_or_exc
+
+    monkeypatch.setattr("tender_getter.company_registry._fetch_json", _fake)
+
+
+@pytest.mark.asyncio_compat
+def test_csd_provider_active_payload(monkeypatch):
+    _mock_fetch(monkeypatch, [{"SupplierNumber": "MAAA1", "LegalName": "X", "RegistrationNumber": "2020/111111/07", "SupplierStatus": "Active"}])
+    from tender_getter.company_registry import CSDSupplierProvider
+
+    check = asyncio.run(CSDSupplierProvider().check("2020/111111/07", None))
+    assert check.status == RegistryStatus.ACTIVE
+    assert registry_decision(check) == "allow"
+
+
+def test_csd_provider_inactive_payload(monkeypatch):
+    _mock_fetch(monkeypatch, [{"RegistrationNumber": "2020/111111/07", "SupplierStatus": "De-Registered"}])
+    from tender_getter.company_registry import CSDSupplierProvider
+
+    check = asyncio.run(CSDSupplierProvider().check("2020/111111/07", None))
+    assert check.status == RegistryStatus.INACTIVE
+    assert registry_decision(check) == "block"
+
+
+def test_csd_provider_not_found(monkeypatch):
+    _mock_fetch(monkeypatch, [])
+    from tender_getter.company_registry import CSDSupplierProvider
+
+    check = asyncio.run(CSDSupplierProvider().check("2020/111111/07", None))
+    assert check.status == RegistryStatus.NOT_FOUND
+    assert registry_decision(check) == "block"
+
+
+def test_csd_provider_outage_is_unknown_and_hold(monkeypatch):
+    _mock_fetch(monkeypatch, ConnectionError("reset by peer"))
+    from tender_getter.company_registry import CSDSupplierProvider
+
+    check = asyncio.run(CSDSupplierProvider().check("2020/111111/07", None))
+    assert check.status == RegistryStatus.UNKNOWN
+    assert registry_decision(check) == "hold"
+
+
+def test_cidb_corroboration_verdicts(monkeypatch):
+    from tender_getter.company_registry import CIDBRegisterProvider
+
+    _mock_fetch(monkeypatch, {"title": "Index", "table": [
+        {"CRS Number": "1", "Contractor Name": "Example Construction CC", "Status": "Active", "Grading": "4GB"},
+    ]})
+    provider = CIDBRegisterProvider()
+    assert asyncio.run(provider.check("2020/111111/07", "Example Construction")).status == RegistryStatus.ACTIVE
+
+    _mock_fetch(monkeypatch, {"table": [
+        {"Contractor Name": "Example Construction CC", "Status": "Suspended", "Grading": "4GB"},
+    ]})
+    assert asyncio.run(provider.check("2020/111111/07", "Example Construction")).status == RegistryStatus.INACTIVE
+
+    _mock_fetch(monkeypatch, {"table": []})
+    assert asyncio.run(provider.check("2020/111111/07", "Example Construction")) is None  # declines, not condemns
+
+
+# ---------------------------------------------------------------------------
+# 26 — Chain precedence + TTL cache (resource protection)
+# ---------------------------------------------------------------------------
+
+
+class _FixedProvider:
+    def __init__(self, source, result, spy):
+        self.source = source
+        self._result = result
+        self._spy = spy
+
+    async def check(self, reg, name):
+        self._spy.append(self.source)
+        return self._result
+
+
+def test_chain_first_definitive_answer_wins(monkeypatch):
+    _reset_cache()
+    calls = []
+    providers = (
+        _FixedProvider("p1", None, calls),
+        _FixedProvider("p2", RegistryCheck(RegistryStatus.UNKNOWN, "p2"), calls),
+        _FixedProvider("p3", RegistryCheck(RegistryStatus.ACTIVE, "p3"), calls),
+        _FixedProvider("p4", RegistryCheck(RegistryStatus.INACTIVE, "p4"), calls),
+    )
+    check = asyncio.run(_real_check_company_active("2020/777777/07", None, providers=providers))
+    assert check.status == RegistryStatus.ACTIVE
+    assert calls == ["p1", "p2", "p3"]  # chain stopped at first definitive answer
+
+
+def test_ttl_cache_avoids_repeat_provider_hits(monkeypatch):
+    _reset_cache()
+    calls = []
+    providers = (_FixedProvider("p1", RegistryCheck(RegistryStatus.ACTIVE, "p1"), calls),)
+    asyncio.run(_real_check_company_active("2020/888888/07", None, providers=providers))
+    asyncio.run(_real_check_company_active("2020/888888/07", None, providers=providers))
+    assert calls == ["p1"]  # second lookup served from the 24h positive cache
+
+
+def test_placeholder_numbers_never_touch_providers(monkeypatch):
+    calls = []
+    providers = (_FixedProvider("p1", RegistryCheck(RegistryStatus.ACTIVE, "p1"), calls),)
+    check = asyncio.run(_real_check_company_active("WA-+2782000111", None, providers=providers))
+    assert check.status == RegistryStatus.UNKNOWN
+    assert calls == []  # guard skipped entirely for placeholder identities
+
+
+# ---------------------------------------------------------------------------
+# 27 — Enforcement inside the verification trust boundary
+# ---------------------------------------------------------------------------
+
+
+def _stub_registry(monkeypatch, status, source="stub"):
+    async def _check(_reg, _name=None):
+        return RegistryCheck(status, source)
+
+    monkeypatch.setattr("tender_getter.company_registry.check_company_active", _check)
+    from tender_getter.company_registry import _reset_cache as _rc
+    _rc()
+
+
+def test_inactive_company_upload_is_refused(monkeypatch):
+    from tender_getter.whatsapp.models import DocumentType, VerificationStatus
+
+    _stub_registry(monkeypatch, RegistryStatus.INACTIVE)
+    user = _mk_user("2020/111111/07")
+    parsed = {"csd_number": "MAAA1234567", "registration_number": "2020/111111/07"}
+    _run_update(monkeypatch, user, DocumentType.CSD_LETTER, parsed)
+    assert user.csd_status == VerificationStatus.FAILED
+    assert user.csd_status != VerificationStatus.VERIFIED
+
+
+def test_registry_outage_holds_verification_pending_not_fraud(monkeypatch):
+    from tender_getter.whatsapp.models import DocumentType, VerificationStatus
+
+    _stub_registry(monkeypatch, RegistryStatus.UNKNOWN)
+    user = _mk_user("2020/111111/07")
+    parsed = {"csd_number": "MAAA1234567", "registration_number": "2020/111111/07"}
+    _run_update(monkeypatch, user, DocumentType.CSD_LETTER, parsed)
+    assert user.csd_status == VerificationStatus.PENDING
+    assert user.csd_status != VerificationStatus.VERIFIED
+
+
+def test_active_company_upload_verifies_as_before(monkeypatch):
+    from tender_getter.whatsapp.models import DocumentType, VerificationStatus
+
+    _stub_registry(monkeypatch, RegistryStatus.ACTIVE)
+    user = _mk_user("2020/111111/07")
+    parsed = {"csd_number": "MAAA1234567", "registration_number": "2020/111111/07"}
+    _run_update(monkeypatch, user, DocumentType.CSD_LETTER, parsed)
+    assert user.csd_status == VerificationStatus.VERIFIED
