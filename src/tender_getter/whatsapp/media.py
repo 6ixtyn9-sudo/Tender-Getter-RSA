@@ -70,34 +70,93 @@ def classify_document_by_content(parsed_data: Dict[str, Any]) -> DocumentType:
 # Media Download
 # ---------------------------------------------------------------------------
 
+class MediaTooLargeError(ValueError):
+    """Raised when an inbound media payload exceeds the configured size limit."""
+
+
+# Host allowlist for server-side media fetches (SSRF defence-in-depth).
+# Override with TG_MEDIA_HOST_ALLOWLIST="host1,host2" — each entry also
+# matches its subdomains.
+_DEFAULT_MEDIA_HOSTS = ("twilio.com",)
+
+
+def _allowed_media_hosts() -> tuple[str, ...]:
+    raw = os.getenv("TG_MEDIA_HOST_ALLOWLIST")
+    if raw is None:
+        return _DEFAULT_MEDIA_HOSTS
+    return tuple(h.strip().lower() for h in raw.split(",") if h.strip())
+
+
+def _enforce_allowed_media_host(url: str) -> None:
+    """Block non-HTTP(S) schemes and any host outside the allowlist."""
+    from urllib.parse import urlparse
+
+    parsed = urlparse(url)
+    if parsed.scheme not in ("http", "https"):
+        raise ValueError(f"Unsupported media URL scheme: {parsed.scheme!r}")
+    host = (parsed.hostname or "").lower()
+    allowed = _allowed_media_hosts()
+    if not host or not any(host == h or host.endswith(f".{h}") for h in allowed):
+        raise ValueError(f"Media URL host is not allowed: {host or 'unknown'}")
+
+
+def _media_size_limit(max_bytes: Optional[int]) -> int:
+    if max_bytes is not None:
+        return max_bytes
+    return int(os.getenv("TG_MAX_MEDIA_BYTES", str(15 * 1024 * 1024)))
+
+
 async def download_media(
     media_url: str,
     auth: Optional[tuple] = None,
     timeout: float = 30.0,
+    max_bytes: Optional[int] = None,
 ) -> bytes:
     """
     Download media from Twilio's media URL.
     Twilio media URLs require authentication (Account SID + Auth Token).
+
+    The payload is streamed and aborted as soon as the size limit is crossed,
+    so an oversize body can never be fully buffered into memory. URLs outside
+    the host allowlist are rejected before any network call is made.
     """
+    _enforce_allowed_media_host(media_url)
+    limit = _media_size_limit(max_bytes)
+
     if auth is None:
         account_sid = os.getenv("TWILIO_ACCOUNT_SID")
         auth_token = os.getenv("TWILIO_AUTH_TOKEN")
         if account_sid and auth_token:
             auth = (account_sid, auth_token)
-    
+
+    chunks: list[bytes] = []
+    total = 0
     async with httpx.AsyncClient(timeout=timeout) as client:
-        response = await client.get(media_url, auth=auth)
-        response.raise_for_status()
-        return response.content
+        async with client.stream("GET", media_url, auth=auth) as response:
+            response.raise_for_status()
+            declared = response.headers.get("Content-Length", "")
+            if declared.isdigit() and int(declared) > limit:
+                raise MediaTooLargeError(
+                    f"Media exceeds the {limit // (1024 * 1024)} MB download limit"
+                )
+            async for chunk in response.aiter_bytes(64 * 1024):
+                total += len(chunk)
+                if total > limit:
+                    raise MediaTooLargeError(
+                        f"Media exceeds the {limit // (1024 * 1024)} MB download limit"
+                    )
+                chunks.append(chunk)
+    return b"".join(chunks)
 
 
 async def download_media_to_file(
     media_url: str,
     filepath: str,
     auth: Optional[tuple] = None,
+    max_bytes: Optional[int] = None,
 ) -> int:
     """Download media directly to file, return size in bytes."""
-    content = await download_media(media_url, auth)
+    content = await download_media(media_url, auth, max_bytes=max_bytes)
     with open(filepath, "wb") as f:
         f.write(content)
     return len(content)

@@ -92,7 +92,10 @@ class TenderOpportunity(BaseModel):
     issuing_entity: str
     closing_date: datetime
     estimated_value: Optional[float] = Field(
-        None, description="Estimated contract value in South African Rand (ZAR)."
+        None,
+        ge=0,
+        allow_inf_nan=False,
+        description="Estimated contract value in South African Rand (ZAR).",
     )
     required_cidb_class: Optional[str] = Field(
         None, description="Required CIDB class code, e.g. 'CE', 'GB', 'EE'."

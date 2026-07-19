@@ -7,6 +7,7 @@ Implements the two-gate matching pipeline:
 """
 
 from typing import Optional
+import math
 from .schemas import CompanyProfile, TenderOpportunity, MatchResult
 
 # ---------------------------------------------------------------------------
@@ -49,11 +50,20 @@ def get_bbbee_system(estimated_value: Optional[float]) -> str:
     """
     Returns the applicable preference point system ('80/20' or '90/10')
     based on the tender's estimated value.
-    Falls back to '80/20' when the value is unknown.
+
+    Per PPPFA regulation the 80/20 system applies to procurement 'up to
+    R50 million' (inclusive); 90/10 applies above R50 million.
+    Falls back to '80/20' when the value is unknown or non-finite
+    (conservative default: never let NaN/inf select a system).
     """
-    if estimated_value is None or estimated_value < BBBEE_THRESHOLD_ZAR:
+    if estimated_value is None:
         return "80/20"
-    return "90/10"
+    try:
+        if math.isfinite(estimated_value) and estimated_value > BBBEE_THRESHOLD_ZAR:
+            return "90/10"
+    except TypeError:
+        pass
+    return "80/20"
 
 
 def get_bbbee_points(bbbee_level: int, system: str) -> float:

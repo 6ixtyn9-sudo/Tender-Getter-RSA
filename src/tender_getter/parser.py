@@ -4,9 +4,11 @@ parser.py - Gemini-powered OCR & compliance sieve for tender PDFs.
 Pipeline:
   1. Local pre-screener (pdfplumber): extracts only pages containing
      known SBD keywords, reducing a 100-page PDF to ~5 pages.
-  2. Gemini 1.5 Pro: extracts structured JSON fields from the reduced text.
-  3. Pydantic validation: the extracted JSON is validated and returned as
-     a partial TenderOpportunity dict ready for database ingestion.
+     Bounded by TG_MAX_PDF_PAGES / TG_MAX_EXTRACT_CHARS (anti-DoS).
+  2. Gemini: extracts structured JSON fields from the reduced text.
+  3. Strict validation: the extracted JSON is coerced and validated
+     field-by-field (unknown keys dropped, invalid values nulled) and
+     returned as a partial TenderOpportunity dict ready for ingestion.
 
 Environment:
   Requires GEMINI_API_KEY in a .env file (gitignored) or environment variable.
@@ -46,6 +48,27 @@ SBD_KEYWORDS = [
 
 GEMINI_MODEL = "gemini-2.5-flash"
 
+# Anti-DoS bounds for the local pre-screener (configurable via env).
+MAX_PDF_PAGES = 200
+MAX_EXTRACT_CHARS = 100_000
+
+# Canonical extraction schema keys (anything else the model emits is dropped).
+EXPECTED_KEYS = (
+    "bid_number", "closing_date", "required_cidb_class",
+    "required_cidb_level", "mandatory_csd", "bbbee_points_system",
+    "location_target",
+)
+
+# Valid CIDB contractor grading classes.
+CIDB_CLASS_CODES = {"CE", "GB", "EE", "ME", "SB", "PE", "PS", "SF", "SI"}
+
+
+def _env_int(name: str, default: int) -> int:
+    try:
+        return int(os.getenv(name, str(default)))
+    except ValueError:
+        return default
+
 # The strict JSON schema the model must produce
 EXTRACTION_SYSTEM_PROMPT = """
 You are a South African government tender document parser.
@@ -84,18 +107,26 @@ def extract_relevant_pages(pdf_path: str | Path) -> str:
             "Install it with: pip install pdfplumber"
         )
 
+    max_pages = _env_int("TG_MAX_PDF_PAGES", MAX_PDF_PAGES)
+    max_chars = _env_int("TG_MAX_EXTRACT_CHARS", MAX_EXTRACT_CHARS)
+
     relevant_text_parts: list[str] = []
     keywords_lower = [kw.lower() for kw in SBD_KEYWORDS]
 
     with pdfplumber.open(str(pdf_path)) as pdf:
         for i, page in enumerate(pdf.pages):
+            if i >= max_pages:
+                break  # hard cap: never stream an unbounded page count
             text = page.extract_text() or ""
             if any(kw in text.lower() for kw in keywords_lower):
                 relevant_text_parts.append(
                     f"--- PAGE {i + 1} ---\n{text}"
                 )
 
-    return "\n\n".join(relevant_text_parts)
+    reduced = "\n\n".join(relevant_text_parts)
+    if len(reduced) > max_chars:
+        reduced = reduced[:max_chars] + "\n[TRUNCATED]"
+    return reduced
 
 
 def parse_tender_pdf(pdf_path: str | Path) -> dict:
@@ -151,16 +182,12 @@ def parse_tender_pdf(pdf_path: str | Path) -> dict:
             f"Gemini returned invalid JSON. Raw response:\n{response.text}"
         ) from exc
 
-    # Ensure all expected keys are present (fill missing with None)
-    expected_keys = [
-        "bid_number", "closing_date", "required_cidb_class",
-        "required_cidb_level", "mandatory_csd", "bbbee_points_system",
-        "location_target",
-    ]
-    for key in expected_keys:
-        result.setdefault(key, None)
+    if not isinstance(result, dict):
+        raise ValueError(
+            f"Gemini must return a single JSON object, got {type(result).__name__}."
+        )
 
-    return result
+    return _validate_extraction(result)
 
 
 # ---------------------------------------------------------------------------
@@ -174,6 +201,67 @@ def _extract_json_block(text: str) -> str:
     """
     # Remove ```json ... ``` or ``` ... ``` wrappers
     clean = re.sub(r"```(?:json)?", "", text).strip().rstrip("`").strip()
+    return clean
+
+
+def _validate_extraction(result: dict) -> dict:
+    """
+    Coerce and validate the raw LLM extraction field-by-field.
+
+    Adversarial or sloppy model output must never flow downstream:
+      * unknown keys (e.g. injected instructions) are dropped;
+      * wrong types or out-of-range values become None (fail-safe null),
+        never a truthy string like 'false' or an invalid enum;
+      * trivially coercible values ('4' -> 4, 'ce' -> 'CE') are normalised.
+    """
+    clean: dict = {key: None for key in EXPECTED_KEYS}
+
+    bid_number = result.get("bid_number")
+    if bid_number is not None:
+        text = str(bid_number).strip()
+        clean["bid_number"] = text or None
+
+    closing = result.get("closing_date")
+    if isinstance(closing, str):
+        candidate = closing.strip()[:10]
+        try:
+            from datetime import date
+
+            date.fromisoformat(candidate)
+            clean["closing_date"] = candidate
+        except ValueError:
+            pass
+
+    cidb_class = result.get("required_cidb_class")
+    if isinstance(cidb_class, str):
+        candidate = cidb_class.strip().upper()
+        if candidate in CIDB_CLASS_CODES:
+            clean["required_cidb_class"] = candidate
+
+    cidb_level = result.get("required_cidb_level")
+    if isinstance(cidb_level, bool):
+        pass  # bool is an int subclass — explicitly rejected
+    elif isinstance(cidb_level, int):
+        if 1 <= cidb_level <= 9:
+            clean["required_cidb_level"] = cidb_level
+    elif isinstance(cidb_level, str) and cidb_level.strip().isdigit():
+        level = int(cidb_level.strip())
+        if 1 <= level <= 9:
+            clean["required_cidb_level"] = level
+
+    mandatory_csd = result.get("mandatory_csd")
+    if isinstance(mandatory_csd, bool):
+        clean["mandatory_csd"] = mandatory_csd
+
+    system = result.get("bbbee_points_system")
+    if isinstance(system, str) and system.strip() in {"80/20", "90/10"}:
+        clean["bbbee_points_system"] = system.strip()
+
+    location = result.get("location_target")
+    if isinstance(location, str):
+        text = location.strip()
+        clean["location_target"] = text or None
+
     return clean
 
 

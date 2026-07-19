@@ -21,7 +21,7 @@ from twilio.request_validator import RequestValidator
 from twilio.twiml.messaging_response import MessagingResponse
 
 from .database import claim_inbound_message, create_media_message, update_media_message, upsert_user
-from .media import download_media, guess_document_type, parse_document_with_gemini, upload_to_supabase
+from .media import download_media, guess_document_type, parse_document_with_gemini, upload_to_supabase, MediaTooLargeError
 from .models import DocumentType, MediaMessage, VerificationStatus, WhatsAppUser
 from .outbound import send_text_message
 
@@ -47,6 +47,9 @@ app.add_middleware(
 _seen_sids: dict[str, float] = {}
 _rate_windows: dict[str, deque[float]] = defaultdict(deque)
 _RATE_LIMIT = int(os.getenv("TG_WEBHOOK_RATE_PER_MINUTE", "30"))
+# Hard cardinality bound for the in-process rate tracker so a flood of
+# distinct sender numbers cannot grow memory without limit.
+_MAX_TRACKED_SENDERS = int(os.getenv("TG_RATE_TRACKER_MAX_SENDERS", "10000"))
 
 
 def clean_phone(value: str) -> str:
@@ -70,6 +73,13 @@ def validate_twilio_request(request: Request, form_data: dict[str, Any]) -> bool
 
 def _allow_request(phone: str) -> bool:
     now = time.monotonic()
+    if len(_rate_windows) >= _MAX_TRACKED_SENDERS:
+        # Memory bound: evict idle windows before admitting another sender.
+        for sender, window in list(_rate_windows.items()):
+            if not window or now - window[-1] > 60:
+                _rate_windows.pop(sender, None)
+        while len(_rate_windows) >= _MAX_TRACKED_SENDERS:
+            _rate_windows.pop(next(iter(_rate_windows)), None)
     bucket = _rate_windows[phone]
     while bucket and now - bucket[0] > 60:
         bucket.popleft()
@@ -226,9 +236,7 @@ async def handle_media_upload(user: WhatsAppUser, message_sid: str, media_url: s
 
 async def process_media_async(media: MediaMessage, user: WhatsAppUser) -> None:
     try:
-        content = await download_media(media.media_url)
-        if len(content) > MAX_MEDIA_BYTES:
-            raise ValueError(f"Document exceeds the {MAX_MEDIA_BYTES // (1024 * 1024)} MB upload limit")
+        content = await download_media(media.media_url, max_bytes=MAX_MEDIA_BYTES)
         media.media_size = len(content)
         media.supabase_path = await upload_to_supabase(content, media.media_content_type, user.phone_number)
         media.downloaded = True
@@ -237,6 +245,17 @@ async def process_media_async(media: MediaMessage, user: WhatsAppUser) -> None:
             await update_user_from_parsed_data(user, media.guessed_type, media.parsed_data, media.supabase_path)
         update_media_message(media)
         send_text_message(user.phone_number, "✅ Your document was processed. Type *profile* to review its verification status.")
+    except MediaTooLargeError as exc:
+        logger.info("Media too large for %s: %s", media.message_sid, exc)
+        media.parsed_data = {"error": "too_large"}
+        update_media_message(media)
+        try:
+            send_text_message(
+                user.phone_number,
+                f"📄 That file is too large — {exc}. Please send a smaller PDF or a clear photo instead.",
+            )
+        except Exception:
+            logger.exception("Could not send media-size notice")
     except Exception:
         logger.exception("Media processing failed for %s", media.message_sid)
         media.parsed_data = {"error": "processing_failed"}

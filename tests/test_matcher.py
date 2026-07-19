@@ -70,7 +70,7 @@ def test_bbbee_system_below_threshold():
     assert get_bbbee_system(10_000_000) == "80/20"
 
 def test_bbbee_system_at_threshold():
-    assert get_bbbee_system(BBBEE_THRESHOLD_ZAR) == "90/10"
+    assert get_bbbee_system(BBBEE_THRESHOLD_ZAR) == "80/20"
 
 def test_bbbee_system_above_threshold():
     assert get_bbbee_system(100_000_000) == "90/10"

@@ -78,7 +78,7 @@ class KeyManager:
     def mark_exhausted(self, key: str) -> None:
         """Mark a key as exhausted (429)."""
         self.exhausted_keys.add(key)
-        logger.warning(f"[TG-AI] Key exhausted (429): {key[:8]}...")
+        logger.warning(f"[TG-AI] Key exhausted (429): {key[:4]}…")
 
     def reset_exhausted(self) -> None:
         """Reset exhausted keys (call periodically)."""
@@ -178,72 +178,80 @@ class AIGateway:
         system_prompt: str,
         messages: list[dict[str, str]],
         temperature: float,
-        used_keys: Optional[set[str]] = None,
     ) -> dict[str, Any]:
-        """Call Gemini with automatic key rotation on 429."""
-        used_keys = used_keys or set()
+        """
+        Call Gemini with automatic key rotation on 429 and bounded retries
+        on 503.
 
-        key = self.key_manager.get_available_key(exclude=used_keys)
-        if not key:
-            return {"error": "All 7 Gemini keys exhausted"}
+        The attempt budget is ``len(keys) + config.max_retries`` so a
+        persistent upstream outage fails fast with an error dict — it can
+        never recurse into a stack overflow (previous unbounded-recursion DoS).
+        """
+        used_keys: set[str] = set()
+        max_attempts = max(1, len(self.key_manager.keys) + self.config.max_retries)
 
-        try:
-            client = self._client_for(key)
-            gemini_contents = self._convert_messages(messages)
+        for _ in range(1, max_attempts + 1):
+            key = self.key_manager.get_available_key(exclude=used_keys)
+            if not key:
+                return {"error": "All 7 Gemini keys exhausted"}
 
-            response = await client.aio.models.generate_content(
-                model=model,
-                contents=gemini_contents,
-                config=genai_types.GenerateContentConfig(
-                    system_instruction=system_prompt,
-                    temperature=temperature,
-                    max_output_tokens=2048,
-                ),
-            )
+            try:
+                client = self._client_for(key)
+                gemini_contents = self._convert_messages(messages)
 
-            text = response.text or ""
-            if not text.strip():
-                return {"error": "Empty response from Gemini"}
-
-            return {"reply": text.strip()}
-
-        except genai_errors.APIError as e:
-            error_msg = e.message or str(e)
-            logger.warning(f"[TG-AI] Gemini error with key {key[:8]}...: {error_msg}")
-
-            if e.code == 429 or "quota" in error_msg.lower():
-                self.key_manager.mark_exhausted(key)
-                used_keys.add(key)
-                return await self._call_gemini_with_rotation(
-                    model, system_prompt, messages, temperature, used_keys
+                response = await client.aio.models.generate_content(
+                    model=model,
+                    contents=gemini_contents,
+                    config=genai_types.GenerateContentConfig(
+                        system_instruction=system_prompt,
+                        temperature=temperature,
+                        max_output_tokens=2048,
+                    ),
                 )
 
-            if e.code == 503 or "overload" in error_msg.lower():
-                await asyncio.sleep(self.config.base_delay_ms / 1000)
-                return await self._call_gemini_with_rotation(
-                    model, system_prompt, messages, temperature, used_keys
-                )
+                text = response.text or ""
+                if not text.strip():
+                    return {"error": "Empty response from Gemini"}
 
-            return {"error": error_msg}
+                return {"reply": text.strip()}
 
-        except Exception as e:
-            error_msg = str(e)
-            logger.warning(f"[TG-AI] Gemini error with key {key[:8]}...: {error_msg}")
+            except genai_errors.APIError as e:
+                error_msg = e.message or str(e)
+                outcome = self._classify_error(key, error_msg, e.code)
+                if outcome == "rotate":
+                    self.key_manager.mark_exhausted(key)
+                    used_keys.add(key)
+                    continue
+                if outcome == "retry":
+                    await asyncio.sleep(self.config.base_delay_ms / 1000)
+                    continue
+                return {"error": error_msg}
 
-            if "429" in error_msg or "quota" in error_msg.lower():
-                self.key_manager.mark_exhausted(key)
-                used_keys.add(key)
-                return await self._call_gemini_with_rotation(
-                    model, system_prompt, messages, temperature, used_keys
-                )
+            except Exception as e:
+                error_msg = str(e)
+                outcome = self._classify_error(key, error_msg, None)
+                if outcome == "rotate":
+                    self.key_manager.mark_exhausted(key)
+                    used_keys.add(key)
+                    continue
+                if outcome == "retry":
+                    await asyncio.sleep(self.config.base_delay_ms / 1000)
+                    continue
+                return {"error": error_msg}
 
-            if "503" in error_msg or "overload" in error_msg.lower():
-                await asyncio.sleep(self.config.base_delay_ms / 1000)
-                return await self._call_gemini_with_rotation(
-                    model, system_prompt, messages, temperature, used_keys
-                )
+        logger.warning(
+            f"[TG-AI] Gemini retry budget exhausted after {max_attempts} attempt(s)"
+        )
+        return {"error": "Gemini unavailable after bounded retries"}
 
-            return {"error": error_msg}
+    def _classify_error(self, key: str, error_msg: str, code: Optional[int]) -> str:
+        """Classify an upstream error: 'rotate' (429/quota), 'retry' (503/overload) or 'fatal'."""
+        logger.warning(f"[TG-AI] Gemini error with key {key[:4]}…: {error_msg}")
+        if code == 429 or (code is None and ("429" in error_msg or "quota" in error_msg.lower())):
+            return "rotate"
+        if code == 503 or (code is None and ("503" in error_msg or "overload" in error_msg.lower())):
+            return "retry"
+        return "fatal"
 
     def _convert_messages(self, messages: list[dict[str, str]]) -> list[genai_types.Content]:
         """Convert standard messages to google-genai ``Content`` objects."""
