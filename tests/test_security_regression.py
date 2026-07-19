@@ -1430,3 +1430,145 @@ def test_active_company_upload_verifies_as_before(monkeypatch):
     parsed = {"csd_number": "MAAA1234567", "registration_number": "2020/111111/07"}
     _run_update(monkeypatch, user, DocumentType.CSD_LETTER, parsed)
     assert user.csd_status == VerificationStatus.VERIFIED
+
+
+# ---------------------------------------------------------------------------
+# 28 — OpenCorporates provider (ROUND 5: documented public CIPC mirror API)
+# ---------------------------------------------------------------------------
+
+
+_OC_COMPANY = {
+    "name": "EXAMPLE TRADING (PTY) LTD",
+    "company_number": "2020/111111/07",
+    "jurisdiction_code": "za",
+    "current_status": "In Business",
+    "inactive": False,
+}
+
+
+def _oc_payload(*companies):
+    return {"api_version": "0.4", "results": {"companies": [{"company": c} for c in companies], "total_count": len(companies)}}
+
+
+def test_opencorporates_disabled_without_token(monkeypatch):
+    monkeypatch.delenv("TG_OPENCORPORATES_API_TOKEN", raising=False)
+    _mock_fetch(monkeypatch, AssertionError("transport must not be touched"))
+    from tender_getter.company_registry import OpenCorporatesProvider
+
+    assert asyncio.run(OpenCorporatesProvider().check("2020/111111/07", None)) is None
+
+
+def test_opencorporates_active_on_exact_number_match(monkeypatch):
+    monkeypatch.setenv("TG_OPENCORPORATES_API_TOKEN", "tok")
+    _mock_fetch(monkeypatch, _oc_payload(
+        {"company_number": "1999/000001/23", "current_status": "In Business", "inactive": False},  # decoy
+        _OC_COMPANY,
+    ))
+    from tender_getter.company_registry import OpenCorporatesProvider
+
+    check = asyncio.run(OpenCorporatesProvider().check("2020/111111/07", None))
+    assert check.status == RegistryStatus.ACTIVE
+    assert registry_decision(check) == "allow"
+
+
+def test_opencorporates_inactive_flag_blocks(monkeypatch):
+    monkeypatch.setenv("TG_OPENCORPORATES_API_TOKEN", "tok")
+    _mock_fetch(monkeypatch, _oc_payload({**_OC_COMPANY, "inactive": True}))
+    from tender_getter.company_registry import OpenCorporatesProvider
+
+    check = asyncio.run(OpenCorporatesProvider().check("2020/111111/07", None))
+    assert check.status == RegistryStatus.INACTIVE
+    assert registry_decision(check) == "block"
+
+
+def test_opencorporates_deregistration_status_blocks(monkeypatch):
+    monkeypatch.setenv("TG_OPENCORPORATES_API_TOKEN", "tok")
+    _mock_fetch(monkeypatch, _oc_payload({**_OC_COMPANY, "current_status": "AR Final Deregistration", "inactive": None})
+    )
+    from tender_getter.company_registry import OpenCorporatesProvider
+
+    check = asyncio.run(OpenCorporatesProvider().check("2020/111111/07", None))
+    assert check.status == RegistryStatus.INACTIVE
+
+
+def test_opencorporates_no_exact_match_is_not_found(monkeypatch):
+    monkeypatch.setenv("TG_OPENCORPORATES_API_TOKEN", "tok")
+    monkeypatch.delenv("TG_OPENCORPORATES_SOFT_NOTFOUND", raising=False)
+    _mock_fetch(monkeypatch, _oc_payload(
+        {"company_number": "1999/000001/23", "current_status": "In Business"},  # fuzzy hit, wrong number
+    ))
+    from tender_getter.company_registry import OpenCorporatesProvider
+
+    check = asyncio.run(OpenCorporatesProvider().check("2020/111111/07", None))
+    assert check.status == RegistryStatus.NOT_FOUND
+    assert registry_decision(check) == "block"
+
+    _mock_fetch(monkeypatch, _oc_payload())  # empty result set equally definitive
+    assert asyncio.run(OpenCorporatesProvider().check("2020/111111/07", None)).status == RegistryStatus.NOT_FOUND
+
+
+def test_opencorporates_soft_notfound_downgrades_to_hold(monkeypatch):
+    monkeypatch.setenv("TG_OPENCORPORATES_API_TOKEN", "tok")
+    monkeypatch.setenv("TG_OPENCORPORATES_SOFT_NOTFOUND", "1")
+    _mock_fetch(monkeypatch, _oc_payload())
+    from tender_getter.company_registry import OpenCorporatesProvider
+
+    check = asyncio.run(OpenCorporatesProvider().check("2020/111111/07", None))
+    assert check.status == RegistryStatus.UNKNOWN
+    assert registry_decision(check) == "hold"
+
+
+def test_opencorporates_outage_is_unknown_and_hold(monkeypatch):
+    monkeypatch.setenv("TG_OPENCORPORATES_API_TOKEN", "tok")
+    _mock_fetch(monkeypatch, TimeoutError("slow upstream"))
+    from tender_getter.company_registry import OpenCorporatesProvider
+
+    check = asyncio.run(OpenCorporatesProvider().check("2020/111111/07", None))
+    assert check.status == RegistryStatus.UNKNOWN
+    assert registry_decision(check) == "hold"
+
+
+def test_opencorporates_ambiguous_status_is_not_blessed(monkeypatch):
+    monkeypatch.setenv("TG_OPENCORPORATES_API_TOKEN", "tok")
+    _mock_fetch(monkeypatch, _oc_payload({**_OC_COMPANY, "current_status": "", "inactive": None}))
+    from tender_getter.company_registry import OpenCorporatesProvider
+
+    check = asyncio.run(OpenCorporatesProvider().check("2020/111111/07", None))
+    assert check.status == RegistryStatus.UNKNOWN
+    assert registry_decision(check) == "hold"
+
+
+def test_opencorporates_respects_base_url_override_and_sends_token(monkeypatch):
+    monkeypatch.setenv("TG_OPENCORPORATES_API_TOKEN", "tok123")
+    monkeypatch.setenv("TG_OPENCORPORATES_BASE_URL", "https://mirror.example.test/v0.4/")
+    seen = {}
+
+    async def _spy(url, timeout=8.0):
+        seen["url"] = url
+        return _oc_payload(_OC_COMPANY)
+
+    monkeypatch.setattr("tender_getter.company_registry._fetch_json", _spy)
+    from tender_getter.company_registry import OpenCorporatesProvider
+
+    check = asyncio.run(OpenCorporatesProvider().check("2020/111111/07", None))
+    assert check.status == RegistryStatus.ACTIVE
+    assert seen["url"].startswith("https://mirror.example.test/v0.4/companies/search?q=")
+    assert "jurisdiction_code=za" in seen["url"]
+    assert "api_token=tok123" in seen["url"]
+    assert "2020%2F111111%2F07" in seen["url"]  # registration properly escaped
+
+
+def test_default_chain_order_and_first_definitive_wins_with_oc():
+    from tender_getter.company_registry import _DEFAULT_PROVIDERS
+
+    assert [p.source for p in _DEFAULT_PROVIDERS] == [
+        "csd.gov.za", "registers.cidb.org.za", "cipc", "opencorporates.com",
+    ]
+
+    _reset_cache()
+    calls = []
+    authoritative = _FixedProvider("csd-like", RegistryCheck(RegistryStatus.ACTIVE, "csd-like"), calls)
+    mirror = _FixedProvider("opencorporates.com", RegistryCheck(RegistryStatus.INACTIVE, "oc"), calls)
+    check = asyncio.run(_real_check_company_active("2020/999999/07", None, providers=(authoritative, mirror)))
+    assert check.status == RegistryStatus.ACTIVE  # authoritative source outranks the mirror
+    assert calls == ["csd-like"]

@@ -21,7 +21,13 @@ Provider chain (first definitive answer wins)
 2. CIDB  — Construction Register of Contractors (name corroboration; the
            endpoint pattern is already proven in tender_getter.cidb_directory).
 3. CIPC  — empty by default. CIPC moved public search behind login in 2024
-           (POPI); wire an approved endpoint/account via TG_CIPC_SEARCH_URL.
+           (POPI); wire an approved endpoint/account via TG_CIPC_SEARCH_URL
+           (e.g. the SearchWorks CIPC API on Standard Bank's OneHub, or a
+           pbVerify account — both are commercial, both expose CIPC status).
+4. OpenCorporates — documented public REST API mirroring CIPC data
+           (api.opencorporates.com/v0.4, jurisdiction za). Opt-in via
+           TG_OPENCORPORATES_API_TOKEN. Licence note: free share-alike keys are
+           for public-benefit projects; commercial use requires their paid key.
 
 All I/O is isolated behind `_fetch_json` so tests never touch the network, and
 every provider fails soft to UNKNOWN — this module NEVER raises to its caller.
@@ -231,11 +237,69 @@ class CIPCEndpointProvider:
         return RegistryCheck(RegistryStatus.UNKNOWN, self.source, "CIPC status could not be determined")
 
 
+class OpenCorporatesProvider:
+    """OpenCorporates API (v0.4) — the only documented public REST API that
+    mirrors CIPC company numbers and statuses (jurisdiction_code=za).
+
+    Disabled unless TG_OPENCORPORATES_API_TOKEN is set. Identity is the exact
+    registration number; fuzzy name hits are never trusted. A zero-hit search
+    is a NOT_FOUND verdict (definitive search returned nothing) — mirrors lag
+    brand-new registrations, so operators who see fresh companies wrongly
+    refused may set TG_OPENCORPORATES_SOFT_NOTFOUND=1 to downgrade to a hold.
+    """
+
+    source = "opencorporates.com"
+    BASE_URL = "https://api.opencorporates.com/v0.4"
+
+    async def check(self, registration_number: str, company_name: Optional[str]) -> Optional[RegistryCheck]:
+        token = os.getenv("TG_OPENCORPORATES_API_TOKEN", "").strip()
+        if not token:
+            return None  # opt-in provider
+        base = os.getenv("TG_OPENCORPORATES_BASE_URL", self.BASE_URL).rstrip("/")
+        url = (
+            f"{base}/companies/search?q={quote(registration_number, safe='')}"
+            f"&jurisdiction_code=za&per_page=20&api_token={quote(token)}"
+        )
+        try:
+            payload = await _fetch_json(url)
+        except Exception as exc:
+            logger.info("OpenCorporates registry check failed for %s: %s", registration_number, exc)
+            return RegistryCheck(RegistryStatus.UNKNOWN, self.source, str(exc))
+
+        results = payload.get("results") if isinstance(payload, dict) else None
+        companies = results.get("companies", []) if isinstance(results, dict) else []
+        needle = _norm_digits(registration_number)
+        matched: Optional[dict] = None
+        for item in companies:
+            record = item.get("company") if isinstance(item, dict) else None
+            if isinstance(record, dict) and _norm_digits(str(record.get("company_number", ""))) == needle:
+                matched = record
+                break
+        if matched is None:
+            if os.getenv("TG_OPENCORPORATES_SOFT_NOTFOUND", "").strip():
+                return RegistryCheck(RegistryStatus.UNKNOWN, self.source, "no OpenCorporates record (soft hold)")
+            return RegistryCheck(RegistryStatus.NOT_FOUND, self.source, "no exact registration match in OpenCorporates ZA")
+
+        if matched.get("inactive") is True:
+            return RegistryCheck(RegistryStatus.INACTIVE, self.source, "record flagged inactive")
+        status_text = str(matched.get("current_status") or "").lower()
+        if any(k in status_text for k in ("deregist", "liquidat", "dissolv", "rescue", "inactive", "final")):
+            return RegistryCheck(RegistryStatus.INACTIVE, self.source, f"status '{matched.get('current_status')}'")
+        if status_text or matched.get("inactive") is False:  # e.g. "In Business"
+            return RegistryCheck(RegistryStatus.ACTIVE, self.source, f"status '{matched.get('current_status')}'")
+        return RegistryCheck(RegistryStatus.UNKNOWN, self.source, "OpenCorporates status could not be determined")
+
+
 # ---------------------------------------------------------------------------
 # Chain + TTL cache
 # ---------------------------------------------------------------------------
 
-_DEFAULT_PROVIDERS: tuple = (CSDSupplierProvider(), CIDBRegisterProvider(), CIPCEndpointProvider())
+_DEFAULT_PROVIDERS: tuple = (
+    CSDSupplierProvider(),
+    CIDBRegisterProvider(),
+    CIPCEndpointProvider(),
+    OpenCorporatesProvider(),
+)
 
 _TTL_SECONDS = {
     RegistryStatus.ACTIVE: 24 * 3600,
