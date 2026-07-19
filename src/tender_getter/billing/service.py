@@ -1,5 +1,6 @@
 from __future__ import annotations
-import os, secrets
+import os, secrets, re
+from datetime import datetime, timezone
 from dataclasses import dataclass
 from typing import Any
 from .models import BillingInterval, DEFAULT_CAPABILITIES, Entitlement, PlanCode, SubscriptionStatus
@@ -21,6 +22,16 @@ class BillingService:
     def entitlement(self, subscription: dict | None) -> Entitlement:
         if not subscription or subscription.get("status") not in {SubscriptionStatus.BETA.value, SubscriptionStatus.TRIAL.value, SubscriptionStatus.ACTIVE.value}:
             return Entitlement(PlanCode.STARTER, False, False, False, False)
+        expiry_key = "beta_expires_at" if subscription.get("status") == SubscriptionStatus.BETA.value else "trial_expires_at" if subscription.get("status") == SubscriptionStatus.TRIAL.value else "current_period_end"
+        expiry = subscription.get(expiry_key)
+        if expiry:
+            try:
+                when = datetime.fromisoformat(str(expiry).replace("Z", "+00:00"))
+                if when.tzinfo is None: when = when.replace(tzinfo=timezone.utc)
+                if when <= datetime.now(timezone.utc):
+                    return Entitlement(PlanCode.STARTER, False, False, False, False)
+            except ValueError:
+                return Entitlement(PlanCode.STARTER, False, False, False, False)
         plan = PlanCode(subscription["plan_code"])
         caps = DEFAULT_CAPABILITIES[plan]
         return Entitlement(plan, True, bool(caps.get("bid_craft")), True, True)
@@ -36,7 +47,26 @@ class BillingService:
         plan_row = self.client.table("subscription_plans").select("*").eq("plan_code", plan.value).eq("active", True).execute().data
         if not plan_row: raise ValueError("Selected paid plan is not available")
         row = plan_row[0]; amount = row["monthly_amount_cents"] if interval == BillingInterval.MONTHLY else row["annual_amount_cents"]
-        reference = f"tg_{registration_number.replace('/','')}_{secrets.token_urlsafe(10)}"
+        # The WhatsApp owner number is the human-recognisable payment reference;
+        # random entropy prevents another customer guessing or reusing it.
+        phone_ref = re.sub(r"[^0-9]", "", owner_phone)[-12:]
+        reference = f"TG-{phone_ref}-{secrets.token_hex(5).upper()}"
         checkout = await self.provider.create_checkout(reference=reference, email=email, amount_cents=amount, interval=interval.value, metadata={"registration_number": registration_number, "owner_phone": owner_phone, "plan": plan.value})
-        self.client.table("checkout_sessions").insert({"registration_number": registration_number, "owner_phone_number": owner_phone, "plan_code": plan.value, "billing_interval": interval.value, "provider": checkout.provider, "provider_reference": checkout.reference, "checkout_url": checkout.url}).execute()
+        self.client.table("checkout_sessions").insert({"registration_number": registration_number, "owner_phone_number": owner_phone, "plan_code": plan.value, "billing_interval": interval.value, "provider": checkout.provider, "provider_reference": checkout.reference, "customer_reference": reference, "checkout_url": checkout.url, "amount_cents": amount, "currency": row["currency"]}).execute()
         return checkout.url
+
+    def subscription_for_phone(self, owner_phone: str) -> dict | None:
+        if not self.client: return None
+        rows = self.client.table("company_subscriptions").select("*").eq("owner_phone_number", owner_phone).execute().data
+        return rows[0] if rows else None
+
+    def status_message(self, owner_phone: str) -> str:
+        subscription = self.subscription_for_phone(owner_phone)
+        if not subscription:
+            return "I cannot see an active paid plan yet. Say *upgrade* when you are ready and I will create a secure checkout link."
+        status = subscription["status"].replace("_", " ")
+        plan = subscription["plan_code"].title()
+        interval = subscription["billing_interval"]
+        if subscription["status"] == "beta":
+            return f"You are on the *{plan} beta* entitlement. It expires on {subscription.get('beta_expires_at') or 'the date agreed with the beta team'}."
+        return f"Your *{plan}* plan is *{status}* on {interval} billing. Your WhatsApp number is the account reference."

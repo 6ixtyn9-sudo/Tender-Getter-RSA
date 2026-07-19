@@ -16,6 +16,14 @@ async def dispatch(job: dict) -> None:
         try: ingest_real_tenders(db)
         finally: db.close()
         return
+    if kind == "process_document":
+        from tender_getter.whatsapp.database import get_media_message, get_user
+        from tender_getter.whatsapp.webhook import process_media_async
+        user = get_user(payload["owner_phone"])
+        media = get_media_message(payload["owner_phone"], payload["message_sid"])
+        if not user or not media: raise ValueError("Document job references missing user or media")
+        await process_media_async(media, user)
+        return
     # Enrichment, matching and Bid-Craft require the job payload's tender/user
     # references and are deliberately retried rather than fabricated.
     raise ValueError(f"No dispatcher configured for {kind!r} payload")

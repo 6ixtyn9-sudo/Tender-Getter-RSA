@@ -29,3 +29,31 @@ def test_natural_language_feedback_requires_no_button():
 def test_all_commercial_plans_are_paid_codes():
     assert {p.value for p in PlanCode} == {"starter", "pro", "vip"}
     assert BillingService().entitlement({"plan_code":"vip", "status":"beta"}).bid_craft
+
+def test_agent_never_alerts_an_expired_tender():
+    t = tender(); t.closing_date = datetime.now(timezone.utc)-timedelta(minutes=1)
+    assert decide_opportunity(t, match(company(), t), source_verified=True, enrichment_confidence=.99).action == Action.SUPPRESS
+
+def test_feedback_redacts_supplier_and_tax_identifiers_before_persistence(monkeypatch):
+    from tender_getter.agents.store import AgentStore
+    captured = {}
+    class Table:
+        def insert(self, row): captured.update(row); return self
+        def execute(self): return None
+    class Client:
+        def table(self, _): return Table()
+    store = AgentStore(); store._client = Client()
+    store.record_feedback("+27123456789", "My CSD is MAAA123456 and tax pin: ABCD123456")
+    assert "MAAA123456" not in captured["raw_text"]
+    assert "ABCD123456" not in captured["raw_text"]
+
+
+def test_distributed_inbound_guard_has_development_fallback(monkeypatch):
+    from tender_getter.whatsapp import database
+    monkeypatch.setattr(database, "_use_supabase", False)
+    assert database.claim_inbound_message("sid-security-test", "+27123456789", "text")
+    assert not database.claim_inbound_message("sid-security-test", "+27123456789", "text")
+
+def test_expired_beta_has_no_entitlements():
+    expired = (datetime.now(timezone.utc) - timedelta(minutes=1)).isoformat()
+    assert not BillingService().entitlement({"plan_code":"vip", "status":"beta", "beta_expires_at": expired}).active

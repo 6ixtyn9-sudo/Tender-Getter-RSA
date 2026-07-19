@@ -4,6 +4,7 @@ The policy is deterministic and auditable. Gemini may enrich facts, but cannot
 bypass hard compliance gates or turn unknown facts into verified facts.
 """
 from dataclasses import dataclass
+from datetime import datetime, timezone
 from enum import Enum
 from typing import Any
 from ..schemas import MatchResult, TenderOpportunity
@@ -23,6 +24,8 @@ class OpportunityDecision:
 
 def decide_opportunity(tender: TenderOpportunity, result: MatchResult, *, source_verified: bool, enrichment_confidence: float = 0.0) -> OpportunityDecision:
     evidence = {"source_verified": source_verified, "has_document": bool(tender.raw_document_url), "enrichment_confidence": enrichment_confidence, "eligible": result.is_eligible, "score": result.match_score}
+    if tender.closing_date <= datetime.now(timezone.utc):
+        return OpportunityDecision(Action.SUPPRESS, 1.0, "Tender is closed or has expired.", evidence)
     if not source_verified:
         return OpportunityDecision(Action.RETRY, 0.0, "Source provenance is not verified.", evidence)
     if not result.is_eligible:

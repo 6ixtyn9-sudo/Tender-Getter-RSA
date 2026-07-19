@@ -103,6 +103,36 @@ def _dict_to_model(data: Dict, model_class):
 
 
 # ---------------------------------------------------------------------------
+# Durable inbound idempotency
+# ---------------------------------------------------------------------------
+
+def claim_inbound_message(message_sid: str, sender_phone_number: str, message_type: str, max_per_minute: int = 30) -> bool:
+    """Distributed replay + per-phone rate guard backed by PostgreSQL.
+
+    If persistence is unavailable in local development, a process fallback is
+    used. Production must use the SQL RPC supplied by the security migration.
+    """
+    if _use_supabase and _supabase:
+        try:
+            result = _supabase.rpc("accept_inbound_message", {
+                "incoming_sid": message_sid,
+                "incoming_phone": sender_phone_number,
+                "incoming_type": message_type,
+                "max_per_minute": max_per_minute,
+            }).execute()
+            return bool(result.data)
+        except Exception:
+            logger.exception("Inbound guard RPC unavailable")
+            return False  # fail closed in production
+    key = f"inbound:{message_sid}"
+    with _memory_lock:
+        if key in _memory_store["outbound_messages"]:
+            return False
+        _memory_store["outbound_messages"][key] = {"message_sid": key}
+    return True
+
+
+# ---------------------------------------------------------------------------
 # WhatsApp User Operations
 # ---------------------------------------------------------------------------
 
@@ -256,8 +286,7 @@ def get_media_message(user_id: str, message_sid: str) -> Optional[MediaMessage]:
         except Exception as e:
             logger.error(f"Supabase get_media_message error: {e}")
     
-    key = f"{user_id}_{message_sid}"
-    return _dict_to_model(_memory_get("media_messages", key), MediaMessage)
+    return _dict_to_model(_memory_get("media_messages", message_sid), MediaMessage)
 
 
 # ---------------------------------------------------------------------------

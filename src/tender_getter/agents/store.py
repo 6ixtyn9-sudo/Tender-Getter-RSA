@@ -28,7 +28,13 @@ class AgentStore:
         if self._client: self._client.table("agent_actions").insert(row).execute()
 
     def record_feedback(self, owner_phone_number: str, raw_text: str, *, tender_id: str | None = None, intent: str | None = None, sentiment: str = "neutral", confidence: float = 0.0, signals: dict[str, Any] | None = None) -> None:
-        row = {"owner_phone_number": owner_phone_number, "raw_text": raw_text, "tender_id": tender_id, "intent": intent, "sentiment": sentiment, "confidence": confidence, "extracted_signals": signals or {}}
+        # Feedback is useful; secrets and identifiers are not. Store a bounded,
+        # redacted signal rather than unrestricted WhatsApp text.
+        import re
+        safe = raw_text[:1000]
+        safe = re.sub(r"\bMAAA[0-9A-Z-]+\b", "[CSD_REDACTED]", safe, flags=re.I)
+        safe = re.sub(r"\b(?:tax\s*pin|pin)\s*[:#-]?\s*[A-Z0-9-]{6,}\b", "[TAX_PIN_REDACTED]", safe, flags=re.I)
+        row = {"owner_phone_number": owner_phone_number, "raw_text": safe, "tender_id": tender_id, "intent": intent, "sentiment": sentiment, "confidence": confidence, "extracted_signals": signals or {}}
         if self._client: self._client.table("natural_language_feedback").insert(row).execute()
 
     def claim_next(self, worker_name: str) -> dict | None:
@@ -43,6 +49,13 @@ class AgentStore:
     def finish(self, job_id: str, *, error: str | None = None) -> None:
         if not self._client: return
         if error:
-            self._client.table("agent_jobs").update({"status": "retry", "last_error": error}).eq("id", job_id).execute()
+            from datetime import timedelta
+            rows = self._client.table("agent_jobs").select("attempts").eq("id", job_id).execute().data
+            attempts = int(rows[0]["attempts"]) if rows else 1
+            if attempts >= 5:
+                values = {"status": "dead_letter", "last_error": error}
+            else:
+                values = {"status": "retry", "last_error": error, "run_after": (datetime.now(timezone.utc) + timedelta(minutes=min(60, 2 ** attempts))).isoformat()}
+            self._client.table("agent_jobs").update(values).eq("id", job_id).execute()
         else:
             self._client.table("agent_jobs").update({"status": "succeeded", "last_error": None}).eq("id", job_id).execute()

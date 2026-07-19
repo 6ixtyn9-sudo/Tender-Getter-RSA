@@ -22,10 +22,14 @@ class PaystackProvider:
     name = "paystack"
     def __init__(self, secret_key: str | None): self.secret_key = secret_key
     async def create_checkout(self, *, reference: str, email: str, amount_cents: int, interval: str, metadata: dict[str, Any]) -> Checkout:
-        if not self.secret_key: raise ProviderNotConfigured("Paystack is not configured")
+        import os
+        plan_key = f"PAYSTACK_PLAN_{metadata['plan'].upper()}_{interval.upper()}"
+        provider_plan = os.getenv(plan_key)
+        if not self.secret_key or not provider_plan:
+            raise ProviderNotConfigured(f"Paystack recurring plan is not configured ({plan_key})")
         import httpx
         async with httpx.AsyncClient(timeout=20) as client:
-            response = await client.post("https://api.paystack.co/transaction/initialize", headers={"Authorization": f"Bearer {self.secret_key}"}, json={"email": email, "amount": amount_cents, "reference": reference, "metadata": {**metadata, "billing_interval": interval}})
+            response = await client.post("https://api.paystack.co/transaction/initialize", headers={"Authorization": f"Bearer {self.secret_key}", "Idempotency-Key": reference}, json={"email": email, "amount": amount_cents, "reference": reference, "plan": provider_plan, "callback_url": os.getenv("BILLING_CALLBACK_URL"), "metadata": {**metadata, "billing_interval": interval}})
             response.raise_for_status(); data = response.json()["data"]
         return Checkout(self.name, data.get("reference", reference), data["authorization_url"])
     def verify_webhook(self, body: bytes, signature: str) -> bool:

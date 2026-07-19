@@ -34,7 +34,8 @@ The system must never present uncertain information as verified or claim that a 
 
 ```bash
 supabase db push
-# Configure production secrets: PAYSTACK_SECRET_KEY and selected provider credentials.
+# Configure production secrets: PAYSTACK_SECRET_KEY, PAYSTACK_PLAN_* and selected provider credentials.
+# Deploy scripts/agent_worker.py as a durable Cloud Run Job/worker.
 # Seed the approved paid plan catalogue; do not invent prices in code.
 PYTHONPATH=src:. pytest -q
 ```
@@ -42,3 +43,7 @@ PYTHONPATH=src:. pytest -q
 ## Required remaining provider work
 
 The code provides the correct durable data model and checkout boundary. Provider credentials, merchant approval, actual plan/product identifiers, webhook secrets, debit-order mandate configuration and approved commercial pricing are business-controlled inputs and cannot be safely fabricated in source code.
+
+## Security Resilience gate
+
+Do not enable real checkout, debit orders or unattended document processing until the controls in [Security Resilience Readiness](Security Resilience-readiness.md) are executed and evidenced.

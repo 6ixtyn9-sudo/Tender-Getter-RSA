@@ -428,8 +428,13 @@ class AIMessageHandler:
         return await self._create_checkout(user, plan, interval, email)
 
     async def _handle_manage_billing(self, user: WhatsAppUser, intent: ClassifiedIntent, message_sid: str) -> str:
-        return ("I can help with your subscription, annual renewal, invoice, cancellation or debit-order mandate. "
-                "Tell me what you need in your own words—for example: _switch to annual_, _send my invoice_, or _set up debit order_.")
+        text = intent.original_text.lower()
+        from ..billing.service import BillingService
+        billing = BillingService()
+        if any(word in text for word in ("paid", "payment status", "my plan", "am i", "confirm payment", "subscription status")):
+            return billing.status_message(user.phone_number)
+        return ("I can check your payment status using this WhatsApp number, manage annual renewal, or start a debit-order mandate. "
+                "Tell me naturally—for example: _have I paid?_, _switch to annual_, or _set up debit order_.")
 
     async def _handle_bid_craft(self, user: WhatsAppUser, intent: ClassifiedIntent, message_sid: str) -> str:
         from ..billing.service import BillingService

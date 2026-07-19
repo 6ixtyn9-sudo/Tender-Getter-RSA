@@ -62,7 +62,7 @@ Khumalo Cleaners,2023/222222/07,MAAA0222222,2,51.0,KwaZulu-Natal,Durban,Cleaning
 
 
 # ---------------------------------------------------------------------------
-# Red Team & Stress-Test Pipeline Resilience Unit Tests
+# Adversarial Input & Pipeline Resilience Unit Tests
 # ---------------------------------------------------------------------------
 
 def test_verbal_and_numeric_date_resilience():

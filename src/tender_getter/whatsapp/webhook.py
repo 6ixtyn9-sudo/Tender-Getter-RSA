@@ -20,7 +20,7 @@ from fastapi.responses import Response
 from twilio.request_validator import RequestValidator
 from twilio.twiml.messaging_response import MessagingResponse
 
-from .database import create_media_message, update_media_message, upsert_user
+from .database import claim_inbound_message, create_media_message, update_media_message, upsert_user
 from .media import download_media, guess_document_type, parse_document_with_gemini, upload_to_supabase
 from .models import DocumentType, MediaMessage, VerificationStatus, WhatsAppUser
 from .outbound import send_text_message
@@ -126,7 +126,8 @@ async def whatsapp_webhook(
     phone = clean_phone(From)
     if not _allow_request(phone):
         raise HTTPException(status_code=429, detail="Rate limit exceeded")
-    if not _mark_seen(MessageSid):
+    message_type = "media" if NumMedia > 0 else "text"
+    if not claim_inbound_message(MessageSid, phone, message_type) or not _mark_seen(MessageSid):
         return Response(content="<Response/>", media_type="application/xml")
 
     user = get_or_create_user(From)
@@ -153,6 +154,8 @@ async def whatsapp_webhook(
 async def paystack_billing_webhook(request: Request):
     """Idempotently activate a paid entitlement after verified hosted checkout."""
     body = await request.body()
+    if len(body) > 512_000:
+        raise HTTPException(status_code=413, detail="Payment payload too large")
     from ..billing.service import BillingService
     service = BillingService()
     if not service.provider.verify_webhook(body, request.headers.get("x-paystack-signature", "")):
@@ -165,12 +168,31 @@ async def paystack_billing_webhook(request: Request):
     # not create another subscription or change entitlement state.
     existing = service.client.table("payment_events").select("id").eq("provider", "paystack").eq("provider_event_id", str(event_id)).execute().data
     if existing: return Response(status_code=204)
-    service.client.table("payment_events").insert({"provider": "paystack", "provider_event_id": str(event_id), "event_type": event.get("event", "unknown"), "payload": event, "processed_at": datetime.utcnow().isoformat()}).execute()
+    try:
+        service.client.table("payment_events").insert({"provider": "paystack", "provider_event_id": str(event_id), "event_type": event.get("event", "unknown"), "payload": event, "processed_at": datetime.utcnow().isoformat()}).execute()
+    except Exception as exc:
+        # The UNIQUE(provider, provider_event_id) constraint is the final race
+        # barrier when two provider retries arrive at different instances.
+        if "duplicate" in str(exc).lower() or "23505" in str(exc): return Response(status_code=204)
+        raise
     if event.get("event") == "charge.success":
-        metadata = event.get("data", {}).get("metadata", {}) or {}
-        if all(metadata.get(k) for k in ("registration_number", "owner_phone", "plan")):
-            interval = metadata.get("billing_interval", "monthly")
-            service.client.table("company_subscriptions").upsert({"registration_number": metadata["registration_number"], "owner_phone_number": metadata["owner_phone"], "plan_code": metadata["plan"], "status": "active", "billing_provider": "paystack", "provider_customer_id": str(event.get("data", {}).get("customer", {}).get("customer_code", "")), "provider_subscription_id": str(event.get("data", {}).get("reference", event_id)), "billing_interval": interval}, on_conflict="registration_number").execute()
+        payment = event.get("data", {}) or {}
+        reference = str(payment.get("reference", ""))
+        sessions = service.client.table("checkout_sessions").select("*").eq("provider", "paystack").eq("provider_reference", reference).execute().data
+        if not sessions:
+            logger.error("Verified payment has no matching checkout session: %s", reference)
+            return Response(status_code=204)
+        session = sessions[0]
+        if int(payment.get("amount", -1)) != int(session["amount_cents"]) or payment.get("currency", "ZAR") != session["currency"]:
+            logger.error("Payment amount/currency mismatch for checkout %s", reference)
+            return Response(status_code=204)
+        service.client.table("checkout_sessions").update({"status": "paid"}).eq("id", session["id"]).execute()
+        service.client.table("company_subscriptions").upsert({"registration_number": session["registration_number"], "owner_phone_number": session["owner_phone_number"], "plan_code": session["plan_code"], "status": "active", "billing_provider": "paystack", "provider_customer_id": str(payment.get("customer", {}).get("customer_code", "")), "provider_subscription_id": reference, "billing_interval": session["billing_interval"], "last_payment_at": datetime.utcnow().isoformat()}, on_conflict="registration_number").execute()
+        try:
+            confirmation_sid = send_text_message(session["owner_phone_number"], f"✅ Payment confirmed. Your *{session['plan_code'].title()}* plan is active. Your payment reference is *{session['customer_reference']}*.")
+            service.client.table("company_subscriptions").update({"payment_confirmation_message_sid": confirmation_sid}).eq("registration_number", session["registration_number"]).execute()
+        except Exception:
+            logger.exception("Payment was activated but WhatsApp confirmation could not be sent")
     return Response(status_code=204)
 
 
@@ -192,7 +214,12 @@ async def handle_media_upload(user: WhatsAppUser, message_sid: str, media_url: s
     guessed = guess_document_type(media_type)
     media = MediaMessage(message_sid=message_sid, user_id=user.phone_number, media_url=media_url, media_content_type=media_type, guessed_type=guessed)
     create_media_message(media)
-    background_tasks.add_task(process_media_async, media, user)
+    # Production processing is durable and picked up by agent_worker. Local
+    # development keeps a fast in-process path for a simple smoke-test loop.
+    from ..agents.store import AgentStore
+    AgentStore().enqueue("process_document", {"message_sid": message_sid, "owner_phone": user.phone_number}, f"process_document:{message_sid}")
+    if ENV != "production":
+        background_tasks.add_task(process_media_async, media, user)
     label = guessed.value.replace("_", " ") if guessed else "document"
     return f"📄 Received your {label}. I’m securely checking it now. Type *profile* shortly for the updated verification status."
 
