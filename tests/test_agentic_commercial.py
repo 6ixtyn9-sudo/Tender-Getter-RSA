@@ -61,3 +61,12 @@ def test_expired_beta_has_no_entitlements():
 def test_expiry_requires_the_correct_status_timestamp():
     future = (datetime.now(timezone.utc) + timedelta(days=1)).isoformat()
     assert BillingService().entitlement({"plan_code":"vip", "status":"trial", "trial_expires_at":future}).bid_craft
+
+def test_tax_modes_calculate_checkout_totals_without_guessing():
+    service = BillingService()
+    service.tax_configuration = lambda: {"tax_mode": "not_registered", "vat_rate_percent": 15}
+    assert service.checkout_amounts(24900) == (24900, 0, 24900, "not_registered")
+    service.tax_configuration = lambda: {"tax_mode": "vat_exclusive", "vat_rate_percent": 15}
+    assert service.checkout_amounts(24900) == (24900, 3735, 28635, "vat_exclusive")
+    service.tax_configuration = lambda: {"tax_mode": "vat_inclusive", "vat_rate_percent": 15}
+    assert service.checkout_amounts(24900) == (21652, 3248, 24900, "vat_inclusive")

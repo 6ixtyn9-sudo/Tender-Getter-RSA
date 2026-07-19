@@ -138,3 +138,7 @@ python scripts/twilio/create_templates.py
 ## Agentic commercial beta
 
 Tender Getter is designed as a WhatsApp-first autonomous procurement agent. Customer plans are paid (`starter`, `pro`, `vip`); beta access is an explicit, expiring entitlement. See [Agentic Commercial Beta](docs/agentic-commercial-beta.md) for the billing, debit-order, autonomous-agent and VIP Bid-Craft rollout.
+
+## Payments and tax
+
+Tender Getter is currently configured as not VAT registered; no VAT is charged. Customer-facing payment language remains bank-neutral: secure card payment, secure bank payment, or debit order depending on customer availability. See [Payments and Tax Presentation Policy](docs/payments-and-tax-policy.md).

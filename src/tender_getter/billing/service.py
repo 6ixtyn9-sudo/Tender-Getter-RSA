@@ -42,17 +42,41 @@ class BillingService:
         rows = self.client.table("company_subscriptions").select("plan_code,status,current_period_end,beta_expires_at,trial_expires_at").eq("registration_number", registration_number).execute().data
         return self.entitlement(rows[0] if rows else None)
 
+    def tax_configuration(self) -> dict:
+        if not self.client:
+            return {"tax_mode": "not_registered", "vat_rate_percent": 15.0}
+        rows = self.client.table("billing_tax_configuration").select("*").eq("singleton", True).execute().data
+        return rows[0] if rows else {"tax_mode": "not_registered", "vat_rate_percent": 15.0}
+
+    def checkout_amounts(self, catalogue_amount_cents: int) -> tuple[int, int, int, str]:
+        """Return subtotal, tax, total and mode from the database-owned tax policy."""
+        config = self.tax_configuration(); mode = config["tax_mode"]; rate = float(config["vat_rate_percent"]) / 100
+        if mode == "vat_exclusive":
+            tax = round(catalogue_amount_cents * rate)
+            return catalogue_amount_cents, tax, catalogue_amount_cents + tax, mode
+        if mode == "vat_inclusive":
+            subtotal = round(catalogue_amount_cents / (1 + rate)) if rate else catalogue_amount_cents
+            return subtotal, catalogue_amount_cents - subtotal, catalogue_amount_cents, mode
+        return catalogue_amount_cents, 0, catalogue_amount_cents, "not_registered"
+
+    def tax_note(self) -> str:
+        mode = self.tax_configuration()["tax_mode"]
+        if mode == "not_registered": return "Tender Getter RSA is not currently VAT registered. No VAT is charged."
+        if mode == "vat_inclusive": return "VAT is included in the displayed price."
+        return "VAT is added at secure checkout where applicable."
+
     async def create_checkout(self, *, registration_number: str, owner_phone: str, email: str, plan: PlanCode, interval: BillingInterval) -> str:
         if not self.client: raise ProviderNotConfigured("Billing persistence is not configured")
         plan_row = self.client.table("subscription_plans").select("*").eq("plan_code", plan.value).eq("active", True).execute().data
         if not plan_row: raise ValueError("Selected paid plan is not available")
-        row = plan_row[0]; amount = row["monthly_amount_cents"] if interval == BillingInterval.MONTHLY else row["annual_amount_cents"]
+        row = plan_row[0]; catalogue_amount = row["monthly_amount_cents"] if interval == BillingInterval.MONTHLY else row["annual_amount_cents"]
+        subtotal, tax, amount, tax_mode = self.checkout_amounts(catalogue_amount)
         # The WhatsApp owner number is the human-recognisable payment reference;
         # random entropy prevents another customer guessing or reusing it.
         phone_ref = re.sub(r"[^0-9]", "", owner_phone)[-12:]
         reference = f"TG-{phone_ref}-{secrets.token_hex(5).upper()}"
         checkout = await self.provider.create_checkout(reference=reference, email=email, amount_cents=amount, interval=interval.value, metadata={"registration_number": registration_number, "owner_phone": owner_phone, "plan": plan.value})
-        self.client.table("checkout_sessions").insert({"registration_number": registration_number, "owner_phone_number": owner_phone, "plan_code": plan.value, "billing_interval": interval.value, "provider": checkout.provider, "provider_reference": checkout.reference, "customer_reference": reference, "checkout_url": checkout.url, "amount_cents": amount, "currency": row["currency"]}).execute()
+        self.client.table("checkout_sessions").insert({"registration_number": registration_number, "owner_phone_number": owner_phone, "plan_code": plan.value, "billing_interval": interval.value, "provider": checkout.provider, "provider_reference": checkout.reference, "customer_reference": reference, "checkout_url": checkout.url, "amount_cents": amount, "subtotal_amount_cents": subtotal, "tax_amount_cents": tax, "tax_mode": tax_mode, "currency": row["currency"]}).execute()
         return checkout.url
 
     def subscription_for_phone(self, owner_phone: str) -> dict | None:
@@ -85,7 +109,8 @@ class BillingService:
             saving = (monthly * 12) - annual
             label = row["display_name"]
             lines.append(f"\n*{label}* — R{monthly:,.0f}/month or R{annual:,.0f}/year (save R{saving:,.0f})")
-        lines.append("\nReply naturally with _upgrade to Starter_, _I want Pro yearly_, or _VIP monthly_.")
+        lines.append("\n" + self.tax_note())
+        lines.append("Reply naturally with _upgrade to Starter_, _I want Pro yearly_, or _VIP monthly_.")
         return "\n".join(lines)
 
     def request_payment_method(self, registration_number: str, owner_phone: str, method: str) -> None:
