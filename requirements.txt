@@ -2,7 +2,8 @@
 pydantic>=2.0
 pdfplumber>=0.10
 pypdf>=4.0
-google-generativeai>=0.7
+# google-generativeai is deprecated/EOL — use the unified google-genai SDK
+google-genai>=1.0
 python-dotenv>=1.0
 pytest>=8.0
 psycopg2-binary>=2.9

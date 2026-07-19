@@ -9,7 +9,7 @@ Existing tender notification systems in South Africa (charging R250 - R800/month
 Tender Getter RSA is different — we do the actual heavy lifting:
 
 Automated Gatekeeper: Screens tenders instantly against client company profiles (CSD registration, SARS Tax status, geographical local-content targets, and CIDB grading capacity limits) before the client wastes time reading.
-Scanned PDF Compliance Sieve: Uses Gemini 1.5 Pro to parse messy, scanned, 100-page tender documents and extract a precise, structured compliance scorecard in seconds.
+Scanned PDF Compliance Sieve: Uses Gemini 2.5 Pro to parse messy, scanned, 100-page tender documents and extract a precise, structured compliance scorecard in seconds.
 Bid-Craft Proposal Co-Pilot: Generates custom-synthesized executive summaries, compliance checklists, and professional project methodologies tailored to the tender's exact evaluation criteria.
 🛠️ Repository Architecture & Tech Stack
 The system is built to be modular, offline-first, highly reliable, and zero-latency:
@@ -53,7 +53,7 @@ Outputs are saved directly to localdata/TG_REPORT_*.md.
 Category: Small Business Services
 Build Window: May 19 — August 17, 2026
 Production Deployment: Google Cloud Run (Containerized Serverless Engine)
-LLM Engine: Gemini 1.5 Pro (Deep Document Auditing) & Gemini 1.5 Flash (Categorization)
+LLM Engine: Gemini 2.5 Pro (Deep Document Auditing) & Gemini 2.5 Flash (Categorization)
 Disclaimer: Tender Getter RSA is an independent software tool utilizing AI-native analytics. Bidders must verify all final compliance items with official state platforms (CSD, SARS, CIDB).Tender Getter RSA 🇿🇦💎
 An AI-native B2B procurement co-pilot and matchmaking platform that instantly screens, filters, and pairs South African SMMEs (Small, Medium, and Micro Enterprises) with active government and corporate tenders, while auto-generating compliance checklists and win-strategy proposals.
 
@@ -65,7 +65,7 @@ Existing tender notification systems in South Africa (charging R250 - R800/month
 Tender Getter RSA is different — we do the actual heavy lifting:
 
 Automated Gatekeeper: Screens tenders instantly against client company profiles (CSD registration, SARS Tax status, geographical local-content targets, and CIDB grading capacity limits) before the client wastes time reading.
-Scanned PDF Compliance Sieve: Uses Gemini 1.5 Pro to parse messy, scanned, 100-page tender documents and extract a precise, structured compliance scorecard in seconds.
+Scanned PDF Compliance Sieve: Uses Gemini 2.5 Pro to parse messy, scanned, 100-page tender documents and extract a precise, structured compliance scorecard in seconds.
 Bid-Craft Proposal Co-Pilot: Generates custom-synthesized executive summaries, compliance checklists, and professional project methodologies tailored to the tender's exact evaluation criteria.
 🛠️ Repository Architecture & Tech Stack
 The system is built to be modular, offline-first, highly reliable, and zero-latency:
@@ -109,7 +109,7 @@ Outputs are saved directly to localdata/TG_REPORT_*.md.
 Category: Small Business Services
 Build Window: May 19 — August 17, 2026
 Production Deployment: Google Cloud Run (Containerized Serverless Engine)
-LLM Engine: Gemini 1.5 Pro (Deep Document Auditing) & Gemini 1.5 Flash (Categorization)
+LLM Engine: Gemini 2.5 Pro (Deep Document Auditing) & Gemini 2.5 Flash (Categorization)
 Disclaimer: Tender Getter RSA is an independent software tool utilizing AI-native analytics. Bidders must verify all final compliance items with official state platforms (CSD, SARS, CIDB).
 ## Repository layout
 

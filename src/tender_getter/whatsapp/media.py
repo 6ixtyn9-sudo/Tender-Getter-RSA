@@ -22,7 +22,7 @@ SUPABASE_BUCKET = os.getenv("SUPABASE_STORAGE_BUCKET", "whatsapp-media")
 
 # Gemini configuration
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
-GEMINI_MODEL = os.getenv("GEMINI_MODEL_VISION", "gemini-1.5-pro")
+GEMINI_MODEL = os.getenv("GEMINI_MODEL_VISION", "gemini-2.5-flash")
 
 
 # ---------------------------------------------------------------------------
@@ -226,28 +226,41 @@ async def parse_document_with_gemini(
         return None
     
     try:
-        import google.generativeai as genai
-        
-        # Configure Gemini
-        genai.configure(api_key=GEMINI_API_KEY)
-        model = genai.GenerativeModel(GEMINI_MODEL)
-        
+        from google import genai
+        from google.genai import types as genai_types
+
+        # google-genai uses a per-key client (no global configure()).
+        client = genai.Client(api_key=GEMINI_API_KEY)
+
         # Prepare prompt based on document type
         prompt = _build_parsing_prompt(hint_type)
-        
-        # Prepare image/PDF for Gemini
+
+        # Prepare image/PDF/text for Gemini
         if mime_type.startswith("image/"):
             image = Image.open(io.BytesIO(content))
-            response = model.generate_content([prompt, image])
+            response = client.models.generate_content(
+                model=GEMINI_MODEL,
+                contents=[prompt, image],
+            )
         elif "pdf" in mime_type:
-            # For PDF, we'd need to convert to images first
-            # Simplified: try as image
-            response = model.generate_content([prompt, content])
+            # Native inline PDF support — send the document bytes directly.
+            response = client.models.generate_content(
+                model=GEMINI_MODEL,
+                contents=[
+                    prompt,
+                    genai_types.Part.from_bytes(
+                        data=content, mime_type="application/pdf"
+                    ),
+                ],
+            )
         else:
             # Try as text
             text = content.decode("utf-8", errors="ignore")
-            response = model.generate_content([prompt, text])
-        
+            response = client.models.generate_content(
+                model=GEMINI_MODEL,
+                contents=[prompt, text],
+            )
+
         # Parse JSON response
         return _parse_gemini_response(response.text)
         

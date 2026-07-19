@@ -36,7 +36,7 @@ create_secret() {
 echo "Creating secrets (values hidden)..."
 create_secret "twilio-account-sid" "Enter Twilio Account SID (ACxxxx):"
 create_secret "twilio-auth-token" "Enter Twilio Auth Token:"
-create_secret "gemini-api-keys" "Enter 7 Gemini API keys (comma-separated):"
+create_secret "tg-gemini-api-key" "Enter 7 Gemini API keys (comma-separated):"
 create_secret "supabase-url" "Enter Supabase URL (https://xxx.supabase.co):"
 create_secret "supabase-service-key" "Enter Supabase Service Role Key:"
 create_secret "supabase-bucket" "Enter Supabase Storage Bucket (default: whatsapp-media):" 
@@ -52,7 +52,7 @@ if [[ -z "${SERVICE_ACCOUNT}" ]]; then
 fi
 
 echo "🔑 Granting ${SERVICE_ACCOUNT} access to secrets..."
-for secret in twilio-account-sid twilio-auth-token gemini-api-keys supabase-url supabase-service-key supabase-bucket; do
+for secret in twilio-account-sid twilio-auth-token tg-gemini-api-key supabase-url supabase-service-key supabase-bucket; do
     gcloud secrets add-iam-policy-binding "${secret}" \
         --member="serviceAccount:${SERVICE_ACCOUNT}" \
         --role="roles/secretmanager.secretAccessor" \
@@ -64,7 +64,7 @@ echo "☁️ Updating Cloud Run service with secret references..."
 gcloud run services update "${SERVICE_NAME}" \
     --region="${REGION}" \
     --project="${PROJECT_ID}" \
-    --update-secrets="TWILIO_ACCOUNT_SID=twilio-account-sid:latest,TWILIO_AUTH_TOKEN=twilio-auth-token:latest,GEMINI_API_KEY=gemini-api-keys:latest,SUPABASE_URL=supabase-url:latest,SUPABASE_SERVICE_ROLE_KEY=supabase-service-key:latest,SUPABASE_STORAGE_BUCKET=supabase-bucket:latest"
+    --update-secrets="TWILIO_ACCOUNT_SID=twilio-account-sid:latest,TWILIO_AUTH_TOKEN=twilio-auth-token:latest,GEMINI_API_KEY=tg-gemini-api-key:latest,SUPABASE_URL=supabase-url:latest,SUPABASE_SERVICE_ROLE_KEY=supabase-service-key:latest,SUPABASE_STORAGE_BUCKET=supabase-bucket:latest"
 
 echo ""
 echo "✅ Secrets configured! Service will restart with new secrets."

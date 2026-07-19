@@ -471,7 +471,7 @@ sources.yaml is a derived artifact. Do not edit it manually. The Python file tre
 Use GenericSource from sources/generic.py automatically – just append a YAML entry and the aggregator picks it up. Only write a bespoke plug-in if the entity has a genuinely unique parser (e.g. eTenders OCDS API, eTenders CSV bulk import).
 Honour live: false. If a source is known to be inactive, set it false in YAML. The aggregator will skip it without raising errors.
 All sources are mock-backed. First sync will yield mock data unless you've verified liveness. Verify liveness via scripts/doctor.py before flipping live: true.
-Verified Python Environment: Install standard lightweight requirements: pydantic, sqlite3, pypdf, pdfplumber, google-generativeai, python-dotenv, supabase, pyyaml, psycopg2-binary.
+Verified Python Environment: Install standard lightweight requirements: pydantic, sqlite3, pypdf, pdfplumber, google-genai, python-dotenv, supabase, pyyaml, psycopg2-binary.
 
 Build src/tender_getter/schemas.py: Standardize the Pydantic models – DONE.
 Build src/tender_getter/matcher.py: Write the binary gates and the BBBEE 80/20 & 90/10 point mapping – DONE.

@@ -1,15 +1,19 @@
 """
 Tender Getter AI Gateway — 7-key Gemini gateway with rate limiting and key rotation.
 No fallbacks, no OpenRouter, single user type (SMME owner).
+
+SDK: google-genai (the successor to the end-of-life google-generativeai package).
 """
 
 import asyncio
 import logging
 import os
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Any, Optional
 
-import google.generativeai as genai
+from google import genai
+from google.genai import errors as genai_errors
+from google.genai import types as genai_types
 
 logger = logging.getLogger(__name__)
 
@@ -20,8 +24,12 @@ logger = logging.getLogger(__name__)
 
 @dataclass
 class GatewayConfig:
-    primary_model: str = "gemini-1.5-flash"
-    fallback_model: str = "gemini-1.5-flash-8b"
+    primary_model: str = field(
+        default_factory=lambda: os.getenv("GEMINI_MODEL_PRIMARY", "gemini-2.5-flash")
+    )
+    fallback_model: str = field(
+        default_factory=lambda: os.getenv("GEMINI_MODEL_FALLBACK", "gemini-2.5-flash-lite")
+    )
     max_retries: int = 2
     base_delay_ms: int = 800
     max_concurrent: int = 3
@@ -108,13 +116,25 @@ class AIGateway:
     """
     7-key Gemini gateway with automatic key rotation on 429.
     No OpenRouter, no model fallback, single SMME owner persona.
+
+    Uses one cached ``genai.Client`` per API key (the google-genai SDK is
+    client-per-key rather than the old global ``genai.configure()``).
     """
 
     def __init__(self, config: Optional[GatewayConfig] = None):
         self.config = config or GatewayConfig()
         self.key_manager = KeyManager(self.config)
         self.limiter = ConcurrencyLimiter(self.config.max_concurrent)
+        self._clients: dict[str, genai.Client] = {}
         self._reset_task_started = False
+
+    def _client_for(self, key: str) -> genai.Client:
+        """Return the cached google-genai client for a key, creating it on first use."""
+        client = self._clients.get(key)
+        if client is None:
+            client = genai.Client(api_key=key)
+            self._clients[key] = client
+        return client
 
     def _ensure_reset_task(self) -> None:
         """Start periodic key reset task on first use."""
@@ -168,18 +188,17 @@ class AIGateway:
             return {"error": "All 7 Gemini keys exhausted"}
 
         try:
-            genai.configure(api_key=key)
-            gemini_model = genai.GenerativeModel(model)
+            client = self._client_for(key)
+            gemini_contents = self._convert_messages(messages)
 
-            gemini_messages = self._convert_messages(messages)
-
-            response = await gemini_model.generate_content_async(
-                contents=gemini_messages,
-                generation_config=genai.types.GenerationConfig(
+            response = await client.aio.models.generate_content(
+                model=model,
+                contents=gemini_contents,
+                config=genai_types.GenerateContentConfig(
+                    system_instruction=system_prompt,
                     temperature=temperature,
                     max_output_tokens=2048,
                 ),
-                system_instruction=system_prompt,
             )
 
             text = response.text or ""
@@ -187,6 +206,25 @@ class AIGateway:
                 return {"error": "Empty response from Gemini"}
 
             return {"reply": text.strip()}
+
+        except genai_errors.APIError as e:
+            error_msg = e.message or str(e)
+            logger.warning(f"[TG-AI] Gemini error with key {key[:8]}...: {error_msg}")
+
+            if e.code == 429 or "quota" in error_msg.lower():
+                self.key_manager.mark_exhausted(key)
+                used_keys.add(key)
+                return await self._call_gemini_with_rotation(
+                    model, system_prompt, messages, temperature, used_keys
+                )
+
+            if e.code == 503 or "overload" in error_msg.lower():
+                await asyncio.sleep(self.config.base_delay_ms / 1000)
+                return await self._call_gemini_with_rotation(
+                    model, system_prompt, messages, temperature, used_keys
+                )
+
+            return {"error": error_msg}
 
         except Exception as e:
             error_msg = str(e)
@@ -207,16 +245,19 @@ class AIGateway:
 
             return {"error": error_msg}
 
-    def _convert_messages(self, messages: list[dict[str, str]]) -> list[dict]:
-        """Convert standard messages to Gemini format."""
+    def _convert_messages(self, messages: list[dict[str, str]]) -> list[genai_types.Content]:
+        """Convert standard messages to google-genai ``Content`` objects."""
         converted = []
         for m in messages:
             role = m.get("role", "user")
             content = m.get("content", "")
-            if role == "assistant":
-                converted.append({"role": "model", "parts": [content]})
-            else:
-                converted.append({"role": "user", "parts": [content]})
+            gemini_role = "model" if role == "assistant" else "user"
+            converted.append(
+                genai_types.Content(
+                    role=gemini_role,
+                    parts=[genai_types.Part.from_text(text=content)],
+                )
+            )
         return converted
 
     async def health_check(self) -> dict[str, Any]:

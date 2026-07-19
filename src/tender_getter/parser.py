@@ -26,7 +26,8 @@ except ImportError:
     _PDFPLUMBER_AVAILABLE = False
 
 try:
-    import google.generativeai as genai  # type: ignore
+    from google import genai as _genai  # type: ignore
+    from google.genai import types as _genai_types  # type: ignore
     _GENAI_AVAILABLE = True
 except ImportError:
     _GENAI_AVAILABLE = False
@@ -107,7 +108,7 @@ def parse_tender_pdf(pdf_path: str | Path) -> dict:
     missing values as None/null).
 
     Raises:
-      ImportError  – if pdfplumber or google-generativeai are not installed.
+      ImportError  – if pdfplumber or google-genai are not installed.
       ValueError   – if Gemini returns unparseable JSON.
       RuntimeError – if GEMINI_API_KEY is not set.
     """
@@ -123,8 +124,8 @@ def parse_tender_pdf(pdf_path: str | Path) -> dict:
 
     if not _GENAI_AVAILABLE:
         raise ImportError(
-            "google-generativeai is required. "
-            "Install it with: pip install google-generativeai"
+            "google-genai is required. "
+            "Install it with: pip install google-genai"
         )
 
     # Stage 1 — local pre-screener
@@ -133,12 +134,14 @@ def parse_tender_pdf(pdf_path: str | Path) -> dict:
         reduced_text = "(No SBD-keyword pages found — sending first 3 pages as fallback.)"
 
     # Stage 2 — Gemini extraction
-    genai.configure(api_key=api_key)
-    model = genai.GenerativeModel(
-        model_name=GEMINI_MODEL,
-        system_instruction=EXTRACTION_SYSTEM_PROMPT,
+    client = _genai.Client(api_key=api_key)
+    response = client.models.generate_content(
+        model=GEMINI_MODEL,
+        contents=reduced_text,
+        config=_genai_types.GenerateContentConfig(
+            system_instruction=EXTRACTION_SYSTEM_PROMPT,
+        ),
     )
-    response = model.generate_content(reduced_text)
     raw_json = _extract_json_block(response.text)
 
     try:
