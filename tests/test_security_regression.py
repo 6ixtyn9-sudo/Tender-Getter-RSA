@@ -1447,3 +1447,143 @@ def test_default_chain_excludes_stale_mirrors():
     sources = [p.source for p in _DEFAULT_PROVIDERS]
     assert sources == ["csd.gov.za", "registers.cidb.org.za", "cipc"]
     assert not any("opencorporates" in s for s in sources)
+
+
+# ---------------------------------------------------------------------------
+# 29 — CSD Registration Report evidence fields (ROUND 7)
+# ---------------------------------------------------------------------------
+
+
+def _csd_parsed(**over):
+    base = {"csd_number": "MAAA1234567", "registration_number": "2020/111111/07", "company_name": "Example Trading"}
+    base.update(over)
+    return base
+
+
+def _iso_days_ago(days):
+    from datetime import datetime, timedelta, timezone
+
+    return (datetime.now(timezone.utc).date() - timedelta(days=days)).isoformat()
+
+
+def test_csd_fresh_report_negative_boolean_fails():
+    from tender_getter.whatsapp.models import DocumentType, VerificationStatus
+    import unittest.mock as m, tender_getter.whatsapp.webhook as webhook
+
+    user = _mk_user()
+    with m.patch.object(webhook, "upsert_user", lambda u: None):
+        asyncio.run(webhook.update_user_from_parsed_data(
+            user, DocumentType.CSD_LETTER,
+            _csd_parsed(csd_supplier_active=False, csd_report_date=_iso_days_ago(0)), None))
+    assert user.csd_status == VerificationStatus.FAILED
+
+
+def test_csd_fresh_report_negative_status_string_fails(monkeypatch):
+    from tender_getter.whatsapp.models import DocumentType, VerificationStatus
+
+    user = _mk_user()
+    _run_update(monkeypatch, user, DocumentType.CSD_LETTER,
+                _csd_parsed(csd_business_status="AR Final Deregistration", csd_report_date=_iso_days_ago(2)))
+    assert user.csd_status == VerificationStatus.FAILED
+
+
+def test_csd_string_false_never_auto_fails(monkeypatch):
+    """LLM-parsed strings are not JSON booleans — 'false' the string must not fail anyone."""
+    from tender_getter.whatsapp.models import DocumentType, VerificationStatus
+
+    user = _mk_user()  # autouse registry stub returns ACTIVE
+    _run_update(monkeypatch, user, DocumentType.CSD_LETTER,
+                _csd_parsed(csd_supplier_active="false", csd_report_date=_iso_days_ago(1)))
+    assert user.csd_status == VerificationStatus.VERIFIED
+
+
+def test_csd_in_business_positive_corroborates_not_blesses(monkeypatch):
+    """Positive report fields alone flip nothing — MAAA + registry allow still decide."""
+    from tender_getter.whatsapp.models import DocumentType, VerificationStatus
+
+    user = _mk_user()
+    _run_update(monkeypatch, user, DocumentType.CSD_LETTER, _csd_parsed(
+        csd_supplier_active=True, csd_business_status="In Business", csd_report_date=_iso_days_ago(1)))
+    assert user.csd_status == VerificationStatus.VERIFIED  # MAAA matched + registry allowed
+
+    user2 = _mk_user()
+    parsed = _csd_parsed(csd_supplier_active=True, csd_business_status="In Business",
+                         csd_report_date=_iso_days_ago(1))
+    del parsed["csd_number"]  # positive fields without a valid MAAA verify nothing
+    _run_update(monkeypatch, user2, DocumentType.CSD_LETTER, parsed)
+    assert user2.csd_status != VerificationStatus.VERIFIED
+
+
+def test_csd_stale_report_negative_does_not_auto_fail(monkeypatch):
+    from tender_getter.whatsapp.models import DocumentType, VerificationStatus
+
+    _stub_registry(monkeypatch, RegistryStatus.UNKNOWN)
+    user = _mk_user()
+    _run_update(monkeypatch, user, DocumentType.CSD_LETTER,
+                _csd_parsed(csd_supplier_active=False, csd_report_date=_iso_days_ago(90)))
+    assert user.csd_status == VerificationStatus.PENDING  # held, not failed
+    assert user.csd_status != VerificationStatus.FAILED
+
+
+def test_csd_missing_and_unparseable_dates_neutralize_negative(monkeypatch):
+    from tender_getter.whatsapp.models import DocumentType, VerificationStatus
+
+    _stub_registry(monkeypatch, RegistryStatus.UNKNOWN)
+    for bad_date in (None, "", "24 Apr 2025 07:19:06.531 AM", "not-a-date", "2025-13-99"):
+        user = _mk_user()
+        _run_update(monkeypatch, user, DocumentType.CSD_LETTER,
+                    _csd_parsed(csd_supplier_active=False, csd_report_date=bad_date))
+        assert user.csd_status == VerificationStatus.PENDING, bad_date
+
+
+def test_csd_future_dated_report_is_not_fresh(monkeypatch):
+    _stub_registry(monkeypatch, RegistryStatus.UNKNOWN)
+    from tender_getter.whatsapp.models import DocumentType, VerificationStatus
+
+    user = _mk_user()
+    _run_update(monkeypatch, user, DocumentType.CSD_LETTER,
+                _csd_parsed(csd_supplier_active=False, csd_report_date=_iso_days_ago(-5)))
+    assert user.csd_status == VerificationStatus.PENDING
+
+
+def test_csd_freshness_window_env_override(monkeypatch):
+    from tender_getter.whatsapp.models import DocumentType, VerificationStatus
+
+    monkeypatch.setenv("TG_CSD_REPORT_MAX_AGE_DAYS", "90")
+    user = _mk_user()
+    _run_update(monkeypatch, user, DocumentType.CSD_LETTER,
+                _csd_parsed(csd_supplier_active=False, csd_report_date=_iso_days_ago(60)))
+    assert user.csd_status == VerificationStatus.FAILED  # inside the widened window
+
+
+def test_csd_freshness_boundaries():
+    import tender_getter.whatsapp.webhook as webhook
+
+    assert webhook._csd_report_fresh({"csd_report_date": _iso_days_ago(30)}) is True   # edge inclusive
+    assert webhook._csd_report_fresh({"csd_report_date": _iso_days_ago(31)}) is False
+    assert webhook._csd_report_fresh({"csd_report_date": _iso_days_ago(-1)}) is False  # future-dated distrusted
+
+
+def test_identity_conflict_outranks_csd_negative(monkeypatch):
+    """A document naming a DIFFERENT company fails closed as conflict — its
+    parsed fields, even negative ones, must not punish the profile owner."""
+    from tender_getter.whatsapp.models import DocumentType, VerificationStatus
+
+    user = _mk_user("2020/111111/07")
+    _run_update(monkeypatch, user, DocumentType.CSD_LETTER, _csd_parsed(
+        registration_number="2019/999999/09", csd_supplier_active=False, csd_report_date=_iso_days_ago(0)))
+    assert user.csd_status != VerificationStatus.FAILED
+    assert user.csd_status != VerificationStatus.VERIFIED
+
+
+def test_csd_negative_fields_ignored_on_other_doc_types(monkeypatch):
+    from tender_getter.whatsapp.models import DocumentType, VerificationStatus
+
+    user = _mk_user()  # registry stub ACTIVE
+    _run_update(monkeypatch, user, DocumentType.BBBEE_CERT, {
+        "registration_number": "2020/111111/07", "bbbee_level": 2,
+        "csd_supplier_active": False, "csd_business_status": "Deregistered",
+        "csd_report_date": _iso_days_ago(0),
+    })
+    assert user.csd_status != VerificationStatus.FAILED
+    assert user.bbbee_status == VerificationStatus.VERIFIED

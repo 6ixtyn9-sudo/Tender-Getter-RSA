@@ -12,7 +12,7 @@ import os
 import re
 import time
 from collections import defaultdict, deque
-from datetime import datetime
+from datetime import date, datetime, timezone
 from typing import Any, Optional
 
 from fastapi import BackgroundTasks, FastAPI, Form, HTTPException, Request
@@ -297,6 +297,52 @@ _CSD_NUMBER_PATTERN = re.compile(r"^MAAA\d{4,}$", re.IGNORECASE)
 # but require substance (5+ alphanumerics).
 _TAX_PIN_PATTERN = re.compile(r"^[A-Z0-9\-\s]{5,32}$", re.IGNORECASE)
 
+# A CSD Registration Report is the CSD's own batch-verified verdict (re-checked
+# against CIPC + SARS by csd.reverifybatch). It is still a user-uploaded
+# document, so its POSITIVE fields only ever corroborate — they never verify
+# anything alone. Its NEGATIVE verdicts, when the report is fresh, fail the
+# upload outright: nobody forges evidence against themselves.
+_CSD_INACTIVE_TERMS = ("deregist", "liquidat", "rescue", "inactive", "not in business")
+_CSD_REPORT_MAX_AGE_DAYS_DEFAULT = 30
+
+
+def _csd_report_max_age_days() -> int:
+    try:
+        return max(1, int(os.getenv("TG_CSD_REPORT_MAX_AGE_DAYS", str(_CSD_REPORT_MAX_AGE_DAYS_DEFAULT))))
+    except (TypeError, ValueError):
+        return _CSD_REPORT_MAX_AGE_DAYS_DEFAULT
+
+
+def _parsed_csd_negative(parsed: dict[str, Any]) -> bool:
+    """True when the parsed CSD report itself states the supplier is not active.
+
+    Only the literal JSON false counts for the boolean field — LLM-parsed
+    strings ("no", "false") never auto-fail a user. The business-status string
+    is matched against deregistration/liquidation vocabulary; a genuine
+    "In Business" status contains none of it.
+    """
+    if parsed.get("csd_supplier_active") is False:
+        return True
+    status = str(parsed.get("csd_business_status") or "").strip().lower()
+    return bool(status) and any(term in status for term in _CSD_INACTIVE_TERMS)
+
+
+def _csd_report_fresh(parsed: dict[str, Any]) -> bool:
+    """True only when the report date is parseable ISO and within the window.
+
+    Future-dated or unparseable dates are not fresh: a tampered or unreadable
+    date must neutralize the self-report instead of empowering it.
+    """
+    raw = str(parsed.get("csd_report_date") or "").strip()
+    if not raw:
+        return False
+    try:
+        report_date = date.fromisoformat(raw[:10])
+    except ValueError:
+        return False
+    age = (datetime.now(timezone.utc).date() - report_date).days
+    return 0 <= age <= _csd_report_max_age_days()
+
 
 def _identity_conflict(user: WhatsAppUser, parsed: dict[str, Any]) -> bool:
     """True when the uploaded document names a DIFFERENT company than the profile."""
@@ -327,6 +373,30 @@ async def update_user_from_parsed_data(user: WhatsAppUser, doc_type: Optional[Do
             user.documents[doc_type.value] = storage_path
             upsert_user(user)
         return
+
+    # CSD self-report negative gate: a FRESH CSD Registration Report whose own
+    # CSD-verified status says "supplier not active" fails the upload here.
+    # A stale or undated negative never auto-fails (the supplier may have
+    # remediated since) — it falls through to the registry guard instead.
+    if doc_type == DocumentType.CSD_LETTER and _parsed_csd_negative(parsed):
+        if _csd_report_fresh(parsed):
+            logger.warning(
+                "Verification refused for %s: fresh CSD report states supplier inactive "
+                "(supplier_active=%r, business_status=%r, report_date=%r)",
+                user.phone_number,
+                parsed.get("csd_supplier_active"),
+                parsed.get("csd_business_status"),
+                parsed.get("csd_report_date"),
+            )
+            user.csd_status = VerificationStatus.FAILED
+            if storage_path:
+                user.documents[doc_type.value] = storage_path
+            upsert_user(user)
+            return
+        logger.info(
+            "Stale/undated CSD report with negative status for %s — not auto-failing; deferring to registry guard",
+            user.phone_number,
+        )
 
     # Root-of-truth guard: the company must exist AND be active in a public
     # register before any uploaded document can count as verification.
